@@ -1,4 +1,4 @@
-<h1 align="center">ePlex SDK</h1>
+<h1 align="center">epPlex SDK</h1>
 <p align="center"><strong>epPlex Typescript SDK</strong></p>
 
 <div align="center">

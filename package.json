@@ -1,16 +1,16 @@
 {
   "name": "@epplex-xyz/sdk",
-  "author": "epPlex ",
+  "author": "epPlex",
   "version": "0.1.0",
   "description": "epPlex Typescript SDK",
   "license": "MIT",
-  "homepage": "https://github.com/epPlex/sdk",
+  "homepage": "https://github.com/epplex-xyz/sdk",
   "bugs": {
-    "url": "https://github.com/epPlex/sdk/issues"
+    "url": "https://github.com/epplex-xyz/sdk/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/epPlex/sdk.git"
+    "url": "https://github.com/epplex-xyz/sdk.git"
   },
   "publishConfig": {
     "access": "public"
