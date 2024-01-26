@@ -1,0 +1,16 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es2015",
+    "module": "commonjs",
+    "lib": ["es2020"],
+    "outDir": "lib/",
+    "rootDir": "./src",
+    "declaration": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "tests"]
+}
