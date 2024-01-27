@@ -1,7 +1,7 @@
 {
   "name": "@epplex-xyz/sdk",
   "author": "epPlex",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "epPlex Typescript SDK",
   "license": "MIT",
   "homepage": "https://github.com/epplex-xyz/sdk",
@@ -41,6 +41,9 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",
-    "@solana/web3.js": "^1.73.2"
+    "@solana/spl-token": "^0.3.11",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/web3.js": "^1.73.2",
+    "@switchboard-xyz/solana.js": "^3.2.3"
   }
 }
