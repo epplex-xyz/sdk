@@ -1,35 +1,6 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-
-import { EpplexCore } from "./types/epplexCoreTypes";
-import { EpplexMetadata } from "./types/epplexMetadataTypes";
-import { EpplexMint } from "./types/epplexMintTypes";
-import { EpplexBurger } from "./types/epplexBurgerTypes";
 import fs from "fs";
 import path from "path";
 import {Keypair} from "@solana/web3.js";
-
-// export function testPrelude() {
-//     // const provider = anchor.AnchorProvider.env();
-//     //
-//     // const coreProgram = anchor.workspace.EpplexCore as Program<EpplexCore>
-//     // const metadataProgram = anchor.workspace.EpplexMetadata as Program<EpplexMetadata>
-//     // const mintProgram = anchor.workspace.EpplexMint as Program<EpplexMint>
-//     // const burgerProgram = anchor.workspace.EpplexBurger as Program<EpplexBurger>
-//     // const connection = coreProgram.provider.connection;
-//     // const wallet = (coreProgram.provider as anchor.AnchorProvider).wallet;
-//     // anchor.setProvider(provider);
-//
-//     return {
-//         coreProgram,
-//         metadataProgram,
-//         mintProgram,
-//         burgerProgram,
-//         // connection,
-//         // wallet,
-//     };
-// }
-
 
 const DEFAULT_KEY_DIR_NAME = ".local_keys";
 export function loadOrGenerateKeypair(fileName: string, dirName: string = DEFAULT_KEY_DIR_NAME) {

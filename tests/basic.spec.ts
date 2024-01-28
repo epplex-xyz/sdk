@@ -1,5 +1,5 @@
 import {clusterApiUrl, Connection, LAMPORTS_PER_SOL, Keypair} from "@solana/web3.js";
-import {loadOrGenerateKeypair} from "../src/testUtils";
+import {loadOrGenerateKeypair} from "./testUtils";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils";
@@ -9,6 +9,7 @@ const connection = new Connection(
     clusterApiUrl("devnet"),
     COMMITMENT
 );
+
 
 const testKeypair = loadOrGenerateKeypair("mintPool");
 const wallet = new NodeWallet(testKeypair);

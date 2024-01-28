@@ -6,7 +6,7 @@
     "module": "commonjs",
     "lib": ["es2020"],
     "outDir": "lib/",
-    "rootDir": "./src",
+    "rootDir": "./",
     "declaration": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
