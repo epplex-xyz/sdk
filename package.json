@@ -27,7 +27,8 @@
   "outDir": "./lib",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/*.spec.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",

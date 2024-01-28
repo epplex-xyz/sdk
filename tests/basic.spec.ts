@@ -57,13 +57,11 @@ describe("Testing Burger Program", () => {
         const tx = await epplexProvider.tokenGameVoteTx({
             mint: mint.publicKey,
             owner: owner,
-
         })
         await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
 
         console.log("\n")
     })
-
 
 });
 
