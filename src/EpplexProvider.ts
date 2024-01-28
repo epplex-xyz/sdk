@@ -18,9 +18,9 @@ import {BURGER_PROGRAM_ID, CORE_PROGRAM_ID} from "./constants/ids";
 import {getMintOwner, tryCreateATAIx} from "./utils";
 import {SEED_BURGER_METADATA, SEED_PROGRAM_DELEGATE} from "./constants/seeds";
 import {TokenMetadata} from "@solana/spl-token-metadata";
-import {NativeMint} from "@switchboard-xyz/solana.js";
 import {AnchorProvider} from "@coral-xyz/anchor";
 import {VAULT} from "./constants/keys";
+import {CreateWhitelistMintTxParams, TokenGameVoteTxParams} from "./EpplexProviderTypes";
 
 class EpplexProvider {
   provider: anchor.AnchorProvider;
@@ -35,13 +35,13 @@ class EpplexProvider {
     this.program = new anchor.Program(BurgerIdl, BURGER_PROGRAM_ID, this.provider);
   }
 
-  async createWhitelistMintTx(
-      expiryDate: string,
-      mint: Keypair,
-      name: string,
-      symbol: string,
-      uri: string
-  ) {
+  async createWhitelistMintTx({
+      expiryDate,
+      mint,
+      name,
+      symbol,
+      uri,
+  }: CreateWhitelistMintTxParams) {
     const permanentDelegate = this.getProgramDelegate();
     const payer = this.provider.wallet.publicKey;
     const ata = getAssociatedTokenAddressSync(
@@ -82,35 +82,41 @@ class EpplexProvider {
     return  new Transaction().add(...ixs);
   }
 
-    async renewToken(
+    async renewTokenTx(
         mint: PublicKey,
         fundUpTo: number = 0.1,
-    ): Promise<{tx: Transaction, signers: Keypair[]}> {
+    ): Promise<{
+        tx: Transaction
+        // signers: Keypair[]}
+    }> {
         // const ata = getAssociatedTokenAddressSync(
         //     mint, this.wallet.publicKey, undefined, TOKEN_2022_PROGRAM_ID
         // );
 
         const ixs: TransactionInstruction[] = [];
 
-        const switchboardMint: NativeMint = await NativeMint.load(this.program.provider as AnchorProvider);
-        const [payerAta, wrapSolTxn] = await switchboardMint.getOrCreateWrappedUserInstructions(
-            this.provider.wallet.publicKey,
-            { fundUpTo: fundUpTo }
-        );
-        if (wrapSolTxn === undefined) {
-            throw new Error("Wrap SOL failed");
-        }
-        ixs.push(...wrapSolTxn.ixns);
+        // const switchboardMint: NativeMint = await NativeMint.load(this.program.provider as AnchorProvider);
+        // const [payerAta, wrapSolTxn] = await switchboardMint.getOrCreateWrappedUserInstructions(
+        //     this.provider.wallet.publicKey,
+        //     { fundUpTo: fundUpTo }
+        // );
+        // if (wrapSolTxn === undefined) {
+        //     throw new Error("Wrap SOL failed");
+        // }
+        // ixs.push(...wrapSolTxn.ixns);
+
+        const WSOL_NATIVE_ADDRESS = new PublicKey('So11111111111111111111111111111111111111112');
 
         // VAULT Ata
         const proceedsAta = getAssociatedTokenAddressSync(
-            NativeMint.address, VAULT, undefined, TOKEN_PROGRAM_ID
+            WSOL_NATIVE_ADDRESS, VAULT, undefined, TOKEN_PROGRAM_ID
         );
 
         // Payer Ata - already created with switchboard stuff
-        // const payerAta = getAssociatedTokenAddressSync(
-        //     NativeMint.address, this.wallet.publicKey, undefined, TOKEN_PROGRAM_ID
-        // );
+        const payerAta = getAssociatedTokenAddressSync(
+            WSOL_NATIVE_ADDRESS, this.provider.wallet.publicKey, undefined, TOKEN_PROGRAM_ID
+        );
+
         // const payerIx = await tryCreateATAIx(
         //     this.connection, this.wallet.publicKey, payerAta, this.wallet.publicKey, NativeMint.address
         // );
@@ -120,7 +126,7 @@ class EpplexProvider {
             this.provider.wallet.publicKey,
             proceedsAta,
             VAULT,
-            NativeMint.address,
+            WSOL_NATIVE_ADDRESS,
             TOKEN_2022_PROGRAM_ID
         );
 
@@ -131,7 +137,7 @@ class EpplexProvider {
             .accounts({
                 mint,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
-                mintPayment: NativeMint.address,
+                mintPayment: WSOL_NATIVE_ADDRESS,
                 proceedsTokenAccount: proceedsAta,
                 payerTokenAccount: payerAta,
                 payer: this.provider.wallet.publicKey,
@@ -144,7 +150,7 @@ class EpplexProvider {
 
         return {
             tx: new Transaction().add(...ixs),
-            signers: wrapSolTxn.signers
+            // signers: wrapSolTxn.signers
         };
     }
 
@@ -181,6 +187,61 @@ class EpplexProvider {
       return tokenBurnTx;
   }
 
+    async tokenGameVoteTx({mint, owner}: TokenGameVoteTxParams) {
+        const programDelegate = this.getProgramDelegate();
+        const mintOwner = owner ?? await getMintOwner(this.provider.connection, mint);
+        const tokenAccount = getAssociatedTokenAddressSync(mint, mintOwner, undefined, TOKEN_2022_PROGRAM_ID);
+
+        const tokenBurnTx = await this.program.methods
+            .tokenGameVote({})
+            .accounts({
+                mint: mint,
+                permanentDelegate: programDelegate,
+                tokenAccount,
+                payer: this.provider.wallet.publicKey,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+
+        return tokenBurnTx;
+    }
+// #[account(
+//         mut,
+//         mint::token_program = token22_program.key(),
+//         constraint = mint.decimals == 0,
+//         constraint = mint.supply == 1,
+//     )]
+//     pub mint: Box<InterfaceAccount<'info, MintInterface>>,
+//
+// #[account(
+//         token::mint = mint,
+//         token::authority = payer,
+//         token::token_program = token22_program.key(),
+//     )]
+//     pub token_account: Box<InterfaceAccount<'info, TokenAccountInterface>>, // Used to verify owner
+//
+// #[account(
+//         seeds = [
+//             SEED_BURGER_METADATA,
+//             mint.key().as_ref()
+//         ],
+//         bump = token_metadata.bump
+//     )]
+//     pub token_metadata: Account<'info, BurgerMetadata>,
+//
+// #[account()]
+//     pub payer: Signer<'info>,
+//
+// #[account(
+//         seeds = [
+//             SEED_PROGRAM_DELEGATE
+//         ],
+//         bump = update_authority.bump
+//     )]
+//     pub update_authority: Account<'info, ProgramDelegate>,
+//
+//     pub token22_program: Program<'info, Token2022>,
+//     pub token_program: Program<'info, Token>,
     async myGetTokenMetadata(
         connection: Connection,
         publicKey: PublicKey
