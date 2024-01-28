@@ -10,7 +10,7 @@ import {
     TransactionSignature
 } from "@solana/web3.js";
 import {createAssociatedTokenAccountInstruction} from "@solana/spl-token";
-import {AnchorWallet} from "@solana/wallet-adapter-react";
+import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
 export async function getMintOwner(connection: Connection, mint: PublicKey): Promise<PublicKey> {
     const largestAccounts = await connection.getTokenLargestAccounts(mint);
@@ -47,7 +47,7 @@ export async function sendAndConfirmRawTransaction(
     connection: Connection,
     tx: Transaction,
     feePayer: PublicKey,
-    wallet?: AnchorWallet,
+    wallet?: NodeWallet,
     signers: Keypair[] = [],
     commitment: Commitment = "confirmed",
     confirmOptions: SendOptions = {skipPreflight: false}

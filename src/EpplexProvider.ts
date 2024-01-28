@@ -18,7 +18,6 @@ import {BURGER_PROGRAM_ID, CORE_PROGRAM_ID} from "./constants/ids";
 import {getMintOwner, tryCreateATAIx} from "./utils";
 import {SEED_BURGER_METADATA, SEED_PROGRAM_DELEGATE} from "./constants/seeds";
 import {TokenMetadata} from "@solana/spl-token-metadata";
-import {AnchorProvider} from "@coral-xyz/anchor";
 import {VAULT} from "./constants/keys";
 import {CreateWhitelistMintTxParams, TokenGameVoteTxParams} from "./EpplexProviderTypes";
 
