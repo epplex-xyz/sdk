@@ -376,11 +376,6 @@ export type EpplexBurger = {
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -1043,11 +1038,6 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }

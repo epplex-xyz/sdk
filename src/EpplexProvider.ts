@@ -189,59 +189,24 @@ class EpplexProvider {
 
     async tokenGameVoteTx({mint, owner}: TokenGameVoteTxParams) {
         const programDelegate = this.getProgramDelegate();
+        // could just do this.provider.wallet.publicKey
         const mintOwner = owner ?? await getMintOwner(this.provider.connection, mint);
         const tokenAccount = getAssociatedTokenAddressSync(mint, mintOwner, undefined, TOKEN_2022_PROGRAM_ID);
-
         const tokenBurnTx = await this.program.methods
-            .tokenGameVote({})
+            .tokenGameVote({message: "hello"})
             .accounts({
                 mint: mint,
-                permanentDelegate: programDelegate,
                 tokenAccount,
-                payer: this.provider.wallet.publicKey,
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                payer: mintOwner,
+                updateAuthority: programDelegate,
                 token22Program: TOKEN_2022_PROGRAM_ID,
             })
             .transaction();
 
         return tokenBurnTx;
     }
-// #[account(
-//         mut,
-//         mint::token_program = token22_program.key(),
-//         constraint = mint.decimals == 0,
-//         constraint = mint.supply == 1,
-//     )]
-//     pub mint: Box<InterfaceAccount<'info, MintInterface>>,
-//
-// #[account(
-//         token::mint = mint,
-//         token::authority = payer,
-//         token::token_program = token22_program.key(),
-//     )]
-//     pub token_account: Box<InterfaceAccount<'info, TokenAccountInterface>>, // Used to verify owner
-//
-// #[account(
-//         seeds = [
-//             SEED_BURGER_METADATA,
-//             mint.key().as_ref()
-//         ],
-//         bump = token_metadata.bump
-//     )]
-//     pub token_metadata: Account<'info, BurgerMetadata>,
-//
-// #[account()]
-//     pub payer: Signer<'info>,
-//
-// #[account(
-//         seeds = [
-//             SEED_PROGRAM_DELEGATE
-//         ],
-//         bump = update_authority.bump
-//     )]
-//     pub update_authority: Account<'info, ProgramDelegate>,
-//
-//     pub token22_program: Program<'info, Token2022>,
-//     pub token_program: Program<'info, Token>,
+
     async myGetTokenMetadata(
         connection: Connection,
         publicKey: PublicKey
