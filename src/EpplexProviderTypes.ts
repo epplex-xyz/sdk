@@ -10,5 +10,11 @@ export interface CreateWhitelistMintTxParams {
 
 export interface TokenGameVoteTxParams {
     mint: PublicKey,
+    message: string,
+    owner?: PublicKey
+}
+
+export interface BurnTxParams {
+    mint: PublicKey,
     owner?: PublicKey
 }
