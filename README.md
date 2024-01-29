@@ -11,3 +11,46 @@
 
 - **epPlex SDK is in active development, so all APIs are subject to change.**
 - **This code is unaudited. Use at your own risk.**
+
+
+## Usage
+
+First, initialize an `EpplexProvider`
+
+As script:
+```javascript
+const wallet = new NodeWallet(new Keypair());
+const connection = new Connection(clusterApiUrl("devnet"));
+const clockworkProvider = new EpplexProvider(
+    wallet, 
+    connection,
+    anchor.AnchorProvider.defaultOptions()
+);
+
+```
+
+Web-client
+```javascript
+import {EpplexProvider} from "@epplex-xyz/sdk";
+import {useAnchorWallet, useConnection} from "@solana/wallet-adapter-react";
+
+const provider = new ClockworkProvider.fromAnchorProvider(provider);
+const wallet = useAnchorWallet()
+const connection = useConnection()
+const epplexProvider = new EpplexProvider(
+    wallet,
+    connection,
+    anchor.AnchorProvider.defaultOptions()
+);
+```
+
+Get all epNFTs
+```javascript
+const epNFTs = await epplexProvider.getEpNFTs(wallet.publicKey)
+```
+
+
+Check if mint is epNFT
+```javascript
+const isEpNFT = await epplexProvider.isBurgerNFT(wallet.publicKey)
+```
