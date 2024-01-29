@@ -34,7 +34,6 @@ Web-client
 import {EpplexProvider} from "@epplex-xyz/sdk";
 import {useAnchorWallet, useConnection} from "@solana/wallet-adapter-react";
 
-const provider = new ClockworkProvider.fromAnchorProvider(provider);
 const wallet = useAnchorWallet()
 const connection = useConnection()
 const epplexProvider = new EpplexProvider(
