@@ -43,7 +43,7 @@ const epplexProvider = new EpplexProvider(
 );
 ```
 
-Get all epNFTs
+Get all epNFTs of wallet
 ```javascript
 const epNFTs = await epplexProvider.getEpNFTs(wallet.publicKey)
 ```
@@ -51,5 +51,5 @@ const epNFTs = await epplexProvider.getEpNFTs(wallet.publicKey)
 
 Check if mint is epNFT
 ```javascript
-const isEpNFT = await epplexProvider.isBurgerNFT(wallet.publicKey)
+const isEpNFT = await epplexProvider.isBurgerNFT(mint)
 ```
