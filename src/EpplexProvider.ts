@@ -5,7 +5,7 @@ import {
     Connection,
     Keypair, PublicKey,
     SystemProgram,
-    SYSVAR_RENT_PUBKEY, Transaction, TransactionInstruction,
+    SYSVAR_RENT_PUBKEY, Transaction, TransactionInstruction, VersionedTransaction,
 } from "@solana/web3.js";
 import {
     AccountLayout,
@@ -21,18 +21,37 @@ import {TokenMetadata} from "@solana/spl-token-metadata";
 import {VAULT} from "./constants/keys";
 import {CreateWhitelistMintTxParams, TokenGameVoteTxParams} from "./EpplexProviderTypes";
 
+
+/**
+ * Wallet interface for objects that can be used to sign provider transactions.
+ */
+export interface EpplexProviderWallet {
+    publicKey: PublicKey;
+    signTransaction<T extends Transaction | VersionedTransaction>(transaction: T): Promise<T>;
+    signAllTransactions<T extends Transaction | VersionedTransaction>(transactions: T[]): Promise<T[]>;
+}
+
 class EpplexProvider {
   provider: anchor.AnchorProvider;
   program: anchor.Program<EpplexBurger>
 
   constructor(
-    wallet: anchor.Wallet,
+    wallet: EpplexProviderWallet,
     connection: Connection,
     opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions()
   ) {
     this.provider = new anchor.AnchorProvider(connection, wallet, opts);
     this.program = new anchor.Program(BurgerIdl, BURGER_PROGRAM_ID, this.provider);
   }
+
+    static fromAnchorProvider(provider: anchor.AnchorProvider): EpplexProvider {
+        const epplexProvider = new EpplexProvider(
+            provider.wallet,
+            provider.connection,
+            provider.opts
+        );
+        return epplexProvider;
+    }
 
   async createWhitelistMintTx({
       expiryDate,
