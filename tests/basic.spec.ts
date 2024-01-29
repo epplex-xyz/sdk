@@ -4,6 +4,7 @@ import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils";
 import {encryptMessage} from "../src/utils/secretUtils";
+import assert = require("node:assert");
 
 const COMMITMENT = "confirmed";
 const connection = new Connection(
@@ -27,7 +28,7 @@ describe("Testing Burger Program", () => {
     const mint = Keypair.generate();
     const metadata = {
         expiryDate: expiryDate,
-        name: "Ephemeral burger",
+        name: "Ephemeral burger (SDK tests)",
         symbol: "EP",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
     }
@@ -54,6 +55,20 @@ describe("Testing Burger Program", () => {
 
       console.log("\n")
     })
+
+    it("Get epNFTs", async() => {
+        const epNFTs = await epplexProvider.getEpNFTs(wallet.publicKey)
+        assert.ok(epNFTs)
+        console.log("\n")
+    })
+
+    it("Get if burgerNFT", async() => {
+        const check = await epplexProvider.isBurgerNFT(wallet.publicKey)
+        assert.equal(true, check)
+
+        console.log("\n")
+    })
+
 
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;
