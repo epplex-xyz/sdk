@@ -1,7 +1,7 @@
 {
   "name": "@epplex-xyz/sdk",
   "author": "epPlex",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "epPlex Typescript SDK",
   "license": "MIT",
   "homepage": "https://github.com/epplex-xyz/sdk",
@@ -27,7 +27,7 @@
   "outDir": "./lib",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc",
+    "build": "rm -rf lib && tsc",
     "test": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/*.spec.ts"
   },
   "devDependencies": {
