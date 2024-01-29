@@ -9,7 +9,7 @@ import {
     TransactionInstruction,
     TransactionSignature
 } from "@solana/web3.js";
-import {createAssociatedTokenAccountInstruction} from "@solana/spl-token";
+import {createAssociatedTokenAccountInstruction, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
 export async function getMintOwner(connection: Connection, mint: PublicKey): Promise<PublicKey> {
@@ -41,6 +41,15 @@ export async function tryCreateATAIx(
     } else {
         return [];
     }
+}
+
+export async function getTokenAccounts(connection: Connection, owner: PublicKey) {
+    // Get all Token2022s of owner
+    const allTokenAccounts = await this.provider.connection.getTokenAccountsByOwner(owner, {
+        programId: TOKEN_2022_PROGRAM_ID
+    });
+
+    return allTokenAccounts
 }
 
 export async function sendAndConfirmRawTransaction(
