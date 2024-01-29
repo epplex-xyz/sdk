@@ -28,7 +28,7 @@ describe("Testing Burger Program", () => {
     const mint = Keypair.generate();
     const metadata = {
         expiryDate: expiryDate,
-        name: "Ephemeral burger (SDK tests)",
+        name: "(SDK tests) Ephemeral burger",
         symbol: "EP",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
     }
@@ -59,12 +59,20 @@ describe("Testing Burger Program", () => {
     it("Get epNFTs", async() => {
         const epNFTs = await epplexProvider.getEpNFTs(wallet.publicKey)
         assert.ok(epNFTs)
+        assert.equal(epNFTs.length > 0, true)
         console.log("\n")
     })
 
-    it("Get if burgerNFT", async() => {
-        const check = await epplexProvider.isBurgerNFT(wallet.publicKey)
+    it("Check is Burger NFT", async() => {
+        const check = await epplexProvider.isBurgerNFT(mint.publicKey)
         assert.equal(true, check)
+
+        console.log("\n")
+    })
+
+    it("Check not Burger NFT", async() => {
+        const check = await epplexProvider.isBurgerNFT(Keypair.generate().publicKey)
+        assert.equal(false, check)
 
         console.log("\n")
     })

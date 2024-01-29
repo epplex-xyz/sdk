@@ -42,12 +42,14 @@ export async function tryCreateATAIx(
         return [];
     }
 }
-
+/**
+ * Get all T22 token accounts
+ */
 export async function getTokenAccounts(connection: Connection, owner: PublicKey) {
-    // Get all Token2022s of owner
-    const allTokenAccounts = await this.provider.connection.getTokenAccountsByOwner(owner, {
-        programId: TOKEN_2022_PROGRAM_ID
-    });
+    const allTokenAccounts = await connection.getTokenAccountsByOwner(
+        owner,
+        {programId: TOKEN_2022_PROGRAM_ID}
+    );
 
     return allTokenAccounts
 }
