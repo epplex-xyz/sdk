@@ -10,10 +10,12 @@ import {EpNFT} from "./types/EpplexProviderTypes";
 
 export interface epNFTOptions {
     metadata?: boolean
+    tokenAccount?: boolean
 }
 
 export const defaultEpNFTOptions: epNFTOptions = {
-    metadata: true
+    metadata: true,
+    tokenAccount: true
 }
 
 class EpNFTService {
@@ -37,16 +39,19 @@ class EpNFTService {
                 );
 
                 if (metadata !== null) {
+                    const nftData = {
+                        ...data
+                    };
+
                     if (opts.metadata) {
-                        epNFTs.push({
-                            ...data,
-                            ...metadata
-                        });
-                    } else {
-                        epNFTs.push({
-                            ...data,
-                        });
+                        Object.assign(nftData, metadata);
                     }
+
+                    if (opts.tokenAccount) {
+                        Object.assign(nftData, {tokenAccount: e.pubkey});
+                    }
+
+                    epNFTs.push(nftData);
                 }
             } catch (e) {
                 // console.error("Failed to decode", e);
