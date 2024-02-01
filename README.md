@@ -3,7 +3,7 @@
 
 <div align="center">
 
-  <a href="https://opensource.org/licenses/MIT">![License](https://img.shields.io/badge/License-MIT-yellow.svg)</a>  
+  <a href="https://opensource.org/licenses/MIT">![License](https://img.shields.io/badge/License-MIT-yellow.svg)</a>
 
 </div>
 
@@ -22,7 +22,7 @@ As script:
 const wallet = new NodeWallet(new Keypair());
 const connection = new Connection(clusterApiUrl("devnet"));
 const clockworkProvider = new EpplexProvider(
-    wallet, 
+    wallet,
     connection,
     anchor.AnchorProvider.defaultOptions()
 );
@@ -45,11 +45,11 @@ const epplexProvider = new EpplexProvider(
 
 Get all epNFTs of wallet
 ```javascript
-const epNFTs = await epplexProvider.getEpNFTs(wallet.publicKey)
+const epNFTs = await EpNFTService.getEpNFTs(connection, wallet.publicKey)
 ```
 
 
 Check if mint is epNFT
 ```javascript
-const isEpNFT = await epplexProvider.isBurgerNFT(mint)
+const isEpNFT = await EpNFTService.isBurgerNFT(connection, mint)
 ```
