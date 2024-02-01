@@ -44,7 +44,7 @@ class EpNFTService {
                     };
 
                     if (opts.metadata) {
-                        Object.assign(nftData, metadata);
+                        Object.assign(nftData, {tokenMetadata: metadata});
                     }
 
                     if (opts.tokenAccount) {
