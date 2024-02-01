@@ -2,7 +2,7 @@ import {Keypair, PublicKey} from "@solana/web3.js";
 import { RawAccount } from "@solana/spl-token";
 import {TokenMetadata} from "@solana/spl-token-metadata";
 
-export type EpNFT = RawAccount & TokenMetadata
+export type EpNFT = RawAccount & Partial<TokenMetadata>
 
 export interface CreateWhitelistMintTxParams {
     expiryDate: string,
