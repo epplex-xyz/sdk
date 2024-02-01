@@ -17,7 +17,7 @@ export const defaultEpNFTOptions: epNFTOptions = {
 }
 
 class EpNFTService {
-    static async getEpNFTs(owner: PublicKey, connection: Connection, opts: epNFTOptions = defaultEpNFTOptions): Promise<EpNFT[]> {
+    static async getEpNFTs(connection: Connection, owner: PublicKey, opts: epNFTOptions = defaultEpNFTOptions): Promise<EpNFT[]> {
         const allTokenAccounts = await getTokenAccounts(connection, owner);
 
         const epNFTs: EpNFT[] = [];
@@ -26,7 +26,7 @@ class EpNFTService {
             const data = AccountLayout.decode(e.account.data);
 
             try {
-                const isEligible = await this.isBurgerNFT(data.mint, connection)
+                const isEligible = await this.isBurgerNFT(connection, data.mint)
                 if (!isEligible) {
                     continue
                 }
@@ -57,7 +57,7 @@ class EpNFTService {
         return epNFTs;
     }
 
-    static async isBurgerNFT(mint: PublicKey, connection: Connection) : Promise <boolean> {
+    static async isBurgerNFT(connection: Connection, mint: PublicKey) : Promise <boolean> {
         // Get burger program metadata address
         const metadataPda = getTokenBurgerMetadata(mint);
 

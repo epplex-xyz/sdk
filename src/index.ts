@@ -1,4 +1,5 @@
 import EpplexProvider from "./EpplexProvider";
+import EpNFTService, { epNFTOptions, defaultEpNFTOptions} from "./EpNFTService";
 
 import {
   EpNFT,
@@ -9,7 +10,13 @@ import {
 
 export {
   EpplexProvider,
+
+  // epNFTservice
+  EpNFTService,
   EpNFT,
+  epNFTOptions,
+  defaultEpNFTOptions,
+
   BurnTxParams,
   CreateWhitelistMintTxParams,
   TokenGameVoteTxParams

@@ -1,7 +1,7 @@
 import {clusterApiUrl, Connection, LAMPORTS_PER_SOL, Keypair} from "@solana/web3.js";
 // import {loadOrGenerateKeypair} from "./testUtils";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
-import {EpplexProvider} from "../src";
+import {EpplexProvider, EpNFTService} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils";
 import {encryptMessage} from "../src/utils/secretUtils";
 import assert = require("node:assert");
@@ -57,21 +57,21 @@ describe("Testing Burger Program", () => {
     })
 
     it("Get epNFTs", async() => {
-        const epNFTs = await epplexProvider.getEpNFTs(wallet.publicKey)
+        const epNFTs = await EpNFTService.getEpNFTs(connection, wallet.publicKey)
         assert.ok(epNFTs)
         assert.equal(epNFTs.length > 0, true)
         console.log("\n")
     })
 
     it("Check is Burger NFT", async() => {
-        const check = await epplexProvider.isBurgerNFT(mint.publicKey)
+        const check = await EpNFTService.isBurgerNFT(connection, mint.publicKey)
         assert.equal(true, check)
 
         console.log("\n")
     })
 
     it("Check not Burger NFT", async() => {
-        const check = await epplexProvider.isBurgerNFT(Keypair.generate().publicKey)
+        const check = await EpNFTService.isBurgerNFT(connection, Keypair.generate().publicKey)
         assert.equal(false, check)
 
         console.log("\n")

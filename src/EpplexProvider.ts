@@ -11,40 +11,17 @@ import {
     VersionedTransaction,
 } from "@solana/web3.js";
 import {
-    AccountLayout,
     ASSOCIATED_TOKEN_PROGRAM_ID,
     getAssociatedTokenAddressSync,
-    getTokenMetadata,
     TOKEN_2022_PROGRAM_ID,
     TOKEN_PROGRAM_ID
 } from "@solana/spl-token";
-import {
-    EpplexBurger,
-    IDL as BurgerIdl
-} from "./types/epplexBurgerTypes";
-import {
-    BURGER_PROGRAM_ID,
-    CORE_PROGRAM_ID
-} from "./constants/ids";
-import {
-    getMintOwner, getTokenAccounts,
-    tryCreateATAIx
-} from "./utils";
-import {
-    SEED_BURGER_METADATA,
-    SEED_PROGRAM_DELEGATE
-} from "./constants/seeds";
-import {
-    TokenMetadata
-} from "@solana/spl-token-metadata";
-import {
-    VAULT
-} from "./constants/keys";
-import {
-    BurnTxParams,
-    CreateWhitelistMintTxParams, EpNFT,
-    TokenGameVoteTxParams
-} from "./types/EpplexProviderTypes";
+import {EpplexBurger, IDL as BurgerIdl} from "./types/epplexBurgerTypes";
+import {BURGER_PROGRAM_ID, CORE_PROGRAM_ID} from "./constants/ids";
+import {getMintOwner, tryCreateATAIx} from "./utils";
+import {getProgramDelegate, getTokenBurgerMetadata} from "./constants/seeds";
+import {VAULT} from "./constants/keys";
+import {BurnTxParams, CreateWhitelistMintTxParams, TokenGameVoteTxParams} from "./types/EpplexProviderTypes";
 
 
 /**
@@ -81,7 +58,7 @@ class EpplexProvider {
         symbol,
         uri,
     }: CreateWhitelistMintTxParams) {
-        const permanentDelegate = this.getProgramDelegate();
+        const permanentDelegate = getProgramDelegate();
         const payer = this.provider.wallet.publicKey;
         const ata = getAssociatedTokenAddressSync(mint.publicKey, payer, undefined, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
 
@@ -93,7 +70,7 @@ class EpplexProvider {
         }).accounts({
             mint: mint.publicKey,
             tokenAccount: ata,
-            tokenMetadata: this.getTokenBurgerMetadata(mint.publicKey),
+            tokenMetadata: getTokenBurgerMetadata(mint.publicKey),
             permanentDelegate: permanentDelegate,
             payer: payer,
 
@@ -151,12 +128,12 @@ class EpplexProvider {
             renewTerms: 1
         }).accounts({
             mint,
-            tokenMetadata: this.getTokenBurgerMetadata(mint),
+            tokenMetadata: getTokenBurgerMetadata(mint),
             mintPayment: WSOL_NATIVE_ADDRESS,
             proceedsTokenAccount: proceedsAta,
             payerTokenAccount: payerAta,
             payer: this.provider.wallet.publicKey,
-            updateAuthority: this.getProgramDelegate(),
+            updateAuthority: getProgramDelegate(),
             token22Program: TOKEN_2022_PROGRAM_ID,
             tokenProgram: TOKEN_PROGRAM_ID
         }).instruction();
@@ -169,7 +146,7 @@ class EpplexProvider {
     }
 
     async createProgramDelegateTx() {
-        const programDelegate = this.getProgramDelegate();
+        const programDelegate = getProgramDelegate();
         const tx = await this.program.methods.programDelegateCreate({}).accounts({
             programDelegate,
             payer: this.provider.wallet.publicKey,
@@ -183,7 +160,7 @@ class EpplexProvider {
         mint,
         owner
     }: BurnTxParams) {
-        const programDelegate = this.getProgramDelegate();
+        const programDelegate = getProgramDelegate();
         const mintOwner = owner ?? await getMintOwner(this.provider.connection, mint);
         const tokenAccount = getAssociatedTokenAddressSync(
             mint,
@@ -194,8 +171,9 @@ class EpplexProvider {
 
         const tokenBurnTx = await this.program.methods.tokenBurn({}).accounts({
             mint: mint,
-            permanentDelegate: programDelegate,
             tokenAccount,
+            permanentDelegate: programDelegate,
+            tokenMetadata: getTokenBurgerMetadata(mint),
             payer: this.provider.wallet.publicKey,
             token22Program: TOKEN_2022_PROGRAM_ID,
         }).transaction();
@@ -208,7 +186,7 @@ class EpplexProvider {
         message,
         owner
     }: TokenGameVoteTxParams) {
-        const programDelegate = this.getProgramDelegate();
+        const programDelegate = getProgramDelegate();
 
         // Could just do this.provider.wallet.publicKey
         const mintOwner = owner ?? await getMintOwner(this.provider.connection, mint);
@@ -224,104 +202,13 @@ class EpplexProvider {
         }).accounts({
             mint: mint,
             tokenAccount,
-            tokenMetadata: this.getTokenBurgerMetadata(mint),
+            tokenMetadata: getTokenBurgerMetadata(mint),
             payer: mintOwner,
             updateAuthority: programDelegate,
             token22Program: TOKEN_2022_PROGRAM_ID,
         }).transaction();
 
         return tokenBurnTx;
-    }
-
-    async getBurgerMetadata(owner: PublicKey): Promise <TokenMetadata[]> {
-        // Get all Token2022s of owner
-        const allTokenAccounts = await getTokenAccounts(this.provider.connection, owner);
-
-        const tokenMetadata: TokenMetadata[] = [];
-        for (const[_, e] of allTokenAccounts.value.entries()) {
-            // Get raw data
-            const data = AccountLayout.decode(e.account.data);
-
-            try {
-                const isEligible = await this.isBurgerNFT(data.mint)
-                if (!isEligible) {
-                    continue
-                }
-
-                const metadata = await getTokenMetadata(
-                    this.provider.connection,
-                    data.mint
-                );
-                if (metadata !== null) {
-                    tokenMetadata.push(metadata);
-                }
-            } catch(e) {
-                // console.log("Failed to decode", e);
-                continue
-            }
-        }
-        return tokenMetadata;
-    }
-
-    async getEpNFTs(owner: PublicKey): Promise <EpNFT[]> {
-        const allTokenAccounts = await getTokenAccounts(this.provider.connection, owner);
-
-        const epNFTs: EpNFT[] = [];
-        for (const[_, e] of allTokenAccounts.value.entries()) {
-            // Get raw data
-            const data = AccountLayout.decode(e.account.data);
-
-            try {
-                const isEligible = await this.isBurgerNFT(data.mint)
-                if (!isEligible) {
-                    continue
-                }
-
-                const metadata = await getTokenMetadata(
-                    this.provider.connection,
-                    data.mint
-                );
-                if (metadata !== null) {
-                    epNFTs.push({
-                        ...data,
-                        ...metadata
-                    });
-                }
-            } catch(e) {
-                // console.error("Failed to decode", e);
-                continue
-            }
-        }
-
-        return epNFTs;
-    }
-
-    async isBurgerNFT(mint: PublicKey) : Promise <boolean> {
-        // Get burger program metadata address
-        const metadataPda = this.getTokenBurgerMetadata(mint);
-
-        // Check if metadata exists - if not, it is not an epNFT
-        const account = await this.provider.connection.getAccountInfo(metadataPda);
-
-        if (account === null) {
-            return false
-        } else {
-            return true
-        }
-    }
-
-    getProgramDelegate() : PublicKey {
-        const[programDelegate] = PublicKey.findProgramAddressSync(
-            [SEED_PROGRAM_DELEGATE], this.program.programId
-        );
-        return programDelegate;
-    }
-
-    getTokenBurgerMetadata(mint: PublicKey) : PublicKey {
-        const[metadata] = PublicKey.findProgramAddressSync(
-            [SEED_BURGER_METADATA, mint.toBuffer()], this.program.programId
-        );
-        return metadata;
     }
 }
 
