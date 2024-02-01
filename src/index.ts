@@ -8,6 +8,13 @@ import {
   TokenGameVoteTxParams
 } from "./types";
 
+import {
+  EpNFT,
+  BurnTxParams,
+  CreateWhitelistMintTxParams,
+  TokenGameVoteTxParams
+} from "./types";
+
 export {
   EpplexProvider,
 
