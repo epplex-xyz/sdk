@@ -8,7 +8,16 @@ import {
   TokenGameVoteTxParams
 } from "./types";
 
+import {
+  nftTransferIxs,
+} from "./utils/token2022";
+
+import {
+  sendAndConfirmRawTransaction,
+} from "./utils/generic";
+
 export {
+  // epplex provider
   EpplexProvider,
 
   // epNFTservice
@@ -17,7 +26,12 @@ export {
   epNFTOptions,
   defaultEpNFTOptions,
 
+  // Types
   BurnTxParams,
   CreateWhitelistMintTxParams,
-  TokenGameVoteTxParams
+  TokenGameVoteTxParams,
+
+  // Utils
+  nftTransferIxs,
+  sendAndConfirmRawTransaction
 };

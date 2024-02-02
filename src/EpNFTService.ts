@@ -1,12 +1,8 @@
 import {Connection, PublicKey,} from "@solana/web3.js";
 import {AccountLayout, getTokenMetadata} from "@solana/spl-token";
-import {getTokenAccounts} from "./utils";
+import {getTokenAccounts} from "./utils/generic";
 import {getTokenBurgerMetadata} from "./constants/seeds";
 import {EpNFT} from "./types/EpplexProviderTypes";
-
-/**
- * Wallet interface for objects that can be used to sign provider transactions.
- */
 
 export interface epNFTOptions {
     metadata?: boolean

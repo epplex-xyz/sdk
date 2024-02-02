@@ -2,8 +2,8 @@ import {clusterApiUrl, Connection, LAMPORTS_PER_SOL, Keypair} from "@solana/web3
 // import {loadOrGenerateKeypair} from "./testUtils";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider, EpNFTService} from "../src";
-import {sendAndConfirmRawTransaction} from "../src/utils";
-import {encryptMessage} from "../src/utils/secretUtils";
+import {sendAndConfirmRawTransaction} from "../src/utils/generic";
+import {encryptMessage} from "../src/utils/encrypt";
 import assert = require("node:assert");
 
 const COMMITMENT = "confirmed";
@@ -34,14 +34,14 @@ describe("Testing Burger Program", () => {
     }
     const secretKey = "asdfe12j0Cs"
 
-    it("Airdrop", async () => {
-        const tx = await connection.requestAirdrop(
-            wallet.publicKey,
-            1 * LAMPORTS_PER_SOL
-        );
-        await new Promise((r) => setTimeout(r, 5000));
-        console.log(tx);
-    });
+    // it("Airdrop", async () => {
+    //     const tx = await connection.requestAirdrop(
+    //         wallet.publicKey,
+    //         1 * LAMPORTS_PER_SOL
+    //     );
+    //     await new Promise((r) => setTimeout(r, 5000));
+    //     console.log(tx);
+    // });
 
     it("Create whitelist mint", async() => {
       const tx = await epplexProvider.createWhitelistMintTx({
@@ -81,6 +81,7 @@ describe("Testing Burger Program", () => {
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;
         const message = encryptMessage("hello", secretKey)
+        console.log('mesage', message)
         const tx = await epplexProvider.tokenGameVoteTx({
             mint: mint.publicKey,
             message,

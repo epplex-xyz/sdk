@@ -18,7 +18,7 @@ import {
 } from "@solana/spl-token";
 import {EpplexBurger, IDL as BurgerIdl} from "./types/epplexBurgerTypes";
 import {BURGER_PROGRAM_ID, CORE_PROGRAM_ID} from "./constants/ids";
-import {getMintOwner, tryCreateATAIx} from "./utils";
+import {getMintOwner, tryCreateATAIx} from "./utils/generic";
 import {getProgramDelegate, getTokenBurgerMetadata} from "./constants/seeds";
 import {VAULT} from "./constants/keys";
 import {BurnTxParams, CreateWhitelistMintTxParams, TokenGameVoteTxParams} from "./types/EpplexProviderTypes";
