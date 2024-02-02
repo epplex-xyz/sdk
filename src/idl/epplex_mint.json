@@ -296,8 +296,5 @@
       "name": "CollectionMintedOut",
       "msg": "Collection already minted out"
     }
-  ],
-  "metadata": {
-    "address": "epMiwQsJzS4mgWgCMZpJRB5RfgiR1zCSSEXophJKxn4"
-  }
+  ]
 }

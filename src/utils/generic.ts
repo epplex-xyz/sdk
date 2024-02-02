@@ -61,8 +61,9 @@ export async function sendAndConfirmRawTransaction(
     wallet?: NodeWallet,
     signers: Keypair[] = [],
     commitment: Commitment = "confirmed",
-    confirmOptions: SendOptions = {skipPreflight: false}
-): Promise<TransactionSignature> {
+    logTx: boolean = true,
+    confirmOptions: SendOptions = {skipPreflight: false},
+): Promise<TransactionSignature | null> {
     const latestBlockhash = await connection.getLatestBlockhash(commitment);
     tx.recentBlockhash = latestBlockhash.blockhash;
     tx.lastValidBlockHeight = latestBlockhash.lastValidBlockHeight;
@@ -79,7 +80,9 @@ export async function sendAndConfirmRawTransaction(
         }
 
         txId = await connection.sendRawTransaction(tx.serialize(), confirmOptions);
-        console.log("Tx id", txId);
+        if (logTx) {
+            console.log("Tx id", txId);
+        }
 
         const res = (
             await connection.confirmTransaction(
@@ -97,9 +100,10 @@ export async function sendAndConfirmRawTransaction(
             console.log(`Raw transaction ${txId} failed (${JSON.stringify(res.value.err)})`);
             throw res.value.err;
         }
-    } catch (e: any) {
-        console.log("Caught TX error", e);
-    }
 
-    return txId;
+        return txId;
+    } catch (e: any) {
+        console.error("Caught TX error", e);
+        return null;
+    }
 }
