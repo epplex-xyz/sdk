@@ -57,6 +57,7 @@ class EpplexProvider {
         name,
         symbol,
         uri,
+        computeBudget = 300_000
     }: CreateWhitelistMintTxParams) {
         const permanentDelegate = getProgramDelegate();
         const payer = this.provider.wallet.publicKey;
@@ -81,9 +82,12 @@ class EpplexProvider {
             epplexCore: CORE_PROGRAM_ID,
         }).instruction();
 
-        const ixs = [ComputeBudgetProgram.setComputeUnitLimit({
-            units: 250_000
-        }), tokenCreateIx];
+        const ixs = [
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: computeBudget
+            }),
+            tokenCreateIx
+        ];
 
         return new Transaction().add(...ixs);
     }

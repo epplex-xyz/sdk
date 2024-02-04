@@ -18,6 +18,7 @@ export interface CreateWhitelistMintTxParams {
     name: string,
     symbol: string,
     uri: string
+    computeBudget?: number
 }
 
 export interface TokenGameVoteTxParams {
