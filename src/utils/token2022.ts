@@ -1,5 +1,6 @@
 import {Connection, PublicKey, TransactionInstruction} from "@solana/web3.js";
 import {
+    createAssociatedTokenAccountInstruction,
     createCloseAccountInstruction,
     createTransferCheckedInstruction, getAssociatedTokenAddressSync,
     TOKEN_2022_PROGRAM_ID
@@ -16,9 +17,9 @@ export type NftTransferTxInputs = {
     allowOwnerOffCurveDestination?: boolean;
 };
 
-export async function nftTransferIxs(
+export function nftTransferIxs(
     inputs: NftTransferTxInputs
-): Promise<TransactionInstruction[]> {
+): TransactionInstruction[] {
     const allowOwnerOffCurveSource = inputs.allowOwnerOffCurveSource ?? false;
     const allowOwnerOffCurveDestination = inputs.allowOwnerOffCurveDestination ?? false;
 
@@ -36,18 +37,15 @@ export async function nftTransferIxs(
         TOKEN_2022_PROGRAM_ID
     );
 
-    // Must create the destination ATA
-    const ix = await tryCreateATAIx(
-        inputs.connection,
-        inputs.payer, // payer
-        destinationAta,
-        inputs.destination, // owner
-        inputs.mint, // mint
-        TOKEN_2022_PROGRAM_ID
-    );
-
-    const ixs = [
-        ...ix,
+    return [
+        // Must create the destination ATA
+        createAssociatedTokenAccountInstruction(
+            inputs.payer,
+            destinationAta,
+            inputs.destination,
+            inputs.mint,
+            TOKEN_2022_PROGRAM_ID
+        ),
         createTransferCheckedInstruction(
             sourceAta, // from
             inputs.mint,
@@ -66,6 +64,4 @@ export async function nftTransferIxs(
             TOKEN_2022_PROGRAM_ID
         )
     ]
-
-    return ixs
 }
