@@ -26,6 +26,7 @@
   "strict": true,
   "outDir": "./lib",
   "scripts": {
+    "pub": "yarn build && npm publish --access public",
     "start": "ts-node src/index.ts",
     "build": "rm -rf lib && tsc",
     "test": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/*.spec.ts",
