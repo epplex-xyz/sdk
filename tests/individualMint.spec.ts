@@ -6,6 +6,13 @@ import {getGlobalCollectionConfig, getMint} from "../src/constants/coreSeeds";
 import {sendAndConfirmRawTransaction} from "../lib";
 
 const {wallet, burgerProvider, coreProvider} = getSetup();
+const metadata = {
+    expiryDate: (Math.floor((new Date()).getTime() / 1000) + 3600).toString(), // in 1 hr
+    name: "(SDK tests) Ephemeral burger",
+    symbol: "EP",
+    uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
+}
+
 
 describe('Environment setup', () => {
     const destroyTimestamp: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
@@ -32,11 +39,14 @@ describe('Environment setup', () => {
 
 
     it('Mint token', async () => {
-        const tx = await burgerProvider.createWhitelistMintTx(
-            destroyTimestamp,
+        const tx = await burgerProvider.createWhitelistMintTx({
+            expiryDate: metadata.expiryDate,
+            name: metadata.name,
+            symbol: metadata.symbol,
+            uri: metadata.uri,
             mint,
-            globalCollectionConfigAddress
-        )
+            globalCollectionConfig: globalCollectionConfigAddress,
+        })
 
         await sendAndConfirmRawTransaction(
             burgerProvider.provider.connection,
@@ -46,8 +56,6 @@ describe('Environment setup', () => {
             []
         );
 
-
-        const metadata = await getTokenMetadata(burgerProvider.provider.connection, mint);
-        console.log("Individual Mint Metadata", metadata);
+        console.log("Individual Mint Metadata", await getTokenMetadata(burgerProvider.provider.connection, mint));
     });
 });

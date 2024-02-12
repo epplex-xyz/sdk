@@ -1,4 +1,3 @@
-import {PublicKey} from "@solana/web3.js";
 import {getTokenMetadata} from "@solana/spl-token";
 import {expect} from "chai";
 import {CONNECTION, getSetup} from "./setup";
@@ -6,14 +5,13 @@ import {sendAndConfirmRawTransaction} from "../lib";
 import {getCollectionConfig, getCollectionMint, getGlobalCollectionConfig, getMint} from "../src/constants/coreSeeds";
 import {getProgramDelegate} from "../src/constants/burgerSeeds";
 import {verifyInCollection} from "../src/utils/collection";
+import {BN} from "@coral-xyz/anchor";
 
 /*
 ******* SETUP
 */
 const {wallet, burgerProvider, coreProvider} = getSetup();
-
-// In 1 hour
-const destroyTimestamp: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
+const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
 const nTokens = 2
 const collection = {
     collectionMintNme: "SDK Test",
@@ -66,41 +64,45 @@ describe('Test Collection', () => {
     });
 
     it('Create token mint into collection', async () => {
+        const collectionConfigData = await coreProvider
+            .program
+            .account
+            .collectionConfig
+            .fetch(collectionConfigAddress);
+        const mintCount = Number(collectionConfigData.mintCount);
+
         for (let i = 0; i < nTokens; i++) {
-
-            const collectionConfigData = await coreProvider
-                .program
-                .account
-                .collectionConfig
-                .fetch(collectionConfigAddress);
-
-            const mint = getMint(globalCollectionData.collectionCounter, collectionConfigData.mintCount)
+            const newMintCount = mintCount + i;
+            const mint = getMint(
+                globalCollectionData.collectionCounter,
+                new BN(newMintCount)
+            );
 
             const tx = await burgerProvider.createCollectionMintTx({
-                expiryDate: destroyTimestamp,
-                collectionCounter: globalCollectionData.collectionCounter,
+                expiryDate,
+                collectionId: Number(globalCollectionData.collectionCounter),
                 mint,
                 name: `${collection.collectionMintNme} ${i + 1}`,
-                symbol: ,
-            }
-                destroyTimestamp,
-                collectionCounter,
-                mint,
-            )
+                symbol: collection.collectionMintSymbol,
+                uri: collection.collectionMintUri,
+            })
 
-            // const mint = await mintTokenIntoCollection({
-            //         provider,
-            //         burgerProgram,
-            //         coreProvider,
-            //         globalCollectionData.collectionCounter,
-            //         destroyTimestamp
-            //     mintCount: collectionConfigData.mintCount,
-            // });
+            await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
 
-            const metadata = await getTokenMetadata(burgerProvider.provider.connection, mint);
-            expect(metadata.additionalMetadata.find(md => md[0] == "collection_id")[1]).to.equal(globalCollectionData.collectionCounter.toString());
-            expect(metadata.additionalMetadata.find(md => md[0] == "mint_count")[1]).to.equal(i.toString());
-            expect(await verifyInCollection(burgerProvider.provider.connection, mint)).to.equal(true);
+
+            // Verification
+            const metadata = await getTokenMetadata(CONNECTION, mint);
+            expect(
+                metadata.additionalMetadata.find(md => md[0] == "collection_id")[1]
+            ).to.equal(globalCollectionData.collectionCounter.toString());
+
+            expect(
+                metadata.additionalMetadata.find(md => md[0] == "mint_count")[1]
+            ).to.equal(i.toString());
+
+            expect(
+                await verifyInCollection(CONNECTION, mint)
+            ).to.equal(true);
         }
 
     });
