@@ -1,54 +1,47 @@
-import fs from "fs";
-import path from "path";
-import {Keypair} from "@solana/web3.js";
+import {getGlobalCollectionConfig} from "../src/constants/coreSeeds";
+import {sendAndConfirmRawTransaction} from "../lib";
+import {CONNECTION} from "./setup";
+import {getProgramDelegate} from "../lib/constants/seeds";
+import {CoreProvider, EpplexProvider} from "../src";
 
-const DEFAULT_KEY_DIR_NAME = ".local_keys";
-export function loadOrGenerateKeypair(fileName: string, dirName: string = DEFAULT_KEY_DIR_NAME) {
-    try {
-        // compute the path to locate the file
-        const searchPath = path.join(dirName, `${fileName}.json`);
-        let keypair = Keypair.generate();
-
-        // attempt to load the keypair from the file
-        if (fs.existsSync(searchPath)) keypair = loadKeypairFromFile(searchPath);
-        // when unable to locate the keypair, save the new one
-        else saveKeypairToFile(keypair, fileName, dirName);
-
-        return keypair;
-    } catch (err) {
-        console.error("loadOrGenerateKeypair:", err);
-        throw err;
-    }
-}
-
-export function loadKeypairFromFile(absPath: string) {
-    if (!absPath) throw Error("No path provided");
-    if (!fs.existsSync(absPath)) throw Error("File does not exist.");
-
-    // load the keypair from the file
-    const keyfileBytes = JSON.parse(fs.readFileSync(absPath, { encoding: "utf-8" }));
-    // parse the loaded secretKey into a valid keypair
-    const keypair = Keypair.fromSecretKey(new Uint8Array(keyfileBytes));
-    return keypair;
-}
-
-export function saveKeypairToFile(
-    keypair: Keypair,
-    fileName: string,
-    dirName: string = DEFAULT_KEY_DIR_NAME,
+export function trySetupGlobalCollectionConfig(
+    provider: CoreProvider,
+    wallet,
+    connection = CONNECTION,
 ) {
-    fileName = path.join(dirName, `${fileName}.json`);
+    it('Try create global collection config', async () => {
+        try {
+            const globalCollectionData = await provider
+                .program
+                .account
+                .globalCollectionConfig
+                .fetch(getGlobalCollectionConfig());
 
-    // create the `dirName` directory, if it does not exists
-    if (!fs.existsSync(`./${dirName}/`)) fs.mkdirSync(`./${dirName}/`);
-
-    // remove the current file, if it already exists
-    if (fs.existsSync(fileName)) fs.unlinkSync(fileName);
-
-    // write the `secretKey` value as a string
-    fs.writeFileSync(fileName, `[${keypair.secretKey.toString()}]`, {
-        encoding: "utf-8",
+            console.log("Global collection config data", globalCollectionData)
+        } catch (e) {
+            const tx = await provider.createGlobalCollectionConfigTx();
+            await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+        }
     });
+}
 
-    return fileName;
+export function trySetupBurgerProgramDelegate(
+    provider: EpplexProvider,
+    wallet,
+    connection = CONNECTION,
+) {
+    it("Try create burger delegate ", async() => {
+        try {
+            const burgerDelegate = getProgramDelegate();
+            const burgerDelegateData = await provider
+                .program
+                .account
+                .programDelegate
+                .fetch(burgerDelegate);
+            console.log("Program Delegate Data", burgerDelegateData)
+        } catch (e) {
+            const tx = await provider.createProgramDelegateTx();
+            await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+        }
+    })
 }
