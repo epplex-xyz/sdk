@@ -6,7 +6,8 @@ import {
   EpNFT,
   BurnTxParams,
   CreateWhitelistMintTxParams,
-  TokenGameVoteTxParams
+  TokenGameVoteTxParams,
+  CreateCollectionTxParams
 } from "./types";
 
 import {
@@ -32,6 +33,7 @@ export {
   BurnTxParams,
   CreateWhitelistMintTxParams,
   TokenGameVoteTxParams,
+  CreateCollectionTxParams,
 
   // Utils
   nftTransferIxs,

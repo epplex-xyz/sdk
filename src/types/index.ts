@@ -5,10 +5,18 @@ import {
     TokenGameVoteTxParams
 } from "./EpplexProviderTypes";
 
+import {
+    CreateCollectionTxParams,
+} from "./CoreProviderTypes";
+
 export {
+    // EpplexProviderTypes
     EpNFT,
     BurnTxParams,
     CreateWhitelistMintTxParams,
-    TokenGameVoteTxParams
+    TokenGameVoteTxParams,
+
+    // CoreProviderTypes
+    CreateCollectionTxParams
 };
 

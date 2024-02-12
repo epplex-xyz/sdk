@@ -1,6 +1,4 @@
-import {Keypair, PublicKey} from "@solana/web3.js";
-import { RawAccount } from "@solana/spl-token";
-import {TokenMetadata} from "@solana/spl-token-metadata";
+import {PublicKey} from "@solana/web3.js";
 
 export interface CreateCollectionTxParams {
     collectionConfigAddress: PublicKey,
