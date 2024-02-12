@@ -5,19 +5,21 @@ import {EpplexProvider, EpNFTService} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
 import {encryptMessage} from "../src/utils/encrypt";
 import assert = require("node:assert");
+import {CONNECTION} from "./connection";
 
-const COMMITMENT = "confirmed";
-const connection = new Connection(
-    clusterApiUrl("devnet"),
-    COMMITMENT
-);
+// This works
+// import dotenv from "dotenv";
+// import path from "path";
+// dotenv.config({path: path.resolve(__dirname, "../.env.local")})
+// console.log("prces", process.env.MINT_POOL_KEYPAIR)
 
-// const testKeypair = loadOrGenerateKeypair("mintPool");
+
+// const testKeypair = loadOrGenerateKeypair("epplex_PAYER_ADMIN.json");
 const testKeypair = Keypair.generate()
 const wallet = new NodeWallet(testKeypair);
 const epplexProvider = new EpplexProvider(
     wallet,
-    connection,
+    CONNECTION,
     {skipPreflight: true}
 );
 
@@ -32,16 +34,6 @@ describe("Testing Burger Program", () => {
         symbol: "EP",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
     }
-    const secretKey = "asdfe12j0Cs"
-
-    // it("Airdrop", async () => {
-    //     const tx = await connection.requestAirdrop(
-    //         wallet.publicKey,
-    //         1 * LAMPORTS_PER_SOL
-    //     );
-    //     await new Promise((r) => setTimeout(r, 5000));
-    //     console.log(tx);
-    // });
 
     it("Create whitelist mint", async() => {
       const tx = await epplexProvider.createWhitelistMintTx({
@@ -51,27 +43,27 @@ describe("Testing Burger Program", () => {
           symbol: metadata.symbol,
           uri: metadata.uri
       })
-      await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [mint])
+      await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [mint])
 
       console.log("\n")
     })
 
     it("Get epNFTs", async() => {
-        const epNFTs = await EpNFTService.getEpNFTs(connection, wallet.publicKey)
+        const epNFTs = await EpNFTService.getEpNFTs(CONNECTION, wallet.publicKey)
         assert.ok(epNFTs)
         assert.equal(epNFTs.length > 0, true)
         console.log("\n")
     })
 
     it("Check is Burger NFT", async() => {
-        const check = await EpNFTService.isBurgerNFT(connection, mint.publicKey)
+        const check = await EpNFTService.isBurgerNFT(CONNECTION, mint.publicKey)
         assert.equal(true, check)
 
         console.log("\n")
     })
 
     it("Check not Burger NFT", async() => {
-        const check = await EpNFTService.isBurgerNFT(connection, Keypair.generate().publicKey)
+        const check = await EpNFTService.isBurgerNFT(CONNECTION, Keypair.generate().publicKey)
         assert.equal(false, check)
 
         console.log("\n")
@@ -87,7 +79,7 @@ describe("Testing Burger Program", () => {
             message,
             owner: owner,
         })
-        await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
 
         console.log("\n")
     })
@@ -98,7 +90,7 @@ describe("Testing Burger Program", () => {
             mint: mint.publicKey,
             owner: owner,
         })
-        await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
 
         console.log("\n")
     })
