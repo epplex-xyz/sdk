@@ -1,11 +1,13 @@
 import EpplexProvider from "./EpplexProvider";
+import CoreProvider from "./CoreProvider";
 import EpNFTService, { epNFTOptions, defaultEpNFTOptions} from "./EpNFTService";
 
 import {
   EpNFT,
   BurnTxParams,
   CreateWhitelistMintTxParams,
-  TokenGameVoteTxParams
+  TokenGameVoteTxParams,
+  CreateCollectionTxParams
 } from "./types";
 
 import {
@@ -19,6 +21,7 @@ import {
 export {
   // epplex provider
   EpplexProvider,
+  CoreProvider,
 
   // epNFTservice
   EpNFTService,
@@ -30,6 +33,7 @@ export {
   BurnTxParams,
   CreateWhitelistMintTxParams,
   TokenGameVoteTxParams,
+  CreateCollectionTxParams,
 
   // Utils
   nftTransferIxs,

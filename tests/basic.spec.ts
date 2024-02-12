@@ -1,102 +1,78 @@
-import {clusterApiUrl, Connection, LAMPORTS_PER_SOL, Keypair} from "@solana/web3.js";
-import {loadOrGenerateKeypair} from "./testUtils";
-import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
-import {EpplexProvider, EpNFTService} from "../src";
+import {Keypair} from "@solana/web3.js";
+import {EpNFTService} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
-import {encryptMessage} from "../src/utils/encrypt";
+import {CONNECTION, getSetup} from "./setup";
 import assert = require("node:assert");
+import {getGlobalCollectionConfig} from "../src/constants/coreSeeds";
 
-const COMMITMENT = "confirmed";
-const connection = new Connection(
-    "http://127.0.0.1:8899",
-    // clusterApiUrl("devnet"),
-    COMMITMENT
-);
+const {wallet, burgerProvider} = getSetup();
 
-const testKeypair = loadOrGenerateKeypair("mintPool");
-// const testKeypair = Keypair.generate()
-const wallet = new NodeWallet(testKeypair);
-const epplexProvider = new EpplexProvider(
-    wallet,
-    connection,
-    {skipPreflight: true}
-);
+const mint = Keypair.generate();
+const metadata = {
+    expiryDate: (Math.floor((new Date()).getTime() / 1000) + 3600).toString(), // 1 hr
+    name: "(SDK tests) Ephemeral burger",
+    symbol: "EP",
+    uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
+}
 
 describe("Testing Burger Program", () => {
-    // Expiry date in 1 hr
-    const expiryDate = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
-    console.log("destroy", expiryDate);
-    const mint = Keypair.generate();
-    const metadata = {
-        expiryDate: expiryDate,
-        name: "(SDK tests) Ephemeral burger",
-        symbol: "EP",
-        uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
-    }
-
-    // it("Airdrop", async () => {
-    //     const tx = await connection.requestAirdrop(
-    //         wallet.publicKey,
-    //         1 * LAMPORTS_PER_SOL
-    //     );
-    //     await new Promise((r) => setTimeout(r, 5000));
-    //     console.log(tx);
-    // });
-
+    // TODO this is outdated
     it("Create whitelist mint", async() => {
-      const tx = await epplexProvider.createWhitelistMintTx({
+      const tx = await burgerProvider.createWhitelistMintTx({
           expiryDate: metadata.expiryDate,
-          mint: mint,
+          mint: mint.publicKey, //TODO
           name: metadata.name,
           symbol: metadata.symbol,
-          uri: metadata.uri
+          uri: metadata.uri,
+          globalCollectionConfig: getGlobalCollectionConfig(),
       })
-      await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [mint])
+      await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [mint])
 
       console.log("\n")
     })
 
     it("Get epNFTs", async() => {
-        const epNFTs = await EpNFTService.getEpNFTs(connection, wallet.publicKey)
+        const epNFTs = await EpNFTService.getEpNFTs(CONNECTION, wallet.publicKey)
         assert.ok(epNFTs)
         assert.equal(epNFTs.length > 0, true)
         console.log("\n")
     })
 
+    // TODO outdated
     it("Check is Burger NFT", async() => {
-        const check = await EpNFTService.isBurgerNFT(connection, mint.publicKey)
+        const check = await EpNFTService.isBurgerNFT(CONNECTION, mint.publicKey)
         assert.equal(true, check)
 
         console.log("\n")
     })
 
+    // TODO outdated
     it("Check not Burger NFT", async() => {
-        const check = await EpNFTService.isBurgerNFT(connection, Keypair.generate().publicKey)
+        const check = await EpNFTService.isBurgerNFT(CONNECTION, Keypair.generate().publicKey)
         assert.equal(false, check)
 
         console.log("\n")
     })
 
-
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;
-        const tx = await epplexProvider.tokenGameVoteTx({
+        const tx = await burgerProvider.tokenGameVoteTx({
             mint: mint.publicKey,
             message: "hello",
             owner: owner,
         })
-        await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
 
         console.log("\n")
     })
 
     it("Token Burn", async() => {
         const owner = wallet.publicKey;
-        const tx = await epplexProvider.burnTokenTx({
+        const tx = await burgerProvider.burnTokenTx({
             mint: mint.publicKey,
             owner: owner,
         })
-        await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
 
         console.log("\n")
     })

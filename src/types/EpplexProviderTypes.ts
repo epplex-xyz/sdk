@@ -14,12 +14,25 @@ export type EpNFT = RawAccount & Partial<TokenMetadataField> & Partial<TokenAcco
 
 export interface CreateWhitelistMintTxParams {
     expiryDate: string,
-    mint: Keypair,
+    name: string,
+    symbol: string,
+    uri: string
+    mint: PublicKey,
+    globalCollectionConfig?: PublicKey,
+    computeBudget?: number
+}
+
+// Maybe should extend the above
+export interface CreateCollectionMintTxTxParams {
+    collectionId: number
+    expiryDate: string,
+    mint: PublicKey,
     name: string,
     symbol: string,
     uri: string
     computeBudget?: number
 }
+
 
 export interface TokenGameVoteTxParams {
     mint: PublicKey,

@@ -1,6 +1,28 @@
 export type EpplexCore = {
   "version": "0.1.0",
   "name": "epplex_core",
+  "constants": [
+    {
+      "name": "SEED_COLLECTION_CONFIG",
+      "type": "bytes",
+      "value": "[67, 79, 78, 70, 73, 71]"
+    },
+    {
+      "name": "SEED_GLOBAL_COLLECTION_CONFIG",
+      "type": "bytes",
+      "value": "[71, 76, 79, 66, 65, 76, 95, 67, 79, 76, 76, 69, 67, 84, 73, 79, 78]"
+    },
+    {
+      "name": "SEED_MINT",
+      "type": "bytes",
+      "value": "[77, 73, 78, 84]"
+    },
+    {
+      "name": "SEED_COLLECTION_MINT",
+      "type": "bytes",
+      "value": "[67, 79, 76, 76, 69, 67, 84, 73, 79, 78, 95, 77, 73, 78, 84]"
+    }
+  ],
   "instructions": [
     {
       "name": "tokenMint",
@@ -8,9 +30,9 @@ export type EpplexCore = {
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": true,
+          "isSigner": false,
           "docs": [
-            "CHECK"
+            "CHECK this account is created in the instruction body, so no need to check data layout"
           ]
         },
         {
@@ -18,7 +40,7 @@ export type EpplexCore = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "CHECK"
+            "CHECK this account is created in the instruction body, so no need to check data layout"
           ]
         },
         {
@@ -26,13 +48,18 @@ export type EpplexCore = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "CHECK"
+            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
           ]
         },
         {
           "name": "updateAuthority",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "globalCollectionConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "payer",
@@ -70,6 +97,86 @@ export type EpplexCore = {
       ]
     },
     {
+      "name": "collectionMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
+          ]
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "This is the admin account assigned when the collection is created."
+          ]
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenCollectionCreateParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "collectionCreate",
       "accounts": [
         {
@@ -89,6 +196,42 @@ export type EpplexCore = {
           "name": "payer",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "systemProgram",
@@ -175,6 +318,10 @@ export type EpplexCore = {
           {
             "name": "collectionSymbol",
             "type": "string"
+          },
+          {
+            "name": "mintCount",
+            "type": "u64"
           }
         ]
       }
@@ -202,6 +349,18 @@ export type EpplexCore = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
           {
             "name": "authority",
             "type": "publicKey"
@@ -273,6 +432,41 @@ export type EpplexCore = {
       }
     },
     {
+      "name": "TokenCollectionCreateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "collectionId",
+            "type": "u64"
+          },
+          {
+            "name": "additionalMetadata",
+            "type": {
+              "vec": {
+                "array": [
+                  "string",
+                  2
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "MintError",
       "type": {
         "kind": "enum",
@@ -304,6 +498,28 @@ export type EpplexCore = {
 export const IDL: EpplexCore = {
   "version": "0.1.0",
   "name": "epplex_core",
+  "constants": [
+    {
+      "name": "SEED_COLLECTION_CONFIG",
+      "type": "bytes",
+      "value": "[67, 79, 78, 70, 73, 71]"
+    },
+    {
+      "name": "SEED_GLOBAL_COLLECTION_CONFIG",
+      "type": "bytes",
+      "value": "[71, 76, 79, 66, 65, 76, 95, 67, 79, 76, 76, 69, 67, 84, 73, 79, 78]"
+    },
+    {
+      "name": "SEED_MINT",
+      "type": "bytes",
+      "value": "[77, 73, 78, 84]"
+    },
+    {
+      "name": "SEED_COLLECTION_MINT",
+      "type": "bytes",
+      "value": "[67, 79, 76, 76, 69, 67, 84, 73, 79, 78, 95, 77, 73, 78, 84]"
+    }
+  ],
   "instructions": [
     {
       "name": "tokenMint",
@@ -311,9 +527,9 @@ export const IDL: EpplexCore = {
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": true,
+          "isSigner": false,
           "docs": [
-            "CHECK"
+            "CHECK this account is created in the instruction body, so no need to check data layout"
           ]
         },
         {
@@ -321,7 +537,7 @@ export const IDL: EpplexCore = {
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "CHECK"
+            "CHECK this account is created in the instruction body, so no need to check data layout"
           ]
         },
         {
@@ -329,13 +545,18 @@ export const IDL: EpplexCore = {
           "isMut": false,
           "isSigner": false,
           "docs": [
-            "CHECK"
+            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
           ]
         },
         {
           "name": "updateAuthority",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "globalCollectionConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "payer",
@@ -373,6 +594,86 @@ export const IDL: EpplexCore = {
       ]
     },
     {
+      "name": "collectionMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
+          ]
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "This is the admin account assigned when the collection is created."
+          ]
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenCollectionCreateParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "collectionCreate",
       "accounts": [
         {
@@ -392,6 +693,42 @@ export const IDL: EpplexCore = {
           "name": "payer",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ]
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "systemProgram",
@@ -478,6 +815,10 @@ export const IDL: EpplexCore = {
           {
             "name": "collectionSymbol",
             "type": "string"
+          },
+          {
+            "name": "mintCount",
+            "type": "u64"
           }
         ]
       }
@@ -505,6 +846,18 @@ export const IDL: EpplexCore = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
           {
             "name": "authority",
             "type": "publicKey"
@@ -560,6 +913,41 @@ export const IDL: EpplexCore = {
           {
             "name": "uri",
             "type": "string"
+          },
+          {
+            "name": "additionalMetadata",
+            "type": {
+              "vec": {
+                "array": [
+                  "string",
+                  2
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenCollectionCreateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "collectionId",
+            "type": "u64"
           },
           {
             "name": "additionalMetadata",

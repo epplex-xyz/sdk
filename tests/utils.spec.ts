@@ -3,6 +3,7 @@ import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider, nftTransferIxs} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
 
+// TODO these needs to be deleted
 const COMMITMENT = "confirmed";
 const connection = new Connection(
     clusterApiUrl("devnet"),
@@ -28,7 +29,6 @@ describe("Testing Burger Program", () => {
         symbol: "EP",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
     }
-    const secretKey = "asdfe12j0Cs"
 
     it("Airdrop", async () => {
         const tx = await connection.requestAirdrop(
@@ -39,10 +39,11 @@ describe("Testing Burger Program", () => {
         console.log(tx);
     });
 
+    // TODO outdated
     it("Create whitelist mint", async() => {
       const tx = await epplexProvider.createWhitelistMintTx({
           expiryDate: metadata.expiryDate,
-          mint: mint,
+          mint: mint.publicKey, //TODO
           name: metadata.name,
           symbol: metadata.symbol,
           uri: metadata.uri
