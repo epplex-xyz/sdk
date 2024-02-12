@@ -22,17 +22,9 @@ import {getMintOwner, tryCreateATAIx} from "./utils/generic";
 import {getProgramDelegate, getTokenBurgerMetadata} from "./constants/seeds";
 import {VAULT} from "./constants/keys";
 import {BurnTxParams, CreateWhitelistMintTxParams, TokenGameVoteTxParams} from "./types/EpplexProviderTypes";
+import {EpplexProviderWallet} from "./types/WalletProvider";
 
-
-/**
- * Wallet interface for objects that can be used to sign provider transactions.
- */
-export interface EpplexProviderWallet {
-    publicKey: PublicKey;
-    signTransaction < T extends Transaction | VersionedTransaction > (transaction: T) : Promise < T > ;
-    signAllTransactions < T extends Transaction | VersionedTransaction > (transactions: T[]) : Promise < T[] > ;
-}
-
+// This is more like Burger Program
 class EpplexProvider {
     provider: anchor.AnchorProvider;
     program: anchor.Program < EpplexBurger >

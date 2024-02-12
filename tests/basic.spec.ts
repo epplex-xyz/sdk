@@ -1,5 +1,5 @@
 import {clusterApiUrl, Connection, LAMPORTS_PER_SOL, Keypair} from "@solana/web3.js";
-// import {loadOrGenerateKeypair} from "./testUtils";
+import {loadOrGenerateKeypair} from "./testUtils";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider, EpNFTService} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
@@ -72,11 +72,9 @@ describe("Testing Burger Program", () => {
 
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;
-        const message = encryptMessage("hello", secretKey)
-        console.log('mesage', message)
         const tx = await epplexProvider.tokenGameVoteTx({
             mint: mint.publicKey,
-            message,
+            message: "hello",
             owner: owner,
         })
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
