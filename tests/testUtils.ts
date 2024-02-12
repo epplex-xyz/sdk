@@ -36,12 +36,11 @@ export function trySetupBurgerProgramDelegate(
 ) {
     it("Try create burger delegate ", async() => {
         try {
-            const burgerDelegate = getProgramDelegate();
             const burgerDelegateData = await provider
                 .program
                 .account
                 .programDelegate
-                .fetch(burgerDelegate);
+                .fetch(getProgramDelegate());
             console.log("Program Delegate Data", burgerDelegateData)
         } catch (e) {
             const tx = await provider.createProgramDelegateTx();

@@ -1,4 +1,4 @@
-import {Keypair, PublicKey} from "@solana/web3.js";
+import {PublicKey} from "@solana/web3.js";
 import { RawAccount } from "@solana/spl-token";
 import {TokenMetadata} from "@solana/spl-token-metadata";
 

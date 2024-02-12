@@ -18,6 +18,7 @@ export const CONNECTION = new Connection(
     // clusterApiUrl("devnet"),
     COMMITMENT
 );
+console.log("CONNECTION", CONNECTION.rpcEndpoint)
 
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 
