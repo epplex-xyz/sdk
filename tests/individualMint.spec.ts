@@ -13,7 +13,7 @@ describe('Individual mint', () => {
     trySetupGlobalCollectionConfig(coreProvider, wallet);
     trySetupBurgerProgramDelegate(burgerProvider, wallet);
 
-    let mint;
+    let mint: PublicKey;
     it('Mint token', async () => {
         console.log("\n \n");
         const globalCollectionData = await coreProvider
@@ -38,7 +38,7 @@ describe('Individual mint', () => {
     it("Transfer NFT", async() => {
         const ixs = nftTransferIxs({
             connection: CONNECTION,
-            mint: mint.publicKey,
+            mint: mint,
             source: wallet.publicKey,
             destination: new PublicKey("2N6aJDX1TNs6RKkPsuufbAe4JjRAZPs1iLPcEUL4DX4z"),
             payer: wallet.publicKey,
