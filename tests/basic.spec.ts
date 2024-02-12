@@ -1,19 +1,13 @@
 import {Keypair} from "@solana/web3.js";
-import {EpNFTService} from "../src";
-import {sendAndConfirmRawTransaction} from "../src/utils/generic";
+import {EpNFTService, getGlobalCollectionConfig, sendAndConfirmRawTransaction} from "../src";
 import {CONNECTION, getSetup} from "./setup";
-import assert = require("node:assert");
-import {getGlobalCollectionConfig} from "../src/constants/coreSeeds";
+import {assert} from "chai";
+import {METADATA} from "./metadata";
 
 const {wallet, burgerProvider} = getSetup();
 
 const mint = Keypair.generate();
-const metadata = {
-    expiryDate: (Math.floor((new Date()).getTime() / 1000) + 3600).toString(), // 1 hr
-    name: "(SDK tests) Ephemeral burger",
-    symbol: "EP",
-    uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
-}
+const metadata = METADATA();
 
 describe("Testing Burger Program", () => {
     // TODO this is outdated

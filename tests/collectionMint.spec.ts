@@ -1,10 +1,15 @@
 import {getTokenMetadata} from "@solana/spl-token";
 import {expect} from "chai";
 import {CONNECTION, getSetup} from "./setup";
-import {sendAndConfirmRawTransaction} from "../lib";
-import {getCollectionConfig, getCollectionMint, getGlobalCollectionConfig, getMint} from "../src/constants/coreSeeds";
-import {getProgramDelegate} from "../src/constants/burgerSeeds";
-import {verifyInCollection} from "../src/utils/collection";
+import {
+    EpNFTService,
+    getCollectionConfig,
+    getCollectionMint,
+    getGlobalCollectionConfig,
+    getMint,
+    getProgramDelegate,
+    sendAndConfirmRawTransaction
+} from "../src";
 import {BN} from "@coral-xyz/anchor";
 import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
 
@@ -90,7 +95,7 @@ describe('Test Collection', () => {
             ).to.equal(i.toString());
 
             expect(
-                await verifyInCollection(CONNECTION, mint)
+                await EpNFTService.verifyInCollection(CONNECTION, mint)
             ).to.equal(true);
         }
     });

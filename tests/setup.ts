@@ -12,9 +12,7 @@ import {CoreProvider, EpplexProvider} from "../src";
 
 
 const COMMITMENT = "confirmed";
-
 const CONFIRM_OPTIONS = {skipPreflight: true}
-
 export const CONNECTION = new Connection(
     "http://127.0.0.1:8899",
     // clusterApiUrl("devnet"),

@@ -2,10 +2,8 @@ import {BN} from "@coral-xyz/anchor";
 import {getTokenMetadata} from "@solana/spl-token";
 import {CONNECTION, getSetup} from "./setup";
 import {METADATA} from "./metadata";
-import {getGlobalCollectionConfig, getMint} from "../src/constants/coreSeeds";
-import {sendAndConfirmRawTransaction} from "../lib";
+import {sendAndConfirmRawTransaction, getGlobalCollectionConfig, getMint, nftTransferIxs} from "../src";
 import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
-import {nftTransferIxs} from "../src";
 import {PublicKey, Transaction} from "@solana/web3.js";
 
 const {wallet, burgerProvider, coreProvider} = getSetup();
