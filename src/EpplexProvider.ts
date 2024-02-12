@@ -15,7 +15,7 @@ import {
     TOKEN_2022_PROGRAM_ID,
     TOKEN_PROGRAM_ID
 } from "@solana/spl-token";
-import {EpplexBurger, IDL as BurgerIdl} from "./types/epplexBurgerTypes";
+import {EpplexBurger, IDL as BurgerIdl} from "./types/epplex_burger";
 import {BURGER_PROGRAM_ID, CORE_PROGRAM_ID} from "./constants/ids";
 import {getMintOwner, tryCreateATAIx} from "./utils/generic";
 import {getProgramDelegate, getTokenBurgerMetadata} from "./constants/burgerSeeds";

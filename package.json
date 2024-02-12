@@ -1,59 +1,65 @@
 {
-  "name": "@epplex-xyz/sdk",
-  "author": "epPlex",
-  "version": "0.1.17",
-  "description": "epPlex Typescript SDK",
-  "license": "MIT",
-  "homepage": "https://github.com/epplex-xyz/sdk",
-  "bugs": {
-    "url": "https://github.com/epplex-xyz/sdk/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/epplex-xyz/sdk.git"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "keywords": [
-    "Solana",
-    "epPlex",
-    "SDK"
-  ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "declaration": true,
-  "strict": true,
-  "outDir": "./lib",
-  "scripts": {
-    "dry": "yarn build && npm publish --dry-run",
-    "pub": "yarn build && npm publish --access public",
-    "start": "ts-node src/index.ts",
-    "build": "rm -rf lib && tsc",
-    "airdrop": "solana airdrop 50 -u localhost -k .local_keys/epplex_PAYER_ADMIN.json",
-    "test": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/*.spec.ts",
-    "test-utils": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/utils.spec.ts",
-    "test-individual": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/individualMint.spec.ts",
-    "test-collection": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/collectionMint.spec.ts"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.3.4",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.14.0",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "chai": "^4.3.7",
-    "eslint": "^8.56.0",
-    "mocha": "^10.2.0",
-    "nodemon": "^2.0.20",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5",
-    "crypto-js": "^4.2.0"
-  },
-  "dependencies": {
-    "@coral-xyz/anchor": "^0.29.0",
-    "@solana/spl-token": "^0.3.11",
-    "@solana/spl-token-metadata": "^0.1.2",
-    "@solana/wallet-adapter-react": "^0.15.35",
-    "@solana/web3.js": "^1.73.2"
-  }
+	"name": "@epplex-xyz/sdk",
+	"author": "epPlex",
+	"version": "0.1.17",
+	"description": "epPlex Typescript SDK",
+	"license": "MIT",
+	"homepage": "https://github.com/epplex-xyz/sdk",
+	"bugs": {
+		"url": "https://github.com/epplex-xyz/sdk/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/epplex-xyz/sdk.git"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"keywords": [
+		"Solana",
+		"epPlex",
+		"SDK"
+	],
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"declaration": true,
+	"strict": true,
+	"outDir": "./lib",
+	"scripts": {
+		"dry": "yarn build && npm publish --dry-run",
+		"pub": "yarn build && npm publish --access public",
+		"start": "ts-node src/index.ts",
+		"build": "rm -rf lib && tsc",
+		"update-types-burger": "cp ../epPlex/target/types/epplex_burger.ts src/types",
+		"update-types-core": "cp ../epPlex/target/types/epplex_core.ts src/types",
+		"update-types-all": "yarn update-types-burger && yarn update-types-core",
+		"update-idl-burger": "cp ../epPlex/target/idl/epplex_burger.json src/idl",
+		"update-idl-core": "cp ../epPlex/target/idl/epplex_core.json src/idl",
+		"update-idl-all": "yarn update-idl-burger && yarn update-idl-core",
+		"airdrop": "solana airdrop 50 -u localhost -k .local_keys/epplex_PAYER_ADMIN.json",
+		"test": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/*.spec.ts",
+		"test-utils": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/utils.spec.ts",
+		"test-individual": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/individualMint.spec.ts",
+		"test-collection": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/collectionMint.spec.ts"
+	},
+	"devDependencies": {
+		"@types/chai": "^4.3.4",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^18.14.0",
+		"@typescript-eslint/eslint-plugin": "^6.19.1",
+		"chai": "^4.3.7",
+		"eslint": "^8.56.0",
+		"mocha": "^10.2.0",
+		"nodemon": "^2.0.20",
+		"ts-node": "^10.9.1",
+		"typescript": "^4.9.5",
+		"crypto-js": "^4.2.0"
+	},
+	"dependencies": {
+		"@coral-xyz/anchor": "^0.29.0",
+		"@solana/spl-token": "^0.3.11",
+		"@solana/spl-token-metadata": "^0.1.2",
+		"@solana/wallet-adapter-react": "^0.15.35",
+		"@solana/web3.js": "^1.73.2"
+	}
 }
