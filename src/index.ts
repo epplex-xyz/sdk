@@ -18,10 +18,31 @@ import {
   sendAndConfirmRawTransaction,
 } from "./utils/generic";
 
+import {
+  // EpplexProvider
+  getProgramDelegate,
+  getTokenBurgerMetadata,
+
+  // CoreProviderTypes
+  getCollectionConfig,
+  getCollectionMint,
+  getGlobalCollectionConfig,
+  getMint
+} from "./constants";
+
 export {
   // epplex provider
   EpplexProvider,
+  getProgramDelegate,
+  getTokenBurgerMetadata,
+
+  // Cpre
   CoreProvider,
+  getCollectionConfig,
+  getCollectionMint,
+  getGlobalCollectionConfig,
+  getMint,
+
 
   // epNFTservice
   EpNFTService,
