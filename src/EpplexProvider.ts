@@ -28,7 +28,7 @@ import {
 } from "./types/EpplexProviderTypes";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
-import {getCollectionConfig} from "./constants/coreSeeds";
+import {getCollectionConfig, getGlobalCollectionConfig} from "./constants/coreSeeds";
 
 // This is more like Burger Program
 class EpplexProvider {
@@ -107,7 +107,6 @@ class EpplexProvider {
         symbol,
         uri,
         mint,
-        globalCollectionConfig,
         computeBudget = DEFAULT_COMPUTE_BUDGET
     }: CreateWhitelistMintTxParams) {
         const permanentDelegate = getProgramDelegate();
@@ -124,7 +123,7 @@ class EpplexProvider {
             tokenAccount: ata,
             tokenMetadata: getTokenBurgerMetadata(mint),
             permanentDelegate: permanentDelegate,
-            globalCollectionConfig,
+            globalCollectionConfig: getGlobalCollectionConfig(),
             payer: payer,
 
             rent: SYSVAR_RENT_PUBKEY,

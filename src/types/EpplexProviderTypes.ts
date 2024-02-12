@@ -18,7 +18,7 @@ export interface CreateWhitelistMintTxParams {
     symbol: string,
     uri: string
     mint: PublicKey,
-    globalCollectionConfig: PublicKey,
+    globalCollectionConfig?: PublicKey,
     computeBudget?: number
 }
 
