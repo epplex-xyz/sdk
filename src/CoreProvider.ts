@@ -1,18 +1,17 @@
 import * as anchor from "@coral-xyz/anchor";
+import {BN} from "@coral-xyz/anchor";
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
     Connection,
-    PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
 } from "@solana/web3.js";
 import {EpplexCore, IDL as CoreIdl} from "./types/epplexCoreTypes";
-import {BURGER_PROGRAM_ID} from "./constants/ids";
+import {CORE_PROGRAM_ID} from "./constants/ids";
 import {EpplexProviderWallet} from "./types/WalletProvider";
-import {getCollectionMint, getGlobalCollectionConfig} from "./constants/coreSeeds";
-import {BN} from "@coral-xyz/anchor";
+import {getGlobalCollectionConfig} from "./constants/coreSeeds";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
 import {CreateCollectionTxParams} from "./types/CoreProviderTypes";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
@@ -27,7 +26,7 @@ class CoreProvider {
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions()
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = new anchor.Program(CoreIdl, BURGER_PROGRAM_ID, this.provider);
+        this.program = new anchor.Program(CoreIdl, CORE_PROGRAM_ID, this.provider);
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider) : CoreProvider {
@@ -84,16 +83,16 @@ class CoreProvider {
                 authority,
             })
             .accounts({
+                mint,
                 collectionConfig: collectionConfigAddress,
                 globalCollectionConfig: getGlobalCollectionConfig(),
                 payer: this.provider.wallet.publicKey,
-                mint,
                 tokenAccount,
                 updateAuthority: this.program.provider.publicKey,
                 rent: SYSVAR_RENT_PUBKEY,
                 token22Program: TOKEN_2022_PROGRAM_ID,
-                systemProgram: SystemProgram.programId,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                systemProgram: SystemProgram.programId,
             }).instruction();
 
         const ixs= [
