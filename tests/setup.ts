@@ -14,7 +14,12 @@ export const CONNECTION = new Connection(
 );
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN.json");
 
-export function getSetup() {
+interface GetSetupReturn {
+    wallet: NodeWallet,
+    burgerProvider: EpplexProvider,
+    coreProvider: CoreProvider
+}
+export function getSetup(): GetSetupReturn {
     const wallet = new NodeWallet(PAYER_ADMIN);
     const burgerProvider = new EpplexProvider(
         wallet,
