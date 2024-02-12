@@ -18,6 +18,7 @@ describe("Testing Burger Program", () => {
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
     }
 
+    // TODO this is outdated
     it("Create whitelist mint", async() => {
       const tx = await burgerProvider.createWhitelistMintTx({
           expiryDate: metadata.expiryDate,
@@ -51,7 +52,6 @@ describe("Testing Burger Program", () => {
 
         console.log("\n")
     })
-
 
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;

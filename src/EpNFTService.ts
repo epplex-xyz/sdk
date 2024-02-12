@@ -1,7 +1,7 @@
 import {Connection, PublicKey,} from "@solana/web3.js";
 import {AccountLayout, getTokenMetadata} from "@solana/spl-token";
 import {getTokenAccounts} from "./utils/generic";
-import {getTokenBurgerMetadata} from "./constants/seeds";
+import {getTokenBurgerMetadata} from "./constants/burgerSeeds";
 import {EpNFT} from "./types/EpplexProviderTypes";
 
 export interface epNFTOptions {
