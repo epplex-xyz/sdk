@@ -1,7 +1,7 @@
 {
   "name": "@epplex-xyz/sdk",
   "author": "epPlex",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "epPlex Typescript SDK",
   "license": "MIT",
   "homepage": "https://github.com/epplex-xyz/sdk",
@@ -26,6 +26,7 @@
   "strict": true,
   "outDir": "./lib",
   "scripts": {
+    "dry": "yarn build && npm publish --dry-run",
     "pub": "yarn build && npm publish --access public",
     "start": "ts-node src/index.ts",
     "build": "rm -rf lib && tsc",

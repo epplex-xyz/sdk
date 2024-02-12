@@ -4,6 +4,7 @@ import {CONNECTION} from "./setup";
 import {getProgramDelegate} from "../lib/constants/seeds";
 import {CoreProvider, EpplexProvider} from "../src";
 
+// TODO these prolly need to be more generic
 export function trySetupGlobalCollectionConfig(
     provider: CoreProvider,
     wallet,

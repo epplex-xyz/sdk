@@ -4,6 +4,13 @@ import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {CoreProvider, EpplexProvider} from "../src";
 
+/*
+    How to use:
+    1. .local_keys/epplex_PAYER_ADMIN.json needs to exist
+    2. yarn test-collection or another test in package.json
+ */
+
+
 const COMMITMENT = "confirmed";
 
 const CONFIRM_OPTIONS = {skipPreflight: true}
@@ -13,6 +20,7 @@ export const CONNECTION = new Connection(
     // clusterApiUrl("devnet"),
     COMMITMENT
 );
+
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 
 interface GetSetupReturn {
