@@ -1,21 +1,13 @@
-import {clusterApiUrl, Connection, LAMPORTS_PER_SOL, Keypair} from "@solana/web3.js";
+import {Keypair} from "@solana/web3.js";
 import {loadOrGenerateKeypair} from "./testUtils";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
-import {EpplexProvider, EpNFTService} from "../src";
+import {EpNFTService, EpplexProvider} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
-import {encryptMessage} from "../src/utils/encrypt";
-import assert = require("node:assert");
 import {CONNECTION} from "./connection";
-
-// This works
-// import dotenv from "dotenv";
-// import path from "path";
-// dotenv.config({path: path.resolve(__dirname, "../.env.local")})
-// console.log("prces", process.env.MINT_POOL_KEYPAIR)
+import assert = require("node:assert");
 
 
-// const testKeypair = loadOrGenerateKeypair("epplex_PAYER_ADMIN.json");
-const testKeypair = Keypair.generate()
+const testKeypair = loadOrGenerateKeypair("epplex_PAYER_ADMIN.json");
 const wallet = new NodeWallet(testKeypair);
 const epplexProvider = new EpplexProvider(
     wallet,
