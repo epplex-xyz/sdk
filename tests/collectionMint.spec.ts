@@ -1,61 +1,106 @@
 import {PublicKey} from "@solana/web3.js";
 import {getTokenMetadata} from "@solana/spl-token";
 import {expect} from "chai";
-import {getSetup} from "./setup";
+import {CONNECTION, getSetup} from "./setup";
 import {sendAndConfirmRawTransaction} from "../lib";
+import {getCollectionConfig, getCollectionMint, getGlobalCollectionConfig, getMint} from "../src/constants/coreSeeds";
+import {getProgramDelegate} from "../src/constants/burgerSeeds";
+import {verifyInCollection} from "../src/utils/collection";
 
-const {wallet, burgerProvider} = getSetup();
+/*
+******* SETUP
+*/
+const {wallet, burgerProvider, coreProvider} = getSetup();
+
+// In 1 hour
+const destroyTimestamp: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
+const nTokens = 2
+const collection = {
+    collectionMintNme: "SDK Test",
+    collectionMintSymbol: "SDK TEST",
+    collectionMintUri: "https://example.com",
+    collectionName: "epplex",
+    collectionSymbol: "EPX",
+    collectionSize: 2,
+}
 
 describe('Test Collection', () => {
-    const nTokens = 2
-
-    // In 1 hour
-    const destroyTimestamp: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
+    let globalCollectionData;
+    let collectionConfigAddress;
 
     it("Create burger delegate ", async() => {
-        await burgerProgram.createProgramDelegate();
+        const tx = await burgerProvider.createProgramDelegateTx();
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
     })
 
-    it('Mint token', async () => {
-        await coreProgram.createGlobalCollectionConfig();
-        const globalCollectionAddress = coreProgram.getGlobalCollectionConfigAddress();
+    it("Create global collection config ", async() => {
+        const tx = await coreProvider.createGlobalCollectionConfigTx();
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    })
+
+    it('Create collection mint and config', async () => {
+        const globalCollectionAddress = getGlobalCollectionConfig();
         console.log("globalCollectionAddress", globalCollectionAddress.toString());
 
-        const globalCollectionData = await coreProgram.program.account.globalCollectionConfig.fetch(
-            coreProgram.getGlobalCollectionConfigAddress());
-        const [collectionConfigAddress, _bump] = PublicKey.findProgramAddressSync(
-            [
-                Buffer.from("CONFIG"),
-                globalCollectionData.collectionCounter.toArrayLike(Buffer, "le", 8)
-            ],
-            coreProgram.program.programId
-        )
+        globalCollectionData = await coreProvider
+            .program
+            .account
+            .globalCollectionConfig
+            .fetch(globalCollectionAddress);
 
-        await coreProgram.createCollection(collectionConfigAddress, burgerProgram.getProgramDelegate());
-        const [mint, _] = PublicKey.findProgramAddressSync(
-            [
-                Buffer.from("COLLECTION_MINT"),
-                globalCollectionData.collectionCounter.toArrayLike(Buffer, "le", 8)
-            ],
-            coreProgram.program.programId
-        );
-        console.log("mint", mint.toString());
-        const metadata = await getTokenMetadata(burgerProvider.connection, mint);
-        console.log("Collection Mint Metadata", metadata);
+        collectionConfigAddress = getCollectionConfig(globalCollectionData.collectionCounter);
+        const mint = getCollectionMint(globalCollectionData.collectionCounter);
+        const tx = await coreProvider.createCollectionTx({
+            collectionConfigAddress,
+            mint,
+            collectionMintName: collection.collectionMintNme,
+            collectionMintSymbol: collection.collectionMintSymbol,
+            collectionMintUri: collection.collectionMintUri,
+            collectionName: collection.collectionName,
+            collectionSize: collection.collectionSize,
+            collectionSymbol: collection.collectionSymbol,
+            authority: getProgramDelegate(),
+        });
 
-        // Mint 10 tokens into the collection
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    });
+
+    it('Create token mint into collection', async () => {
         for (let i = 0; i < nTokens; i++) {
-            const mint = await mintTokenIntoCollection(
-                provider,
-                burgerProgram,
-                coreProgram,
-                globalCollectionData.collectionCounter,
-                destroyTimestamp
-            );
-            const metadata = await getTokenMetadata(provider.connection, mint);
+
+            const collectionConfigData = await coreProvider
+                .program
+                .account
+                .collectionConfig
+                .fetch(collectionConfigAddress);
+
+            const mint = getMint(globalCollectionData.collectionCounter, collectionConfigData.mintCount)
+
+            const tx = await burgerProvider.createCollectionMintTx({
+                expiryDate: destroyTimestamp,
+                collectionCounter: globalCollectionData.collectionCounter,
+                mint,
+                name: `${collection.collectionMintNme} ${i + 1}`,
+                symbol: ,
+            }
+                destroyTimestamp,
+                collectionCounter,
+                mint,
+            )
+
+            // const mint = await mintTokenIntoCollection({
+            //         provider,
+            //         burgerProgram,
+            //         coreProvider,
+            //         globalCollectionData.collectionCounter,
+            //         destroyTimestamp
+            //     mintCount: collectionConfigData.mintCount,
+            // });
+
+            const metadata = await getTokenMetadata(burgerProvider.provider.connection, mint);
             expect(metadata.additionalMetadata.find(md => md[0] == "collection_id")[1]).to.equal(globalCollectionData.collectionCounter.toString());
             expect(metadata.additionalMetadata.find(md => md[0] == "mint_count")[1]).to.equal(i.toString());
-            expect(await coreProgram.verifyInCollection(provider.connection, mint)).to.equal(true);
+            expect(await verifyInCollection(burgerProvider.provider.connection, mint)).to.equal(true);
         }
 
     });
