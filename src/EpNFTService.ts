@@ -3,6 +3,8 @@ import {AccountLayout, getTokenMetadata} from "@solana/spl-token";
 import {getTokenAccounts} from "./utils/generic";
 import {getTokenBurgerMetadata} from "./constants/burgerSeeds";
 import {EpNFT} from "./types/EpplexProviderTypes";
+import {getMint} from "./constants";
+import {BN} from "@coral-xyz/anchor";
 
 export interface epNFTOptions {
     metadata?: boolean
@@ -69,6 +71,27 @@ class EpNFTService {
             return false
         } else {
             return true
+        }
+    }
+
+    static async verifyInCollection(connection: Connection, mint: PublicKey): Promise<boolean> {
+        try {
+            const metadata = await getTokenMetadata(connection, mint);
+            const collectionIdString = metadata!
+                .additionalMetadata
+                .find((m) => m[0] == "collection_id")![1];
+            const mintCountString = metadata!
+                .additionalMetadata
+                .find((m) => m[0] == "mint_count")![1];
+
+            const mintAddress = getMint(
+                new BN(collectionIdString),
+                new BN(mintCountString)
+            );
+
+            return mintAddress.toString() === mint.toString();
+        } catch {
+            return false;
         }
     }
 }
