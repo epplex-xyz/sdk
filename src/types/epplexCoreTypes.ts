@@ -199,7 +199,7 @@ export type EpplexCore = {
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "CHECK this account is created in the instruction body, so no need to check data layout"
@@ -207,7 +207,7 @@ export type EpplexCore = {
         },
         {
           "name": "tokenAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "CHECK this account is created in the instruction body, so no need to check data layout"
@@ -696,7 +696,7 @@ export const IDL: EpplexCore = {
         },
         {
           "name": "mint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "CHECK this account is created in the instruction body, so no need to check data layout"
@@ -704,7 +704,7 @@ export const IDL: EpplexCore = {
         },
         {
           "name": "tokenAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "CHECK this account is created in the instruction body, so no need to check data layout"

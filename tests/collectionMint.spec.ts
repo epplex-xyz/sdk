@@ -38,12 +38,9 @@ describe('Test Collection', () => {
             .globalCollectionConfig
             .fetch(getGlobalCollectionConfig());
 
-        collectionConfigAddress = getCollectionConfig(globalCollectionData.collectionCounter);
-        const mint = getCollectionMint(globalCollectionData.collectionCounter);
-        console.log("mint", mint.toString());
         const tx = await coreProvider.createCollectionTx({
-            collectionConfigAddress,
-            mint,
+            collectionConfigAddress: getCollectionConfig(globalCollectionData.collectionCounter),
+            mint: getCollectionMint(globalCollectionData.collectionCounter),
             collectionMintName: collection.collectionMintNme,
             collectionMintSymbol: collection.collectionMintSymbol,
             collectionMintUri: collection.collectionMintUri,
@@ -56,47 +53,46 @@ describe('Test Collection', () => {
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
     });
 
-    // it('Create token mint into collection', async () => {
-    //     const collectionConfigData = await coreProvider
-    //         .program
-    //         .account
-    //         .collectionConfig
-    //         .fetch(collectionConfigAddress);
-    //     const mintCount = Number(collectionConfigData.mintCount);
-    //
-    //     for (let i = 0; i < nTokens; i++) {
-    //         const newMintCount = mintCount + i;
-    //         const mint = getMint(
-    //             globalCollectionData.collectionCounter,
-    //             new BN(newMintCount)
-    //         );
-    //
-    //         const tx = await burgerProvider.createCollectionMintTx({
-    //             expiryDate,
-    //             collectionId: Number(globalCollectionData.collectionCounter),
-    //             mint,
-    //             name: `${collection.collectionMintNme} ${i + 1}`,
-    //             symbol: collection.collectionMintSymbol,
-    //             uri: collection.collectionMintUri,
-    //         })
-    //
-    //         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    //
-    //
-    //         // Verification
-    //         const metadata = await getTokenMetadata(CONNECTION, mint);
-    //         expect(
-    //             metadata.additionalMetadata.find(md => md[0] == "collection_id")[1]
-    //         ).to.equal(globalCollectionData.collectionCounter.toString());
-    //
-    //         expect(
-    //             metadata.additionalMetadata.find(md => md[0] == "mint_count")[1]
-    //         ).to.equal(i.toString());
-    //
-    //         expect(
-    //             await verifyInCollection(CONNECTION, mint)
-    //         ).to.equal(true);
-    //     }
-    // });
+    it('Create token mint into collection', async () => {
+        const collectionConfigData = await coreProvider
+            .program
+            .account
+            .collectionConfig
+            .fetch(collectionConfigAddress);
+        const mintCount = Number(collectionConfigData.mintCount);
+
+        for (let i = 0; i < nTokens; i++) {
+            const newMintCount = mintCount + i;
+            const mint = getMint(
+                globalCollectionData.collectionCounter,
+                new BN(newMintCount)
+            );
+
+            const tx = await burgerProvider.createCollectionMintTx({
+                expiryDate,
+                collectionId: Number(globalCollectionData.collectionCounter),
+                mint,
+                name: `${collection.collectionMintNme} ${i + 1}`,
+                symbol: collection.collectionMintSymbol,
+                uri: collection.collectionMintUri,
+            })
+            await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+
+
+            // Verification
+            const metadata = await getTokenMetadata(CONNECTION, mint);
+            expect(
+                metadata.additionalMetadata.find(md => md[0] == "collection_id")[1]
+            ).to.equal(globalCollectionData.collectionCounter.toString());
+
+            expect(
+                metadata.additionalMetadata.find(md => md[0] == "mint_count")[1]
+            ).to.equal(i.toString());
+
+            expect(
+                await verifyInCollection(CONNECTION, mint)
+            ).to.equal(true);
+        }
+    });
 
 });
