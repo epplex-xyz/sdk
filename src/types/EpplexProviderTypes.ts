@@ -21,6 +21,18 @@ export interface CreateWhitelistMintTxParams {
     computeBudget?: number
 }
 
+// Maybe should extend the above
+export interface CreateCollectionMintTxTxParams {
+    collectionId: number
+    expiryDate: string,
+    mint: PublicKey,
+    name: string,
+    symbol: string,
+    uri: string
+    computeBudget?: number
+}
+
+
 export interface TokenGameVoteTxParams {
     mint: PublicKey,
     message: string,

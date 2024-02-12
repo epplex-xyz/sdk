@@ -1,4 +1,5 @@
 import EpplexProvider from "./EpplexProvider";
+import CoreProvider from "./CoreProvider";
 import EpNFTService, { epNFTOptions, defaultEpNFTOptions} from "./EpNFTService";
 
 import {
@@ -19,6 +20,7 @@ import {
 export {
   // epplex provider
   EpplexProvider,
+  CoreProvider,
 
   // epNFTservice
   EpNFTService,
