@@ -5,7 +5,6 @@ import {
     createTransferCheckedInstruction, getAssociatedTokenAddressSync,
     TOKEN_2022_PROGRAM_ID
 } from "@solana/spl-token";
-import {tryCreateATAIx} from "./generic";
 
 export type NftTransferTxInputs = {
     connection: Connection;

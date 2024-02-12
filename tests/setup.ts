@@ -3,7 +3,6 @@ import {loadOrGenerateKeypair} from "./keyUtils";
 import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {CoreProvider, EpplexProvider} from "../src";
-import {AnchorProvider, Provider} from "@coral-xyz/anchor";
 
 const COMMITMENT = "confirmed";
 
@@ -29,15 +28,12 @@ export function getSetup(): GetSetupReturn {
     //     CONNECTION,
     //     CONFIRM_OPTIONS
     // );
-    //
-
+    // try using
     const provider = new anchor.AnchorProvider(
         CONNECTION,
         wallet,
         CONFIRM_OPTIONS
     )
-    // anchor.setProvider(provider);
-
     const burgerProvider = EpplexProvider.fromAnchorProvider(provider)
 
     const coreProvider = new CoreProvider(

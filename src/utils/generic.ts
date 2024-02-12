@@ -62,7 +62,7 @@ export async function sendAndConfirmRawTransaction(
     signers: Keypair[] = [],
     commitment: Commitment = "confirmed",
     logTx: boolean = true,
-    confirmOptions: SendOptions = {skipPreflight: false},
+    confirmOptions: SendOptions = {skipPreflight: true},
 ): Promise<TransactionSignature | null> {
     const latestBlockhash = await connection.getLatestBlockhash(commitment);
     tx.recentBlockhash = latestBlockhash.blockhash;
