@@ -25,7 +25,6 @@ const collection = {
 
 describe('Test Collection', () => {
     let globalCollectionData;
-    let collectionConfigAddress;
 
     trySetupGlobalCollectionConfig(coreProvider, wallet);
     trySetupBurgerProgramDelegate(burgerProvider, wallet);
@@ -54,6 +53,7 @@ describe('Test Collection', () => {
     });
 
     it('Create token mint into collection', async () => {
+        const collectionConfigAddress = getCollectionConfig(globalCollectionData.collectionCounter)
         const collectionConfigData = await coreProvider
             .program
             .account
