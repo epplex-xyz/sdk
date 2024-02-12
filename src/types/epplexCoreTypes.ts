@@ -13,16 +13,6 @@ export type EpplexCore = {
       "value": "[71, 76, 79, 66, 65, 76, 95, 67, 79, 76, 76, 69, 67, 84, 73, 79, 78]"
     },
     {
-      "name": "COLLECTION_ID_FIELD",
-      "type": "string",
-      "value": "\"collection_id\""
-    },
-    {
-      "name": "MINT_COUNT_FIELD",
-      "type": "string",
-      "value": "\"mint_count\""
-    },
-    {
       "name": "SEED_MINT",
       "type": "bytes",
       "value": "[77, 73, 78, 84]"
@@ -518,16 +508,6 @@ export const IDL: EpplexCore = {
       "name": "SEED_GLOBAL_COLLECTION_CONFIG",
       "type": "bytes",
       "value": "[71, 76, 79, 66, 65, 76, 95, 67, 79, 76, 76, 69, 67, 84, 73, 79, 78]"
-    },
-    {
-      "name": "COLLECTION_ID_FIELD",
-      "type": "string",
-      "value": "\"collection_id\""
-    },
-    {
-      "name": "MINT_COUNT_FIELD",
-      "type": "string",
-      "value": "\"mint_count\""
     },
     {
       "name": "SEED_MINT",
