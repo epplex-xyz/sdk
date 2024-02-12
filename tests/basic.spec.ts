@@ -1,5 +1,5 @@
 import {clusterApiUrl, Connection, LAMPORTS_PER_SOL, Keypair} from "@solana/web3.js";
-// import {loadOrGenerateKeypair} from "./testUtils";
+import {loadOrGenerateKeypair} from "./testUtils";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider, EpNFTService} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
@@ -8,12 +8,13 @@ import assert = require("node:assert");
 
 const COMMITMENT = "confirmed";
 const connection = new Connection(
-    clusterApiUrl("devnet"),
+    "http://127.0.0.1:8899",
+    // clusterApiUrl("devnet"),
     COMMITMENT
 );
 
-// const testKeypair = loadOrGenerateKeypair("mintPool");
-const testKeypair = Keypair.generate()
+const testKeypair = loadOrGenerateKeypair("mintPool");
+// const testKeypair = Keypair.generate()
 const wallet = new NodeWallet(testKeypair);
 const epplexProvider = new EpplexProvider(
     wallet,
@@ -32,7 +33,6 @@ describe("Testing Burger Program", () => {
         symbol: "EP",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
     }
-    const secretKey = "asdfe12j0Cs"
 
     // it("Airdrop", async () => {
     //     const tx = await connection.requestAirdrop(
@@ -80,11 +80,9 @@ describe("Testing Burger Program", () => {
 
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;
-        const message = encryptMessage("hello", secretKey)
-        console.log('mesage', message)
         const tx = await epplexProvider.tokenGameVoteTx({
             mint: mint.publicKey,
-            message,
+            message: "hello",
             owner: owner,
         })
         await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
