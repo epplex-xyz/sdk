@@ -1,35 +1,11 @@
 import {PublicKey} from "@solana/web3.js";
-import * as anchor from "@coral-xyz/anchor";
-import {BN, Wallet} from "@coral-xyz/anchor";
-import {BurgerProgram} from "../app/client/burgerProgram";
-import {CoreProgram} from "../app/client/coreProgram";
+import {BN} from "@coral-xyz/anchor";
 import {getTokenMetadata} from "@solana/spl-token";
-import {sendAndConfirmRawTransaction} from "../app/utils/solana";
-import {buildNFTTransferTx} from "../app/utils/token2022";
-import {loadKeypairFromFile} from "../script/utils/helpers";
+import {getSetup} from "./setup";
 
-// This works
-// import dotenv from "dotenv";
-// import path from "path";
-// dotenv.config({path: path.resolve(__dirname, "../.env.local")})
-// console.log("prces", process.env.MINT_POOL_KEYPAIR)
-
-const payer = loadKeypairFromFile("../target/deploy/epplex_PAYER_ADMIN.json")
-const destination = new PublicKey("2N6aJDX1TNs6RKkPsuufbAe4JjRAZPs1iLPcEUL4DX4z")
+const {wallet, burgerProvider} = getSetup();
 
 describe('Environment setup', () => {
-    const tempProvider = anchor.AnchorProvider.env();
-    anchor.setProvider(tempProvider);
-
-    const provider = new anchor.AnchorProvider(
-        tempProvider.connection,
-        new Wallet(payer),
-        {skipPreflight: true}
-    )
-    anchor.setProvider(provider);
-    const burgerProgram = new BurgerProgram(provider.wallet, provider.connection);
-    const coreProgram = new CoreProgram(provider.wallet, provider.connection);
-
     const destroyTimestamp: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
     console.log("destroy", destroyTimestamp);
     let mint: PublicKey;

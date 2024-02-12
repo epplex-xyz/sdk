@@ -1,22 +1,14 @@
-import {Wallet} from "@coral-xyz/anchor";
 import {PublicKey} from "@solana/web3.js";
 import {getTokenMetadata} from "@solana/spl-token";
-import * as anchor from "@coral-xyz/anchor";
 import {expect} from "chai";
-import {loadKeypairFromFile} from "./testUtils";
+import {getSetup} from "./setup";
+import {sendAndConfirmRawTransaction} from "../lib";
 
-const payer = loadKeypairFromFile("../.local_keys/epplex_PAYER_ADMIN.json")
+const {wallet, burgerProvider} = getSetup();
+
+
 
 describe('Test Collection', () => {
-    const tempProvider = anchor.AnchorProvider.env();
-    anchor.setProvider(tempProvider);
-
-    const provider = new anchor.AnchorProvider(
-        tempProvider.connection,
-        new Wallet(payer),
-        {skipPreflight: true}
-    )
-    anchor.setProvider(provider);
     const burgerProgram = new BurgerProgram(provider.wallet, provider.connection);
     const coreProgram = new CoreProgram(provider.wallet, provider.connection);
     const nTokens = 2
@@ -25,9 +17,6 @@ describe('Test Collection', () => {
     const destroyTimestamp: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
 
     it("Create burger delegate ", async() => {
-        console.log("Getting airDrop");
-        await provider.connection.requestAirdrop(new PublicKey("8Df9mQfYfVj3uMjdhxMfF41PwbxC5xZofsHHdgyvG5Gr"), 1000000000);
-        console.log("Creating program delegate");
         await burgerProgram.createProgramDelegate();
     })
 
@@ -55,7 +44,7 @@ describe('Test Collection', () => {
             coreProgram.program.programId
         );
         console.log("mint", mint.toString());
-        const metadata = await getTokenMetadata(provider.connection, mint);
+        const metadata = await getTokenMetadata(burgerProvider.connection, mint);
         console.log("Collection Mint Metadata", metadata);
 
         // Mint 10 tokens into the collection
