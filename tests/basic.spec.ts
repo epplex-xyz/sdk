@@ -1,19 +1,10 @@
 import {Keypair} from "@solana/web3.js";
-import {loadOrGenerateKeypair} from "./testUtils";
-import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpNFTService, EpplexProvider} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
-import {CONNECTION} from "./connection";
+import {CONNECTION, getSetup} from "./setup";
 import assert = require("node:assert");
 
-
-const testKeypair = loadOrGenerateKeypair("epplex_PAYER_ADMIN.json");
-const wallet = new NodeWallet(testKeypair);
-const epplexProvider = new EpplexProvider(
-    wallet,
-    CONNECTION,
-    {skipPreflight: true}
-);
+const {wallet, burgerProvider} = getSetup();
 
 describe("Testing Burger Program", () => {
     // Expiry date in 1 hr
@@ -28,7 +19,7 @@ describe("Testing Burger Program", () => {
     }
 
     it("Create whitelist mint", async() => {
-      const tx = await epplexProvider.createWhitelistMintTx({
+      const tx = await burgerProvider.createWhitelistMintTx({
           expiryDate: metadata.expiryDate,
           mint: mint,
           name: metadata.name,
@@ -64,7 +55,7 @@ describe("Testing Burger Program", () => {
 
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;
-        const tx = await epplexProvider.tokenGameVoteTx({
+        const tx = await burgerProvider.tokenGameVoteTx({
             mint: mint.publicKey,
             message: "hello",
             owner: owner,
@@ -76,7 +67,7 @@ describe("Testing Burger Program", () => {
 
     it("Token Burn", async() => {
         const owner = wallet.publicKey;
-        const tx = await epplexProvider.burnTokenTx({
+        const tx = await burgerProvider.burnTokenTx({
             mint: mint.publicKey,
             owner: owner,
         })

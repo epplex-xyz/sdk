@@ -6,11 +6,7 @@ import {sendAndConfirmRawTransaction} from "../lib";
 
 const {wallet, burgerProvider} = getSetup();
 
-
-
 describe('Test Collection', () => {
-    const burgerProgram = new BurgerProgram(provider.wallet, provider.connection);
-    const coreProgram = new CoreProgram(provider.wallet, provider.connection);
     const nTokens = 2
 
     // In 1 hour
