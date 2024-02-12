@@ -1,31 +1,30 @@
 import {Keypair} from "@solana/web3.js";
-import {EpNFTService, EpplexProvider} from "../src";
+import {EpNFTService} from "../src";
 import {sendAndConfirmRawTransaction} from "../src/utils/generic";
 import {CONNECTION, getSetup} from "./setup";
 import assert = require("node:assert");
+import {getGlobalCollectionConfig} from "../src/constants/coreSeeds";
 
 const {wallet, burgerProvider} = getSetup();
 
-describe("Testing Burger Program", () => {
-    // Expiry date in 1 hr
-    const expiryDate = (Math.floor((new Date()).getTime() / 1000) + 3600).toString()
-    console.log("destroy", expiryDate);
-    const mint = Keypair.generate();
-    const metadata = {
-        expiryDate: expiryDate,
-        name: "(SDK tests) Ephemeral burger",
-        symbol: "EP",
-        uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
-    }
+const mint = Keypair.generate();
+const metadata = {
+    expiryDate: (Math.floor((new Date()).getTime() / 1000) + 3600).toString(), // 1 hr
+    name: "(SDK tests) Ephemeral burger",
+    symbol: "EP",
+    uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
+}
 
+describe("Testing Burger Program", () => {
     // TODO this is outdated
     it("Create whitelist mint", async() => {
       const tx = await burgerProvider.createWhitelistMintTx({
           expiryDate: metadata.expiryDate,
-          mint: mint,
+          mint: mint.publicKey, //TODO
           name: metadata.name,
           symbol: metadata.symbol,
-          uri: metadata.uri
+          uri: metadata.uri,
+          globalCollectionConfig: getGlobalCollectionConfig(),
       })
       await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [mint])
 
@@ -39,6 +38,7 @@ describe("Testing Burger Program", () => {
         console.log("\n")
     })
 
+    // TODO outdated
     it("Check is Burger NFT", async() => {
         const check = await EpNFTService.isBurgerNFT(CONNECTION, mint.publicKey)
         assert.equal(true, check)
@@ -46,6 +46,7 @@ describe("Testing Burger Program", () => {
         console.log("\n")
     })
 
+    // TODO outdated
     it("Check not Burger NFT", async() => {
         const check = await EpNFTService.isBurgerNFT(CONNECTION, Keypair.generate().publicKey)
         assert.equal(false, check)

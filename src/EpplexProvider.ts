@@ -103,15 +103,16 @@ class EpplexProvider {
     }
     async createWhitelistMintTx({
         expiryDate,
-        mint,
         name,
         symbol,
         uri,
+        mint,
+        globalCollectionConfig,
         computeBudget = DEFAULT_COMPUTE_BUDGET
     }: CreateWhitelistMintTxParams) {
         const permanentDelegate = getProgramDelegate();
         const payer = this.provider.wallet.publicKey;
-        const ata = getAssociatedTokenAddressSync(mint.publicKey, payer, undefined, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+        const ata = getAssociatedTokenAddressSync(mint, payer, undefined, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
 
         const tokenCreateIx = await this.program.methods.whitelistMint({
             name: name,
@@ -119,10 +120,11 @@ class EpplexProvider {
             uri: uri,
             expiryDate: expiryDate,
         }).accounts({
-            mint: mint.publicKey,
+            mint,
             tokenAccount: ata,
-            tokenMetadata: getTokenBurgerMetadata(mint.publicKey),
+            tokenMetadata: getTokenBurgerMetadata(mint),
             permanentDelegate: permanentDelegate,
+            globalCollectionConfig,
             payer: payer,
 
             rent: SYSVAR_RENT_PUBKEY,

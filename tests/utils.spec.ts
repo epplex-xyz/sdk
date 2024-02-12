@@ -39,6 +39,7 @@ describe("Testing Burger Program", () => {
         console.log(tx);
     });
 
+    // TODO outdated
     it("Create whitelist mint", async() => {
       const tx = await epplexProvider.createWhitelistMintTx({
           expiryDate: metadata.expiryDate,
