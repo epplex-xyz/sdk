@@ -38,10 +38,11 @@ class EpplexProvider {
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
-        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions()
+        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        epplexProgramId: PublicKey = BURGER_PROGRAM_ID
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = new anchor.Program(BurgerIdl, BURGER_PROGRAM_ID, this.provider);
+        this.program = new anchor.Program(BurgerIdl, epplexProgramId, this.provider);
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider) : EpplexProvider {
@@ -56,7 +57,8 @@ class EpplexProvider {
          name,
          symbol,
          uri,
-         computeBudget = DEFAULT_COMPUTE_BUDGET
+         computeBudget = DEFAULT_COMPUTE_BUDGET,
+         coreProgramId = CORE_PROGRAM_ID,
      }: CreateCollectionMintTxTxParams) {
         const bigCollectionId = new anchor.BN(collectionId);
         const payer = this.provider.wallet.publicKey;
@@ -88,7 +90,7 @@ class EpplexProvider {
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                epplexCore: CORE_PROGRAM_ID,
+                epplexCore: coreProgramId,
             })
             .instruction();
 
@@ -107,7 +109,8 @@ class EpplexProvider {
         symbol,
         uri,
         mint,
-        computeBudget = DEFAULT_COMPUTE_BUDGET
+        computeBudget = DEFAULT_COMPUTE_BUDGET,
+        coreProgramId = CORE_PROGRAM_ID,
     }: CreateWhitelistMintTxParams) {
         const permanentDelegate = getProgramDelegate();
         const payer = this.provider.wallet.publicKey;
@@ -130,7 +133,7 @@ class EpplexProvider {
             systemProgram: SystemProgram.programId,
             token22Program: TOKEN_2022_PROGRAM_ID,
             associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-            epplexCore: CORE_PROGRAM_ID,
+            epplexCore: coreProgramId,
         }).instruction();
 
         const ixs = [

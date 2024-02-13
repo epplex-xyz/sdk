@@ -3,7 +3,7 @@ import {BN} from "@coral-xyz/anchor";
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
-    Connection,
+    Connection, PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
@@ -23,10 +23,11 @@ class CoreProvider {
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
-        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions()
+        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        coreProgramId: PublicKey = CORE_PROGRAM_ID
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = new anchor.Program(CoreIdl, CORE_PROGRAM_ID, this.provider);
+        this.program = new anchor.Program(CoreIdl, coreProgramId, this.provider);
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider) : CoreProvider {
