@@ -12,9 +12,8 @@ import {EpplexCore, IDL as CoreIdl} from "./types/epplexCoreTypes";
 import {CORE_PROGRAM_ID} from "./constants/ids";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
-    SEED_COLLECTION_CONFIG,
-    SEED_COLLECTION_MINT,
-    SEED_GLOBAL_COLLECTION, SEED_MINT
+    getCollectionConfig, getCollectionMint,
+    getGlobalCollectionConfig, getMint,
 } from "./constants/coreSeeds";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
 import {CreateCollectionTxParams} from "./types/CoreProviderTypes";
@@ -111,45 +110,19 @@ class CoreProvider {
     }
 
     getGlobalCollectionConfig(): PublicKey {
-        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
-            [SEED_GLOBAL_COLLECTION],
-            this.program.programId
-        );
-        return globalCollectionConfig;
+        return getGlobalCollectionConfig(this.program.programId);
     }
 
     getCollectionConfig(collectionCounter: BN): PublicKey {
-        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
-            [
-                SEED_COLLECTION_CONFIG,
-                collectionCounter.toArrayLike(Buffer, "le", 8)
-            ],
-            this.program.programId
-        );
-        return globalCollectionConfig;
+        return getCollectionConfig(collectionCounter, this.program.programId);
     }
 
     getCollectionMint(collectionCounter: BN): PublicKey {
-        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
-            [
-                SEED_COLLECTION_MINT,
-                collectionCounter.toArrayLike(Buffer, "le", 8),
-            ],
-            this.program.programId
-        );
-        return globalCollectionConfig;
+        return getCollectionMint(collectionCounter, this.program.programId);
     }
 
     getMint(collectionCounter: BN, mintCount: BN): PublicKey {
-        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
-            [
-                SEED_MINT,
-                collectionCounter.toArrayLike(Buffer, "le", 8),
-                mintCount.toArrayLike(Buffer, "le", 8)
-            ],
-            this.program.programId
-        );
-        return globalCollectionConfig;
+        return getMint(collectionCounter, mintCount, this.program.programId);
     }
 }
 
