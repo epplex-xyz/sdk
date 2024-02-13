@@ -11,7 +11,11 @@ import {
 import {EpplexCore, IDL as CoreIdl} from "./types/epplexCoreTypes";
 import {CORE_PROGRAM_ID} from "./constants/ids";
 import {EpplexProviderWallet} from "./types/WalletProvider";
-import {getGlobalCollectionConfig} from "./constants/coreSeeds";
+import {
+    SEED_COLLECTION_CONFIG,
+    SEED_COLLECTION_MINT,
+    SEED_GLOBAL_COLLECTION, SEED_MINT
+} from "./constants/coreSeeds";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
 import {CreateCollectionTxParams} from "./types/CoreProviderTypes";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
@@ -39,7 +43,7 @@ class CoreProvider {
         return await this.program.methods
             .globalCollectionConfigCreate()
             .accounts({
-                globalCollectionConfig: getGlobalCollectionConfig(),
+                globalCollectionConfig: this.getGlobalCollectionConfig(),
                 payer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })
@@ -86,7 +90,7 @@ class CoreProvider {
             .accounts({
                 mint,
                 collectionConfig: collectionConfigAddress,
-                globalCollectionConfig: getGlobalCollectionConfig(),
+                globalCollectionConfig: this.getGlobalCollectionConfig(),
                 payer: this.provider.wallet.publicKey,
                 tokenAccount,
                 updateAuthority: this.program.provider.publicKey,
@@ -106,6 +110,47 @@ class CoreProvider {
         return new Transaction().add(...ixs);
     }
 
+    getGlobalCollectionConfig(): PublicKey {
+        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
+            [SEED_GLOBAL_COLLECTION],
+            this.program.programId
+        );
+        return globalCollectionConfig;
+    }
+
+    getCollectionConfig(collectionCounter: BN): PublicKey {
+        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
+            [
+                SEED_COLLECTION_CONFIG,
+                collectionCounter.toArrayLike(Buffer, "le", 8)
+            ],
+            this.program.programId
+        );
+        return globalCollectionConfig;
+    }
+
+    getCollectionMint(collectionCounter: BN): PublicKey {
+        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
+            [
+                SEED_COLLECTION_MINT,
+                collectionCounter.toArrayLike(Buffer, "le", 8),
+            ],
+            this.program.programId
+        );
+        return globalCollectionConfig;
+    }
+
+    getMint(collectionCounter: BN, mintCount: BN): PublicKey {
+        const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
+            [
+                SEED_MINT,
+                collectionCounter.toArrayLike(Buffer, "le", 8),
+                mintCount.toArrayLike(Buffer, "le", 8)
+            ],
+            this.program.programId
+        );
+        return globalCollectionConfig;
+    }
 }
 
 export default CoreProvider;
