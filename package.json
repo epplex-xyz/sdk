@@ -30,6 +30,8 @@
     "pub": "yarn build && npm publish --access public",
     "start": "ts-node src/index.ts",
     "build": "rm -rf lib && tsc",
+    "show-balance": "solana balance -u localhost -k .local_keys/epplex_PAYER_ADMIN.json",
+    "show-key": "solana address -k .local_keys/epplex_PAYER_ADMIN.json",
     "airdrop": "solana airdrop 50 -u localhost -k .local_keys/epplex_PAYER_ADMIN.json",
     "test": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/*.spec.ts",
     "test-utils": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/utils.spec.ts",
