@@ -8,15 +8,20 @@ import {
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {sleep, trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
 import {PublicKey} from "@solana/web3.js";
+import {expect} from "chai";
 
 /*
 ******* SETUP
 */
 const {wallet, burgerProvider, coreProvider} = getSetup();
 
-const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 5).toString() // In 1 hour
+// 3 second expiry
+const expiryTime = 3;
+const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + expiryTime).toString()
+
+
 const nTokens = 1
 const collection = {
     collectionMintNme: "SDK Test",
@@ -87,13 +92,26 @@ describe('Test Burn', () => {
     });
 
     it('Burn token FAIL', async () => {
-
-
+        const tx = await burgerProvider.burnTokenTx({
+            mint: mints[0],
+            owner: wallet.publicKey,
+        });
+        const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+        expect(res).to.be.equal(null);
     });
 
 
     it('Burn token SUCCESS', async () => {
+        console.log("Sleeping for 4 seconds");
+        await sleep(4_000);
 
+        const tx = await burgerProvider.burnTokenTx({
+            mint: mints[0],
+            owner: wallet.publicKey,
+        });
+        const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+        console.log("res", res)
+        expect(res).to.not.be.empty;
     });
 
 });

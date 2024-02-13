@@ -19,11 +19,9 @@ import {
 } from "./utils/generic";
 
 import {
-  // EpplexProvider
   getProgramDelegate,
   getTokenBurgerMetadata,
 
-  // CoreProviderTypes
   getCollectionConfig,
   getCollectionMint,
   getGlobalCollectionConfig,
@@ -31,12 +29,10 @@ import {
 } from "./constants";
 
 export {
-  // epplex provider
   EpplexProvider,
   getProgramDelegate,
   getTokenBurgerMetadata,
 
-  // Cpre
   CoreProvider,
   getCollectionConfig,
   getCollectionMint,
@@ -44,19 +40,16 @@ export {
   getMint,
 
 
-  // epNFTservice
   EpNFTService,
   EpNFT,
   epNFTOptions,
   defaultEpNFTOptions,
 
-  // Types
   BurnTxParams,
   CreateWhitelistMintTxParams,
   TokenGameVoteTxParams,
   CreateCollectionTxParams,
 
-  // Utils
   nftTransferIxs,
   sendAndConfirmRawTransaction
 };
