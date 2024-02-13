@@ -20,7 +20,7 @@ describe('Individual mint', () => {
             .program
             .account
             .globalCollectionConfig
-            .fetch(getGlobalCollectionConfig());
+            .fetch(coreProvider.getGlobalCollectionConfig());
 
         mint = getMint(globalCollectionData.collectionCounter, new BN(0));
         const tx = await burgerProvider.createWhitelistMintTx({

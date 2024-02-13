@@ -3,10 +3,6 @@ import {expect} from "chai";
 import {CONNECTION, getSetup} from "./setup";
 import {
     EpNFTService,
-    getCollectionConfig,
-    getCollectionMint,
-    getGlobalCollectionConfig,
-    getMint,
     getProgramDelegate,
     sendAndConfirmRawTransaction
 } from "../src";
@@ -20,12 +16,12 @@ const {wallet, burgerProvider, coreProvider} = getSetup();
 const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
 const nTokens = 2
 const collection = {
-    collectionMintNme: "SDK Test",
-    collectionMintSymbol: "SDK TEST",
-    collectionMintUri: "https://example.com",
-    collectionName: "epplex",
-    collectionSymbol: "EPX",
-    collectionSize: 2,
+    collectionMintNme: "SDK Test", // shows up directly on the Collection NFT
+    collectionMintSymbol: "SDK TEST", // shows up directly on the Collection NFT
+    collectionMintUri: "https://example.com", // shows up directly on the Collection NFT
+    collectionName: "epplex", // can just check on-chain, but not really super important
+    collectionSymbol: "EPX",  // can just check on-chain, but not really super important
+    collectionSize: 2,  // can just check on-chain, but not really super important
 }
 
 describe('Test Collection', () => {
@@ -40,11 +36,11 @@ describe('Test Collection', () => {
             .program
             .account
             .globalCollectionConfig
-            .fetch(getGlobalCollectionConfig());
+            .fetch(coreProvider.getGlobalCollectionConfig());
 
         const tx = await coreProvider.createCollectionTx({
-            collectionConfigAddress: getCollectionConfig(globalCollectionData.collectionCounter),
-            mint: getCollectionMint(globalCollectionData.collectionCounter),
+            collectionConfigAddress: coreProvider.getCollectionConfig(globalCollectionData.collectionCounter),
+            mint: coreProvider.getCollectionMint(globalCollectionData.collectionCounter),
             collectionMintName: collection.collectionMintNme,
             collectionMintSymbol: collection.collectionMintSymbol,
             collectionMintUri: collection.collectionMintUri,
@@ -58,7 +54,7 @@ describe('Test Collection', () => {
     });
 
     it('Create token mint into collection', async () => {
-        const collectionConfigAddress = getCollectionConfig(globalCollectionData.collectionCounter)
+        const collectionConfigAddress = coreProvider.getCollectionConfig(globalCollectionData.collectionCounter)
         const collectionConfigData = await coreProvider
             .program
             .account
@@ -68,7 +64,7 @@ describe('Test Collection', () => {
 
         for (let i = 0; i < nTokens; i++) {
             const newMintCount = mintCount + i;
-            const mint = getMint(
+            const mint = coreProvider.getMint(
                 globalCollectionData.collectionCounter,
                 new BN(newMintCount)
             );
@@ -77,7 +73,7 @@ describe('Test Collection', () => {
                 expiryDate,
                 collectionId: Number(globalCollectionData.collectionCounter),
                 mint,
-                name: `${collection.collectionMintNme} ${i + 1}`,
+                name: `${collection.collectionMintNme} #${i + 1}`,
                 symbol: collection.collectionMintSymbol,
                 uri: collection.collectionMintUri,
             })

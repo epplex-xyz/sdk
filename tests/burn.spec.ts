@@ -1,9 +1,5 @@
 import {CONNECTION, getSetup} from "./setup";
 import {
-    getCollectionConfig,
-    getCollectionMint,
-    getGlobalCollectionConfig,
-    getMint,
     getProgramDelegate,
     sendAndConfirmRawTransaction
 } from "../src";
@@ -45,11 +41,11 @@ describe('Test Burn', () => {
             .program
             .account
             .globalCollectionConfig
-            .fetch(getGlobalCollectionConfig());
+            .fetch(coreProvider.getGlobalCollectionConfig());
 
         const tx = await coreProvider.createCollectionTx({
-            collectionConfigAddress: getCollectionConfig(globalCollectionData.collectionCounter),
-            mint: getCollectionMint(globalCollectionData.collectionCounter),
+            collectionConfigAddress: coreProvider.getCollectionConfig(globalCollectionData.collectionCounter),
+            mint: coreProvider.getCollectionMint(globalCollectionData.collectionCounter),
             collectionMintName: collection.collectionMintNme,
             collectionMintSymbol: collection.collectionMintSymbol,
             collectionMintUri: collection.collectionMintUri,
@@ -63,7 +59,7 @@ describe('Test Burn', () => {
     });
 
     it('Create token mint into collection', async () => {
-        const collectionConfigAddress = getCollectionConfig(globalCollectionData.collectionCounter)
+        const collectionConfigAddress = coreProvider.getCollectionConfig(globalCollectionData.collectionCounter)
         const collectionConfigData = await coreProvider
             .program
             .account
@@ -73,7 +69,7 @@ describe('Test Burn', () => {
 
         for (let i = 0; i < nTokens; i++) {
             const newMintCount = mintCount + i;
-            const mint = getMint(
+            const mint = coreProvider.getMint(
                 globalCollectionData.collectionCounter,
                 new BN(newMintCount)
             );

@@ -3,7 +3,7 @@ import {BN} from "@coral-xyz/anchor";
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
-    Connection,
+    Connection, PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
@@ -11,7 +11,10 @@ import {
 import {EpplexCore, IDL as CoreIdl} from "./types/epplexCoreTypes";
 import {CORE_PROGRAM_ID} from "./constants/ids";
 import {EpplexProviderWallet} from "./types/WalletProvider";
-import {getGlobalCollectionConfig} from "./constants/coreSeeds";
+import {
+    getCollectionConfig, getCollectionMint,
+    getGlobalCollectionConfig, getMint,
+} from "./constants/coreSeeds";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
 import {CreateCollectionTxParams} from "./types/CoreProviderTypes";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
@@ -23,10 +26,11 @@ class CoreProvider {
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
-        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions()
+        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        coreProgramId: PublicKey = CORE_PROGRAM_ID
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = new anchor.Program(CoreIdl, CORE_PROGRAM_ID, this.provider);
+        this.program = new anchor.Program(CoreIdl, coreProgramId, this.provider);
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider) : CoreProvider {
@@ -38,7 +42,7 @@ class CoreProvider {
         return await this.program.methods
             .globalCollectionConfigCreate()
             .accounts({
-                globalCollectionConfig: getGlobalCollectionConfig(),
+                globalCollectionConfig: this.getGlobalCollectionConfig(),
                 payer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })
@@ -85,7 +89,7 @@ class CoreProvider {
             .accounts({
                 mint,
                 collectionConfig: collectionConfigAddress,
-                globalCollectionConfig: getGlobalCollectionConfig(),
+                globalCollectionConfig: this.getGlobalCollectionConfig(),
                 payer: this.provider.wallet.publicKey,
                 tokenAccount,
                 updateAuthority: this.program.provider.publicKey,
@@ -105,6 +109,21 @@ class CoreProvider {
         return new Transaction().add(...ixs);
     }
 
+    getGlobalCollectionConfig(): PublicKey {
+        return getGlobalCollectionConfig(this.program.programId);
+    }
+
+    getCollectionConfig(collectionCounter: BN): PublicKey {
+        return getCollectionConfig(collectionCounter, this.program.programId);
+    }
+
+    getCollectionMint(collectionCounter: BN): PublicKey {
+        return getCollectionMint(collectionCounter, this.program.programId);
+    }
+
+    getMint(collectionCounter: BN, mintCount: BN): PublicKey {
+        return getMint(collectionCounter, mintCount, this.program.programId);
+    }
 }
 
 export default CoreProvider;

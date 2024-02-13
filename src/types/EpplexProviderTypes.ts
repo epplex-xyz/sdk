@@ -19,7 +19,8 @@ export interface CreateWhitelistMintTxParams {
     uri: string
     mint: PublicKey,
     globalCollectionConfig?: PublicKey,
-    computeBudget?: number
+    computeBudget?: number,
+    coreProgramId?: PublicKey
 }
 
 // Maybe should extend the above
@@ -31,6 +32,7 @@ export interface CreateCollectionMintTxTxParams {
     symbol: string,
     uri: string
     computeBudget?: number
+    coreProgramId?: PublicKey
 }
 
 

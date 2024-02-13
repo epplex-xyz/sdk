@@ -23,18 +23,18 @@ describe("Testing Burger Program", () => {
     const metadata = getDefaultMetadata({});
 
     // TODO outdated
-    it("Create whitelist mint", async() => {
-      const tx = await epplexProvider.createWhitelistMintTx({
-          expiryDate: metadata.expiryDate,
-          mint: mint.publicKey, //TODO
-          name: metadata.name,
-          symbol: metadata.symbol,
-          uri: metadata.uri
-      })
-      await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [mint])
-
-      console.log("\n")
-    })
+    // it("Create whitelist mint", async() => {
+    //   const tx = await epplexProvider.createWhitelistMintTx({
+    //       expiryDate: metadata.expiryDate,
+    //       mint: mint.publicKey, //TODO
+    //       name: metadata.name,
+    //       symbol: metadata.symbol,
+    //       uri: metadata.uri
+    //   })
+    //   await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [mint])
+    //
+    //   console.log("\n")
+    // })
 
     it("Transfer NFT", async() => {
         const ixs = nftTransferIxs({
