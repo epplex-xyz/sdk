@@ -2,12 +2,12 @@ import {Keypair} from "@solana/web3.js";
 import {EpNFTService, getGlobalCollectionConfig, sendAndConfirmRawTransaction} from "../src";
 import {CONNECTION, getSetup} from "./setup";
 import {assert} from "chai";
-import {METADATA} from "./metadata";
+import {getDefaultMetadata} from "./getDefaultMetadata";
 
 const {wallet, burgerProvider} = getSetup();
 
 const mint = Keypair.generate();
-const metadata = METADATA();
+const metadata = getDefaultMetadata({});
 
 describe("Testing Burger Program", () => {
     // TODO this is outdated
