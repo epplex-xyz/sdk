@@ -8,7 +8,7 @@ import {
     SYSVAR_RENT_PUBKEY,
     Transaction,
 } from "@solana/web3.js";
-import {EpplexCore, IDL as CoreIdl} from "./types/epplex_core";
+import {EpplexCore, IDL as CoreIdl} from "./types/epplexCoreTypes";
 import {CORE_PROGRAM_ID} from "./constants/ids";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {getGlobalCollectionConfig} from "./constants/coreSeeds";

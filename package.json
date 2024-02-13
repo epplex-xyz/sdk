@@ -30,12 +30,14 @@
 		"pub": "yarn build && npm publish --access public",
 		"start": "ts-node src/index.ts",
 		"build": "rm -rf lib && tsc",
-		"update-types-burger": "cp ../epPlex/target/types/epplex_burger.ts src/types",
-		"update-types-core": "cp ../epPlex/target/types/epplex_core.ts src/types",
+
+		"update-types-burger": "cp ../epPlex/target/types/epplex_burger.ts src/types/epplexBurgerTypes.ts",
+		"update-types-core": "cp ../epPlex/target/types/epplex_core.ts src/types/epplexCoreTypes.ts",
 		"update-types-all": "yarn update-types-burger && yarn update-types-core",
-		"update-idl-burger": "cp ../epPlex/target/idl/epplex_burger.json src/idl",
-		"update-idl-core": "cp ../epPlex/target/idl/epplex_core.json src/idl",
+		"update-idl-burger": "cp ../epPlex/target/idl/epplex_burger.json src/idl/epplex_burger.json",
+		"update-idl-core": "cp ../epPlex/target/idl/epplex_core.json src/idl/epplex_core.json",
 		"update-idl-all": "yarn update-idl-burger && yarn update-idl-core",
+
 		"airdrop": "solana airdrop 50 -u localhost -k .local_keys/epplex_PAYER_ADMIN.json",
 		"test": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/*.spec.ts",
 		"test-utils": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/utils.spec.ts",
