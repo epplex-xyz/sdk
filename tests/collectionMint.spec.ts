@@ -20,12 +20,12 @@ const {wallet, burgerProvider, coreProvider} = getSetup();
 const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
 const nTokens = 2
 const collection = {
-    collectionMintNme: "SDK Test",
-    collectionMintSymbol: "SDK TEST",
-    collectionMintUri: "https://example.com",
-    collectionName: "epplex",
-    collectionSymbol: "EPX",
-    collectionSize: 2,
+    collectionMintNme: "SDK Test", // shows up directly on the Collection NFT
+    collectionMintSymbol: "SDK TEST", // shows up directly on the Collection NFT
+    collectionMintUri: "https://example.com", // shows up directly on the Collection NFT
+    collectionName: "epplex", // can just check on-chain, but not really super important
+    collectionSymbol: "EPX",  // can just check on-chain, but not really super important
+    collectionSize: 2,  // can just check on-chain, but not really super important
 }
 
 describe('Test Collection', () => {
@@ -77,7 +77,7 @@ describe('Test Collection', () => {
                 expiryDate,
                 collectionId: Number(globalCollectionData.collectionCounter),
                 mint,
-                name: `${collection.collectionMintNme} ${i + 1}`,
+                name: `${collection.collectionMintNme} #${i + 1}`,
                 symbol: collection.collectionMintSymbol,
                 uri: collection.collectionMintUri,
             })
