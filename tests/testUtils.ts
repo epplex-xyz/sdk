@@ -48,3 +48,7 @@ export function trySetupBurgerProgramDelegate(
         }
     })
 }
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
