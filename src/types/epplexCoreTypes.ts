@@ -57,78 +57,6 @@ export type EpplexCore = {
           "isSigner": true
         },
         {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
-          ]
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -171,7 +99,7 @@ export type EpplexCore = {
         {
           "name": "params",
           "type": {
-            "defined": "TokenCollectionCreateParams"
+            "defined": "TokenCreateParams"
           }
         }
       ]
@@ -402,37 +330,6 @@ export type EpplexCore = {
     },
     {
       "name": "TokenCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "additionalMetadata",
-            "type": {
-              "vec": {
-                "array": [
-                  "string",
-                  2
-                ]
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenCollectionCreateParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -554,78 +451,6 @@ export const IDL: EpplexCore = {
           "isSigner": true
         },
         {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
-          ]
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -668,7 +493,7 @@ export const IDL: EpplexCore = {
         {
           "name": "params",
           "type": {
-            "defined": "TokenCollectionCreateParams"
+            "defined": "TokenCreateParams"
           }
         }
       ]
@@ -899,37 +724,6 @@ export const IDL: EpplexCore = {
     },
     {
       "name": "TokenCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "additionalMetadata",
-            "type": {
-              "vec": {
-                "array": [
-                  "string",
-                  2
-                ]
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenCollectionCreateParams",
       "type": {
         "kind": "struct",
         "fields": [

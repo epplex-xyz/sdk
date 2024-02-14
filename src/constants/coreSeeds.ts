@@ -34,7 +34,6 @@ export const SEED_MINT = Buffer.from(JSON.parse(
 ));
 
 
-
 export function getGlobalCollectionConfig(coreProgramId = CORE_PROGRAM_ID): PublicKey {
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [SEED_GLOBAL_COLLECTION],
@@ -55,7 +54,23 @@ export function getCollectionConfig(collectionCounter: BN, coreProgramId = CORE_
     return globalCollectionConfig;
 }
 
+<<<<<<< HEAD
 export function getCollectionMint(collectionCounter: BN, coreProgramId = CORE_PROGRAM_ID): PublicKey {
+=======
+export function getMint(collectionCounter: BN, mintCounter: BN): PublicKey {
+    const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
+        [
+            SEED_MINT,
+            collectionCounter.toArrayLike(Buffer, "le", 8),
+            mintCounter.toArrayLike(Buffer, "le", 8),
+        ],
+        CORE_PROGRAM_ID
+    );
+    return globalCollectionConfig;
+}
+
+export function getCollectionMint(collectionCounter: BN): PublicKey {
+>>>>>>> ad513c6 (combine collection mint and token mint instructions)
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [
             SEED_COLLECTION_MINT,
@@ -66,6 +81,7 @@ export function getCollectionMint(collectionCounter: BN, coreProgramId = CORE_PR
     return globalCollectionConfig;
 }
 
+<<<<<<< HEAD
 
 
 // From globalCollection counter
@@ -81,3 +97,5 @@ export function getMint(collectionCounter: BN, mintCount: BN, coreProgramId = CO
     return globalCollectionConfig;
 }
 
+=======
+>>>>>>> ad513c6 (combine collection mint and token mint instructions)

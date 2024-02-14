@@ -13,6 +13,16 @@ describe('Individual mint', () => {
     trySetupGlobalCollectionConfig(coreProvider, wallet);
     trySetupBurgerProgramDelegate(burgerProvider, wallet);
 
+
+    const collection = {
+        collectionMintNme: "SDK Test",
+        collectionMintSymbol: "SDK TEST",
+        collectionMintUri: "https://example.com",
+        collectionName: "epplex",
+        collectionSymbol: "EPX",
+        collectionSize: 0,
+    };
+
     let mint: PublicKey;
     it('Mint token', async () => {
         console.log("\n \n");
@@ -22,17 +32,16 @@ describe('Individual mint', () => {
             .globalCollectionConfig
             .fetch(coreProvider.getGlobalCollectionConfig());
 
-        mint = getMint(globalCollectionData.collectionCounter, new BN(0));
-        const tx = await burgerProvider.createWhitelistMintTx({
+        const tx = await burgerProvider.createIndividualMintTx({
             expiryDate: metadata.expiryDate,
             name: metadata.name,
             symbol: metadata.symbol,
             uri: metadata.uri,
-            mint,
+            collectionId: Number(globalCollectionData.collectionCounter),
         })
 
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-        console.log("Individual Mint Metadata", await getTokenMetadata(burgerProvider.provider.connection, mint));
+        mint = getMint(globalCollectionData.collectionCounter, new BN(0));
     });
 
     it("Transfer NFT", async() => {
