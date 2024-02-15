@@ -128,7 +128,6 @@ class CoreProvider {
     getMint(collectionCounter: BN, mintCount: BN): PublicKey {
         return getMint(collectionCounter, mintCount, this.program.programId);
     }
-=======
 }
 
 

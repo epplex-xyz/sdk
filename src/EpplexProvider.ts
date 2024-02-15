@@ -62,7 +62,8 @@ class EpplexProvider {
                                      name,
                                      symbol,
                                      uri,
-                                     computeBudget = DEFAULT_COMPUTE_BUDGET
+                                     computeBudget = DEFAULT_COMPUTE_BUDGET,
+                                     coreProgramId = CORE_PROGRAM_ID
                                  }) {
 
         const bigCollectionId = new anchor.BN(collectionId);
@@ -94,7 +95,7 @@ class EpplexProvider {
             ComputeBudgetProgram.setComputeUnitLimit({
                 units: computeBudget
             });
-        const tokenCreateIx = await this.createTokenMintIx(name, symbol, uri, expiryDate, bigCollectionId, mint, ata,this.provider.publicKey);
+        const tokenCreateIx = await this.createTokenMintIx(name, symbol, uri, expiryDate, bigCollectionId, mint, ata,this.provider.publicKey, coreProgramId);
 //        return new Transaction().add(collectionMintIx, tokenCreateIx);
         return new Transaction().add(computeLimitIx, collectionMintIx, tokenCreateIx);
     }
@@ -119,7 +120,7 @@ class EpplexProvider {
             TOKEN_2022_PROGRAM_ID,
             ASSOCIATED_TOKEN_PROGRAM_ID
         );
-        const tokenCreateIx = await this.createTokenMintIx(name, symbol, uri, expiryDate, bigCollectionId, mint, ata, payer);
+        const tokenCreateIx = await this.createTokenMintIx(name, symbol, uri, expiryDate, bigCollectionId, mint, ata, payer, coreProgramId);
 
         const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
@@ -131,7 +132,7 @@ class EpplexProvider {
         return new Transaction().add(...ixs);
     }
 
-    private async createTokenMintIx(name: string, symbol: string, uri: string, expiryDate: string, bigCollectionId, mint: PublicKey, ata: PublicKey, payer: PublicKey) {
+    private async createTokenMintIx(name: string, symbol: string, uri: string, expiryDate: string, bigCollectionId, mint: PublicKey, ata: PublicKey, payer: PublicKey, coreProgramId: PublicKey) {
         return await this.program.methods
             .tokenMint({
                 name: name,
@@ -155,58 +156,7 @@ class EpplexProvider {
                 epplexCore: coreProgramId,
             })
             .instruction();
-<<<<<<< HEAD
 
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget
-            }),
-            tokenCreateIx
-        ];
-
-        return new Transaction().add(...ixs);
-    }
-    async createWhitelistMintTx({
-        expiryDate,
-        name,
-        symbol,
-        uri,
-        mint,
-        computeBudget = DEFAULT_COMPUTE_BUDGET,
-        coreProgramId = CORE_PROGRAM_ID,
-    }: CreateWhitelistMintTxParams) {
-        const permanentDelegate = this.getProgramDelegate();
-        const payer = this.provider.wallet.publicKey;
-        const ata = getAssociatedTokenAddressSync(mint, payer, undefined, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-
-        const tokenCreateIx = await this.program.methods.whitelistMint({
-            name: name,
-            symbol: symbol,
-            uri: uri,
-            expiryDate: expiryDate,
-        }).accounts({
-            mint,
-            tokenAccount: ata,
-            tokenMetadata: this.getTokenBurgerMetadata(mint),
-            permanentDelegate: permanentDelegate,
-            globalCollectionConfig: getGlobalCollectionConfig(coreProgramId),
-            payer: payer,
-
-            rent: SYSVAR_RENT_PUBKEY,
-            systemProgram: SystemProgram.programId,
-            token22Program: TOKEN_2022_PROGRAM_ID,
-            associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-            epplexCore: coreProgramId,
-        }).instruction();
-
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget
-            }),
-            tokenCreateIx
-        ];
-
-        return new Transaction().add(...ixs);
     }
 
     async renewTokenTx(mint: PublicKey, fundUpTo: number = 0.1, ) : Promise < {
