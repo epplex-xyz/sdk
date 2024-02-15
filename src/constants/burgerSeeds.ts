@@ -14,6 +14,8 @@ export const SEED_PROGRAM_DELEGATE = Buffer.from(JSON.parse(
     })[0].value
 ));
 
+export const GAME_CONFIG_SEED = "GAME_CONFIG";
+
 export function getProgramDelegate(burgerProgramId = BURGER_PROGRAM_ID) : PublicKey {
     const[programDelegate] = PublicKey.findProgramAddressSync(
         [SEED_PROGRAM_DELEGATE], burgerProgramId

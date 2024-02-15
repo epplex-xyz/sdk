@@ -518,6 +518,76 @@ export type EpplexBurger = {
       ]
     },
     {
+      "name": "gameCreate",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "GameCreateParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "gameTransition",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameEnd",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "programDelegateCreate",
       "accounts": [
         {
@@ -874,6 +944,21 @@ export type EpplexBurger = {
       "code": 6009,
       "name": "FieldDoesNotExist",
       "msg": "Field does not exist"
+    },
+    {
+      "code": 6010,
+      "name": "GamePhaseLastStage",
+      "msg": "Already in the Last game phase"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidGameDuration",
+      "msg": "Phase start greater than phase end"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidPhaseEndTS",
+      "msg": "Phase end must be greater than current timestamp"
     }
   ]
 };
@@ -1398,6 +1483,76 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
+      "name": "gameCreate",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "GameCreateParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "gameTransition",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameEnd",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "programDelegateCreate",
       "accounts": [
         {
@@ -1754,6 +1909,21 @@ export const IDL: EpplexBurger = {
       "code": 6009,
       "name": "FieldDoesNotExist",
       "msg": "Field does not exist"
+    },
+    {
+      "code": 6010,
+      "name": "GamePhaseLastStage",
+      "msg": "Already in the Last game phase"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidGameDuration",
+      "msg": "Phase start greater than phase end"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidPhaseEndTS",
+      "msg": "Phase end must be greater than current timestamp"
     }
   ]
 };

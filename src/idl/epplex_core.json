@@ -492,8 +492,5 @@
       "name": "DestroyTimestampNotExceeded",
       "msg": "Destroy timestamp has not been exceeded"
     }
-  ],
-  "metadata": {
-    "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"
-  }
+  ]
 }
