@@ -2,8 +2,6 @@ import {CONNECTION} from "./setup";
 import {
     CoreProvider,
     EpplexProvider,
-    getGlobalCollectionConfig,
-    getProgramDelegate,
     sendAndConfirmRawTransaction
 } from "../src";
 
@@ -19,7 +17,7 @@ export function trySetupGlobalCollectionConfig(
                 .program
                 .account
                 .globalCollectionConfig
-                .fetch(getGlobalCollectionConfig());
+                .fetch(provider.getGlobalCollectionConfig());
 
             console.log("Global collection config data", globalCollectionData)
         } catch (e) {
@@ -36,16 +34,19 @@ export function trySetupBurgerProgramDelegate(
 ) {
     it("Try create burger delegate ", async() => {
         try {
-            const burgerDelegate = getProgramDelegate();
             const burgerDelegateData = await provider
                 .program
                 .account
                 .programDelegate
-                .fetch(burgerDelegate);
+                .fetch(provider.getProgramDelegate());
             console.log("Program Delegate Data", burgerDelegateData)
         } catch (e) {
             const tx = await provider.createProgramDelegateTx();
             await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
         }
     })
+}
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

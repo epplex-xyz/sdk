@@ -1,31 +1,36 @@
-import {getTokenMetadata} from "@solana/spl-token";
-import {expect} from "chai";
 import {CONNECTION, getSetup} from "./setup";
 import {
-    EpNFTService,
     getProgramDelegate,
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {sleep, trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {PublicKey} from "@solana/web3.js";
+import {expect} from "chai";
 
 /*
 ******* SETUP
 */
 const {wallet, burgerProvider, coreProvider} = getSetup();
-const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
-const nTokens = 2
+
+// 3 second expiry
+const expiryTime = 3;
+const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + expiryTime).toString()
+
+
+const nTokens = 1
 const collection = {
-    collectionMintNme: "SDK Test", // shows up directly on the Collection NFT
-    collectionMintSymbol: "SDK TEST", // shows up directly on the Collection NFT
-    collectionMintUri: "https://example.com", // shows up directly on the Collection NFT
-    collectionName: "epplex", // can just check on-chain, but not really super important
-    collectionSymbol: "EPX",  // can just check on-chain, but not really super important
-    collectionSize: 2,  // can just check on-chain, but not really super important
+    collectionMintNme: "SDK Test",
+    collectionMintSymbol: "SDK TEST",
+    collectionMintUri: "https://example.com",
+    collectionName: "epplex",
+    collectionSymbol: "EPX",
+    collectionSize: nTokens,
 }
 
-describe('Test Collection', () => {
+describe('Test Burn', () => {
     let globalCollectionData;
+    let mints: PublicKey[] = [];
 
     trySetupGlobalCollectionConfig(coreProvider, wallet);
     trySetupBurgerProgramDelegate(burgerProvider, wallet);
@@ -73,27 +78,36 @@ describe('Test Collection', () => {
                 expiryDate,
                 collectionId: Number(globalCollectionData.collectionCounter),
                 mint,
-                name: `${collection.collectionMintNme} #${i + 1}`,
+                name: `${collection.collectionMintNme} ${i + 1}`,
                 symbol: collection.collectionMintSymbol,
                 uri: collection.collectionMintUri,
             })
             await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-
-
-            // Verification
-            const metadata = await getTokenMetadata(CONNECTION, mint);
-            expect(
-                metadata.additionalMetadata.find(md => md[0] == "collection_id")[1]
-            ).to.equal(globalCollectionData.collectionCounter.toString());
-
-            expect(
-                metadata.additionalMetadata.find(md => md[0] == "mint_count")[1]
-            ).to.equal(i.toString());
-
-            expect(
-                await EpNFTService.verifyInCollection(CONNECTION, mint)
-            ).to.equal(true);
+            mints.push(mint);
         }
+    });
+
+    it('Burn token FAIL', async () => {
+        const tx = await burgerProvider.burnTokenTx({
+            mint: mints[0],
+            owner: wallet.publicKey,
+        });
+        const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+        expect(res).to.be.equal(null);
+    });
+
+
+    it('Burn token SUCCESS', async () => {
+        console.log("Sleeping for 4 seconds");
+        await sleep(4_000);
+
+        const tx = await burgerProvider.burnTokenTx({
+            mint: mints[0],
+            owner: wallet.publicKey,
+        });
+        const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+        console.log("res", res)
+        expect(res).to.not.be.empty;
     });
 
 });

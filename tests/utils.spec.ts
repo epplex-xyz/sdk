@@ -1,7 +1,7 @@
 import {clusterApiUrl, Connection, Keypair, LAMPORTS_PER_SOL, Transaction} from "@solana/web3.js";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider, nftTransferIxs, sendAndConfirmRawTransaction} from "../src";
-import {METADATA} from "./metadata";
+import {getDefaultMetadata} from "./getDefaultMetadata";
 
 // TODO these needs to be deleted
 const COMMITMENT = "confirmed";
@@ -20,21 +20,21 @@ const epplexProvider = new EpplexProvider(
 
 describe("Testing Burger Program", () => {
     const mint = Keypair.generate();
-    const metadata = METADATA();
+    const metadata = getDefaultMetadata({});
 
     // TODO outdated
-    it("Create whitelist mint", async() => {
-      const tx = await epplexProvider.createWhitelistMintTx({
-          expiryDate: metadata.expiryDate,
-          mint: mint.publicKey, //TODO
-          name: metadata.name,
-          symbol: metadata.symbol,
-          uri: metadata.uri
-      })
-      await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [mint])
-
-      console.log("\n")
-    })
+    // it("Create whitelist mint", async() => {
+    //   const tx = await epplexProvider.createWhitelistMintTx({
+    //       expiryDate: metadata.expiryDate,
+    //       mint: mint.publicKey, //TODO
+    //       name: metadata.name,
+    //       symbol: metadata.symbol,
+    //       uri: metadata.uri
+    //   })
+    //   await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [mint])
+    //
+    //   console.log("\n")
+    // })
 
     it("Transfer NFT", async() => {
         const ixs = nftTransferIxs({

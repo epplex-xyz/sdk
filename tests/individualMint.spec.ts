@@ -1,13 +1,13 @@
 import {BN} from "@coral-xyz/anchor";
 import {getTokenMetadata} from "@solana/spl-token";
 import {CONNECTION, getSetup} from "./setup";
-import {METADATA} from "./metadata";
+import {getDefaultMetadata} from "./getDefaultMetadata";
 import {sendAndConfirmRawTransaction, getGlobalCollectionConfig, getMint, nftTransferIxs} from "../src";
 import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
 import {PublicKey, Transaction} from "@solana/web3.js";
 
 const {wallet, burgerProvider, coreProvider} = getSetup();
-const metadata = METADATA();
+const metadata = getDefaultMetadata({});
 
 describe('Individual mint', () => {
     trySetupGlobalCollectionConfig(coreProvider, wallet);
@@ -20,7 +20,7 @@ describe('Individual mint', () => {
             .program
             .account
             .globalCollectionConfig
-            .fetch(getGlobalCollectionConfig());
+            .fetch(coreProvider.getGlobalCollectionConfig());
 
         mint = getMint(globalCollectionData.collectionCounter, new BN(0));
         const tx = await burgerProvider.createWhitelistMintTx({

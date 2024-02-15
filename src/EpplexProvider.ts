@@ -18,7 +18,10 @@ import {
 import {EpplexBurger, IDL as BurgerIdl} from "./types/epplexBurgerTypes";
 import {BURGER_PROGRAM_ID, CORE_PROGRAM_ID} from "./constants/ids";
 import {getMintOwner, tryCreateATAIx} from "./utils/generic";
-import {getProgramDelegate, getTokenBurgerMetadata} from "./constants/burgerSeeds";
+import {
+    getProgramDelegate,
+    getTokenBurgerMetadata,
+} from "./constants/burgerSeeds";
 import {PAYER_ADMIN} from "./constants/keys";
 import {
     BurnTxParams,
@@ -38,10 +41,11 @@ class EpplexProvider {
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
-        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions()
+        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        epplexProgramId: PublicKey = BURGER_PROGRAM_ID
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = new anchor.Program(BurgerIdl, BURGER_PROGRAM_ID, this.provider);
+        this.program = new anchor.Program(BurgerIdl, epplexProgramId, this.provider);
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider) : EpplexProvider {
@@ -56,7 +60,8 @@ class EpplexProvider {
          name,
          symbol,
          uri,
-         computeBudget = DEFAULT_COMPUTE_BUDGET
+         computeBudget = DEFAULT_COMPUTE_BUDGET,
+         coreProgramId = CORE_PROGRAM_ID,
      }: CreateCollectionMintTxTxParams) {
         const bigCollectionId = new anchor.BN(collectionId);
         const payer = this.provider.wallet.publicKey;
@@ -80,15 +85,15 @@ class EpplexProvider {
             .accounts({
                 mint: mint,
                 tokenAccount: ata,
-                tokenMetadata: getTokenBurgerMetadata(mint),
-                permanentDelegate: getProgramDelegate(),
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                permanentDelegate: this.getProgramDelegate(),
                 payer: payer,
-                collectionConfig: getCollectionConfig(bigCollectionId),
+                collectionConfig: getCollectionConfig(bigCollectionId, coreProgramId),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                epplexCore: CORE_PROGRAM_ID,
+                epplexCore: coreProgramId,
             })
             .instruction();
 
@@ -107,9 +112,10 @@ class EpplexProvider {
         symbol,
         uri,
         mint,
-        computeBudget = DEFAULT_COMPUTE_BUDGET
+        computeBudget = DEFAULT_COMPUTE_BUDGET,
+        coreProgramId = CORE_PROGRAM_ID,
     }: CreateWhitelistMintTxParams) {
-        const permanentDelegate = getProgramDelegate();
+        const permanentDelegate = this.getProgramDelegate();
         const payer = this.provider.wallet.publicKey;
         const ata = getAssociatedTokenAddressSync(mint, payer, undefined, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
 
@@ -121,16 +127,16 @@ class EpplexProvider {
         }).accounts({
             mint,
             tokenAccount: ata,
-            tokenMetadata: getTokenBurgerMetadata(mint),
+            tokenMetadata: this.getTokenBurgerMetadata(mint),
             permanentDelegate: permanentDelegate,
-            globalCollectionConfig: getGlobalCollectionConfig(),
+            globalCollectionConfig: getGlobalCollectionConfig(coreProgramId),
             payer: payer,
 
             rent: SYSVAR_RENT_PUBKEY,
             systemProgram: SystemProgram.programId,
             token22Program: TOKEN_2022_PROGRAM_ID,
             associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-            epplexCore: CORE_PROGRAM_ID,
+            epplexCore: coreProgramId,
         }).instruction();
 
         const ixs = [
@@ -183,12 +189,12 @@ class EpplexProvider {
             renewTerms: 1
         }).accounts({
             mint,
-            tokenMetadata: getTokenBurgerMetadata(mint),
+            tokenMetadata: this.getTokenBurgerMetadata(mint),
             mintPayment: WSOL_NATIVE_ADDRESS,
             proceedsTokenAccount: proceedsAta,
             payerTokenAccount: payerAta,
             payer: this.provider.wallet.publicKey,
-            updateAuthority: getProgramDelegate(),
+            updateAuthority: this.getProgramDelegate(),
             token22Program: TOKEN_2022_PROGRAM_ID,
             tokenProgram: TOKEN_PROGRAM_ID
         }).instruction();
@@ -201,7 +207,7 @@ class EpplexProvider {
     }
 
     async createProgramDelegateTx() {
-        const programDelegate = getProgramDelegate();
+        const programDelegate = this.getProgramDelegate();
         const tx = await this.program.methods.programDelegateCreate({}).accounts({
             programDelegate,
             payer: this.provider.wallet.publicKey,
@@ -215,7 +221,7 @@ class EpplexProvider {
         mint,
         owner
     }: BurnTxParams) {
-        const programDelegate = getProgramDelegate();
+        const programDelegate = this.getProgramDelegate();
         const mintOwner = owner ?? await getMintOwner(this.provider.connection, mint);
         const tokenAccount = getAssociatedTokenAddressSync(
             mint,
@@ -228,7 +234,7 @@ class EpplexProvider {
             mint: mint,
             tokenAccount,
             permanentDelegate: programDelegate,
-            tokenMetadata: getTokenBurgerMetadata(mint),
+            tokenMetadata: this.getTokenBurgerMetadata(mint),
             payer: this.provider.wallet.publicKey,
             token22Program: TOKEN_2022_PROGRAM_ID,
         }).transaction();
@@ -241,7 +247,7 @@ class EpplexProvider {
         message,
         owner
     }: TokenGameVoteTxParams) {
-        const programDelegate = getProgramDelegate();
+        const programDelegate = this.getProgramDelegate();
 
         // Could just do this.provider.wallet.publicKey
         const mintOwner = owner ?? await getMintOwner(this.provider.connection, mint);
@@ -257,7 +263,7 @@ class EpplexProvider {
         }).accounts({
             mint: mint,
             tokenAccount,
-            tokenMetadata: getTokenBurgerMetadata(mint),
+            tokenMetadata: this.getTokenBurgerMetadata(mint),
             payer: mintOwner,
             updateAuthority: programDelegate,
             token22Program: TOKEN_2022_PROGRAM_ID,
@@ -265,6 +271,15 @@ class EpplexProvider {
 
         return tokenBurnTx;
     }
+
+    getProgramDelegate() : PublicKey {
+        return getProgramDelegate(this.program.programId)
+    }
+
+    getTokenBurgerMetadata(mint: PublicKey) : PublicKey {
+        return getTokenBurgerMetadata(mint, this.program.programId);
+    }
+
 }
 
 export default EpplexProvider;
