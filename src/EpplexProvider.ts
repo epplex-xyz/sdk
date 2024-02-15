@@ -31,7 +31,9 @@ import {
 } from "./types/EpplexProviderTypes";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
-import {getCollectionConfig, getGlobalCollectionConfig} from "./constants/coreSeeds";
+import {getCollectionConfig, getCollectionMint, getGlobalCollectionConfig} from "./constants/coreSeeds";
+import {CoreProvider} from "./index";
+import {getMint} from "../lib";
 
 // This is more like Burger Program
 class EpplexProvider {
@@ -53,7 +55,53 @@ class EpplexProvider {
         return epplexProvider;
     }
 
-    async createCollectionMintTx({
+
+    async createIndividualMintTx({
+                                     expiryDate,
+                                     collectionId,
+                                     name,
+                                     symbol,
+                                     uri,
+                                     computeBudget = DEFAULT_COMPUTE_BUDGET,
+                                     coreProgramId = CORE_PROGRAM_ID
+                                 }) {
+
+        const bigCollectionId = new anchor.BN(collectionId);
+        const coreProvider = new CoreProvider(this.provider.wallet, this.provider.connection);
+        const [collectionConfigAddress, _] = PublicKey.findProgramAddressSync(
+            [Buffer.from("CONFIG"),
+            bigCollectionId.toArrayLike(Buffer, "le", 8)],
+            CORE_PROGRAM_ID
+        );
+        const collectionMint = getCollectionMint(bigCollectionId);
+        const collectionAta = getAssociatedTokenAddressSync(
+            collectionMint,
+            this.provider.wallet.publicKey,
+            undefined,
+            TOKEN_2022_PROGRAM_ID,
+            ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+        const collectionMintIx = await coreProvider.createCollectionIx(name, symbol, uri, name, symbol, 1, getProgramDelegate(), collectionMint, collectionConfigAddress, collectionAta);
+        const mint = getMint(bigCollectionId, new anchor.BN(0));
+        const ata = getAssociatedTokenAddressSync(
+            mint,
+            this.provider.wallet.publicKey,
+            undefined,
+            TOKEN_2022_PROGRAM_ID,
+            ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+
+        const computeLimitIx =
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: computeBudget
+            });
+        const tokenCreateIx = await this.createTokenMintIx(name, symbol, uri, expiryDate, bigCollectionId, mint, ata,this.provider.publicKey, coreProgramId);
+//        return new Transaction().add(collectionMintIx, tokenCreateIx);
+        return new Transaction().add(computeLimitIx, collectionMintIx, tokenCreateIx);
+    }
+
+
+    async createTokenMintTx({
          expiryDate,
          collectionId,
          mint,
@@ -72,9 +120,21 @@ class EpplexProvider {
             TOKEN_2022_PROGRAM_ID,
             ASSOCIATED_TOKEN_PROGRAM_ID
         );
+        const tokenCreateIx = await this.createTokenMintIx(name, symbol, uri, expiryDate, bigCollectionId, mint, ata, payer, coreProgramId);
 
-        const tokenCreateIx = await this.program.methods
-            .collectionMint({
+        const ixs = [
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: computeBudget
+            }),
+            tokenCreateIx
+        ];
+
+        return new Transaction().add(...ixs);
+    }
+
+    private async createTokenMintIx(name: string, symbol: string, uri: string, expiryDate: string, bigCollectionId, mint: PublicKey, ata: PublicKey, payer: PublicKey, coreProgramId: PublicKey) {
+        return await this.program.methods
+            .tokenMint({
                 name: name,
                 symbol: symbol,
                 uri: uri,
@@ -97,56 +157,6 @@ class EpplexProvider {
             })
             .instruction();
 
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget
-            }),
-            tokenCreateIx
-        ];
-
-        return new Transaction().add(...ixs);
-    }
-    async createWhitelistMintTx({
-        expiryDate,
-        name,
-        symbol,
-        uri,
-        mint,
-        computeBudget = DEFAULT_COMPUTE_BUDGET,
-        coreProgramId = CORE_PROGRAM_ID,
-    }: CreateWhitelistMintTxParams) {
-        const permanentDelegate = this.getProgramDelegate();
-        const payer = this.provider.wallet.publicKey;
-        const ata = getAssociatedTokenAddressSync(mint, payer, undefined, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-
-        const tokenCreateIx = await this.program.methods.whitelistMint({
-            name: name,
-            symbol: symbol,
-            uri: uri,
-            expiryDate: expiryDate,
-        }).accounts({
-            mint,
-            tokenAccount: ata,
-            tokenMetadata: this.getTokenBurgerMetadata(mint),
-            permanentDelegate: permanentDelegate,
-            globalCollectionConfig: getGlobalCollectionConfig(coreProgramId),
-            payer: payer,
-
-            rent: SYSVAR_RENT_PUBKEY,
-            systemProgram: SystemProgram.programId,
-            token22Program: TOKEN_2022_PROGRAM_ID,
-            associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-            epplexCore: coreProgramId,
-        }).instruction();
-
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget
-            }),
-            tokenCreateIx
-        ];
-
-        return new Transaction().add(...ixs);
     }
 
     async renewTokenTx(mint: PublicKey, fundUpTo: number = 0.1, ) : Promise < {

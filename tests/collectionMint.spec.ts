@@ -3,11 +3,16 @@ import {expect} from "chai";
 import {CONNECTION, getSetup} from "./setup";
 import {
     EpNFTService,
+    getGlobalCollectionConfig,
+    getCollectionConfig,
     getProgramDelegate,
+    getMint,
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
 import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {getCollectionMint} from "../src/constants/coreSeeds";
+import {PublicKey} from "@solana/web3.js";
 
 /*
 ******* SETUP
@@ -31,7 +36,6 @@ describe('Test Collection', () => {
     trySetupBurgerProgramDelegate(burgerProvider, wallet);
 
     it('Create collection mint and config', async () => {
-        console.log("\n \n");
         globalCollectionData = await coreProvider
             .program
             .account
@@ -50,7 +54,7 @@ describe('Test Collection', () => {
             authority: getProgramDelegate(),
         });
 
-        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+        const sig = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
     });
 
     it('Create token mint into collection', async () => {
@@ -69,7 +73,7 @@ describe('Test Collection', () => {
                 new BN(newMintCount)
             );
 
-            const tx = await burgerProvider.createCollectionMintTx({
+            const tx = await burgerProvider.createTokenMintTx({
                 expiryDate,
                 collectionId: Number(globalCollectionData.collectionCounter),
                 mint,

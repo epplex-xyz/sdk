@@ -5,20 +5,17 @@ import {
 
 import {
     getCollectionConfig,
-    getCollectionMint,
     getGlobalCollectionConfig,
+    getCollectionMint,
     getMint
 } from "./coreSeeds";
 
 export {
-    // EpplexProvider
     getProgramDelegate,
     getTokenBurgerMetadata,
-
-    // CoreProviderTypes
     getCollectionConfig,
-    getCollectionMint,
     getGlobalCollectionConfig,
+    getCollectionMint,
     getMint
 };
 

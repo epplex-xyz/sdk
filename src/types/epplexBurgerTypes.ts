@@ -20,81 +20,7 @@ export type EpplexBurger = {
   ],
   "instructions": [
     {
-      "name": "whitelistMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WhitelistMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionMint",
+      "name": "tokenMint",
       "accounts": [
         {
           "name": "mint",
@@ -165,7 +91,7 @@ export type EpplexBurger = {
         {
           "name": "params",
           "type": {
-            "defined": "CollectionMintParams"
+            "defined": "TokenMintParams"
           }
         }
       ]
@@ -655,34 +581,6 @@ export type EpplexBurger = {
   ],
   "types": [
     {
-      "name": "CollectionMintParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "expiryDate",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "collectionCounter",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
       "name": "GameCreateParams",
       "type": {
         "kind": "struct",
@@ -763,21 +661,7 @@ export type EpplexBurger = {
       }
     },
     {
-      "name": "TokenRenewParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenSellParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "WhitelistMintParams",
+      "name": "TokenMintParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -796,8 +680,26 @@ export type EpplexBurger = {
           {
             "name": "uri",
             "type": "string"
+          },
+          {
+            "name": "collectionCounter",
+            "type": "u64"
           }
         ]
+      }
+    },
+    {
+      "name": "TokenRenewParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenSellParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     },
     {
@@ -900,81 +802,7 @@ export const IDL: EpplexBurger = {
   ],
   "instructions": [
     {
-      "name": "whitelistMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WhitelistMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionMint",
+      "name": "tokenMint",
       "accounts": [
         {
           "name": "mint",
@@ -1045,7 +873,7 @@ export const IDL: EpplexBurger = {
         {
           "name": "params",
           "type": {
-            "defined": "CollectionMintParams"
+            "defined": "TokenMintParams"
           }
         }
       ]
@@ -1535,34 +1363,6 @@ export const IDL: EpplexBurger = {
   ],
   "types": [
     {
-      "name": "CollectionMintParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "expiryDate",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "collectionCounter",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
       "name": "GameCreateParams",
       "type": {
         "kind": "struct",
@@ -1643,21 +1443,7 @@ export const IDL: EpplexBurger = {
       }
     },
     {
-      "name": "TokenRenewParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenSellParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "WhitelistMintParams",
+      "name": "TokenMintParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1676,8 +1462,26 @@ export const IDL: EpplexBurger = {
           {
             "name": "uri",
             "type": "string"
+          },
+          {
+            "name": "collectionCounter",
+            "type": "u64"
           }
         ]
+      }
+    },
+    {
+      "name": "TokenRenewParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenSellParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     },
     {

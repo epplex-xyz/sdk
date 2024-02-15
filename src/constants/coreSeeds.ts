@@ -34,7 +34,6 @@ export const SEED_MINT = Buffer.from(JSON.parse(
 ));
 
 
-
 export function getGlobalCollectionConfig(coreProgramId = CORE_PROGRAM_ID): PublicKey {
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [SEED_GLOBAL_COLLECTION],
@@ -55,7 +54,8 @@ export function getCollectionConfig(collectionCounter: BN, coreProgramId = CORE_
     return globalCollectionConfig;
 }
 
-export function getCollectionMint(collectionCounter: BN, coreProgramId = CORE_PROGRAM_ID): PublicKey {
+
+export function getCollectionMint(collectionCounter: BN, coreProgramId: PublicKey = CORE_PROGRAM_ID): PublicKey {
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [
             SEED_COLLECTION_MINT,

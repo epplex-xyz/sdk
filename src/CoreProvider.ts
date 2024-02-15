@@ -70,7 +70,19 @@ class CoreProvider {
             undefined,
             TOKEN_2022_PROGRAM_ID
         );
+        const collectionCreateIx = await this.createCollectionIx(collectionMintName, collectionMintSymbol, collectionMintUri, collectionName, collectionSymbol, collectionSize, authority, mint, collectionConfigAddress, tokenAccount);
 
+        const ixs= [
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: computeBudget
+            }),
+            collectionCreateIx
+        ];
+
+        return new Transaction().add(...ixs);
+    }
+
+    async createCollectionIx(collectionMintName: string, collectionMintSymbol: string, collectionMintUri: string, collectionName: string, collectionSymbol: string, collectionSize: number, authority: PublicKey, mint: PublicKey, collectionConfigAddress: PublicKey, tokenAccount: PublicKey) {
         const collectionCreateIx = await this.program.methods
             .collectionCreate({
                 name: collectionMintName,
@@ -98,15 +110,7 @@ class CoreProvider {
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             }).instruction();
-
-        const ixs= [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget
-            }),
-            collectionCreateIx
-        ];
-
-        return new Transaction().add(...ixs);
+        return collectionCreateIx;
     }
 
     getGlobalCollectionConfig(): PublicKey {
@@ -125,5 +129,6 @@ class CoreProvider {
         return getMint(collectionCounter, mintCount, this.program.programId);
     }
 }
+
 
 export default CoreProvider;

@@ -1,1 +1,1 @@
-export const DEFAULT_COMPUTE_BUDGET = 450_000;
+export const DEFAULT_COMPUTE_BUDGET = 1_000_000;

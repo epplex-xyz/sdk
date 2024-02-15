@@ -21,10 +21,9 @@ import {
 import {
   getProgramDelegate,
   getTokenBurgerMetadata,
-
   getCollectionConfig,
-  getCollectionMint,
   getGlobalCollectionConfig,
+  getCollectionMint,
   getMint
 } from "./constants";
 
@@ -35,8 +34,8 @@ export {
 
   CoreProvider,
   getCollectionConfig,
-  getCollectionMint,
   getGlobalCollectionConfig,
+  getCollectionMint,
   getMint,
 
 
