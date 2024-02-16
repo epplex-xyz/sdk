@@ -14,6 +14,7 @@ export type NftTransferTxInputs = {
     payer: PublicKey;
     allowOwnerOffCurveSource?: boolean;
     allowOwnerOffCurveDestination?: boolean;
+    tokenProgramId?: PublicKey;
 };
 
 export function nftTransferIxs(
@@ -21,19 +22,20 @@ export function nftTransferIxs(
 ): TransactionInstruction[] {
     const allowOwnerOffCurveSource = inputs.allowOwnerOffCurveSource ?? false;
     const allowOwnerOffCurveDestination = inputs.allowOwnerOffCurveDestination ?? false;
+    const tokenProgramId = inputs.tokenProgramId ?? TOKEN_2022_PROGRAM_ID
 
     const sourceAta = getAssociatedTokenAddressSync(
         inputs.mint, // mint
         inputs.source, // source wllaet
         allowOwnerOffCurveSource,
-        TOKEN_2022_PROGRAM_ID
+        tokenProgramId
     );
 
     const destinationAta = getAssociatedTokenAddressSync(
         inputs.mint, // mint
         inputs.destination, // destination wallet
         allowOwnerOffCurveDestination,
-        TOKEN_2022_PROGRAM_ID
+        tokenProgramId
     );
 
     return [
@@ -43,7 +45,7 @@ export function nftTransferIxs(
             destinationAta,
             inputs.destination,
             inputs.mint,
-            TOKEN_2022_PROGRAM_ID
+            tokenProgramId
         ),
         createTransferCheckedInstruction(
             sourceAta, // from
@@ -53,14 +55,14 @@ export function nftTransferIxs(
             1,
             0,
             [],
-            TOKEN_2022_PROGRAM_ID
+            tokenProgramId
         ),
         createCloseAccountInstruction(
             sourceAta,
             inputs.source, // receives fees
             inputs.source, // owner of account
             undefined,
-            TOKEN_2022_PROGRAM_ID
+            tokenProgramId
         )
     ]
 }
