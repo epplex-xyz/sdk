@@ -3,18 +3,19 @@ import {expect} from "chai";
 import {CONNECTION, getSetup} from "./setup";
 import {
     EpNFTService,
-    getProgramDelegate,
+    getProgramDelegate, nftTransferIxs,
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig, writeLinesToFile} from "./testUtils";
+import {PublicKey, Transaction} from "@solana/web3.js";
 
 /*
 ******* SETUP
 */
 const {wallet, burgerProvider, coreProvider} = getSetup();
 const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
-const nTokens = 2
+const nTokens = 25
 const collection = {
     collectionMintNme: "SDK Test", // shows up directly on the Collection NFT
     collectionMintSymbol: "SDK TEST", // shows up directly on the Collection NFT
@@ -26,6 +27,7 @@ const collection = {
 
 describe('Test Collection', () => {
     let globalCollectionData;
+    let addresses: string[] = []
 
     trySetupGlobalCollectionConfig(coreProvider, wallet);
     trySetupBurgerProgramDelegate(burgerProvider, wallet);
@@ -80,6 +82,20 @@ describe('Test Collection', () => {
             await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
 
 
+            // const ixs = nftTransferIxs({
+            //     connection: CONNECTION,
+            //     mint: mint,
+            //     source: wallet.publicKey,
+            //     destination: new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj"),
+            //     payer: wallet.publicKey,
+            // })
+            // const sendTx = new Transaction().add(...ixs)
+            // const res = await sendAndConfirmRawTransaction(CONNECTION, sendTx, wallet.publicKey, wallet, [])
+            // if (res) {
+            //     addresses.push(mint.toString())
+            // }
+
+
             // Verification
             const metadata = await getTokenMetadata(CONNECTION, mint);
             expect(
@@ -95,5 +111,10 @@ describe('Test Collection', () => {
             ).to.equal(true);
         }
     });
+
+    // Save to text file
+    // it("Write addresses", async () => {
+    //     writeLinesToFile(addresses, `/Users/Mac/Documents/Crypto/epPlex-xyz/sdk/.output/mints.txt`)
+    // });
 
 });

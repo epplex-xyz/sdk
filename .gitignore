@@ -3,3 +3,4 @@ lib
 .idea
 .local_keys
 .env.local
+.output
