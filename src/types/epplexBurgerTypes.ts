@@ -703,6 +703,15 @@ export type EpplexBurger = {
               "Game master"
             ],
             "type": "publicKey"
+          },
+          {
+            "name": "voteType",
+            "docs": [
+              "Game vote type"
+            ],
+            "type": {
+              "defined": "VoteType"
+            }
           }
         ]
       }
@@ -774,6 +783,12 @@ export type EpplexBurger = {
           {
             "name": "endTimestampOffset",
             "type": "i64"
+          },
+          {
+            "name": "voteType",
+            "type": {
+              "defined": "VoteType"
+            }
           }
         ]
       }
@@ -902,30 +917,7 @@ export type EpplexBurger = {
             "name": "VoteMany"
           },
           {
-            "name": "VoteOnce",
-            "fields": [
-              {
-                "name": "address",
-                "type": "publicKey"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "VoteOption",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "YES"
-          },
-          {
-            "name": "NO"
-          },
-          {
-            "name": "MAYBE"
+            "name": "VoteOnce"
           }
         ]
       }
@@ -996,6 +988,11 @@ export type EpplexBurger = {
       "code": 6012,
       "name": "InvalidPhaseEndTS",
       "msg": "Phase end must be greater than current timestamp"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidVoteMany",
+      "msg": "Only VoteOnce is allowed"
     }
   ]
 };
@@ -1705,6 +1702,15 @@ export const IDL: EpplexBurger = {
               "Game master"
             ],
             "type": "publicKey"
+          },
+          {
+            "name": "voteType",
+            "docs": [
+              "Game vote type"
+            ],
+            "type": {
+              "defined": "VoteType"
+            }
           }
         ]
       }
@@ -1776,6 +1782,12 @@ export const IDL: EpplexBurger = {
           {
             "name": "endTimestampOffset",
             "type": "i64"
+          },
+          {
+            "name": "voteType",
+            "type": {
+              "defined": "VoteType"
+            }
           }
         ]
       }
@@ -1904,30 +1916,7 @@ export const IDL: EpplexBurger = {
             "name": "VoteMany"
           },
           {
-            "name": "VoteOnce",
-            "fields": [
-              {
-                "name": "address",
-                "type": "publicKey"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "VoteOption",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "YES"
-          },
-          {
-            "name": "NO"
-          },
-          {
-            "name": "MAYBE"
+            "name": "VoteOnce"
           }
         ]
       }
@@ -1998,6 +1987,11 @@ export const IDL: EpplexBurger = {
       "code": 6012,
       "name": "InvalidPhaseEndTS",
       "msg": "Phase end must be greater than current timestamp"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidVoteMany",
+      "msg": "Only VoteOnce is allowed"
     }
   ]
 };

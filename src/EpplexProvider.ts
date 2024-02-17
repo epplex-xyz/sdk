@@ -340,6 +340,7 @@ class EpplexProvider {
         gamePhase,
         phaseStart,
         endTimestampOffset,
+        voteType,
     }: gameCreateParams): Promise<Transaction> {
         const createTx = await this.program.methods
             .gameCreate({
@@ -347,6 +348,7 @@ class EpplexProvider {
                 gameState,
                 phaseStart,
                 endTimestampOffset,
+                voteType,
             })
             .accounts({
                 gameConfig: this.provider.publicKey,
