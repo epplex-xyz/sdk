@@ -703,6 +703,15 @@
               "Game master"
             ],
             "type": "publicKey"
+          },
+          {
+            "name": "voteType",
+            "docs": [
+              "Game vote type"
+            ],
+            "type": {
+              "defined": "VoteType"
+            }
           }
         ]
       }
@@ -774,6 +783,12 @@
           {
             "name": "endTimestampOffset",
             "type": "i64"
+          },
+          {
+            "name": "voteType",
+            "type": {
+              "defined": "VoteType"
+            }
           }
         ]
       }
@@ -902,30 +917,7 @@
             "name": "VoteMany"
           },
           {
-            "name": "VoteOnce",
-            "fields": [
-              {
-                "name": "address",
-                "type": "publicKey"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "name": "VoteOption",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "YES"
-          },
-          {
-            "name": "NO"
-          },
-          {
-            "name": "MAYBE"
+            "name": "VoteOnce"
           }
         ]
       }
@@ -996,9 +988,11 @@
       "code": 6012,
       "name": "InvalidPhaseEndTS",
       "msg": "Phase end must be greater than current timestamp"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidVoteMany",
+      "msg": "Only VoteOnce is allowed"
     }
-  ],
-  "metadata": {
-    "address": "LepByYNXCXLAQicahdRvvxBD45SMNHJgoNsAUDLyG1N"
-  }
+  ]
 }

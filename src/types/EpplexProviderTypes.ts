@@ -51,10 +51,12 @@ export interface BurnTxParams {
 }
 
 type GamePhase = IdlTypes<EpplexBurger>["GamePhase"];
+type voteType = IdlTypes<EpplexBurger>["VoteType"];
 
 export interface gameCreateParams {
     gameState: number;
     gamePhase: GamePhase;
     phaseStart: number;
     endTimestampOffset: number;
+    voteType: voteType;
 }
