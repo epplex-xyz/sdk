@@ -54,6 +54,19 @@ export async function getTokenAccounts(connection: Connection, owner: PublicKey)
     return allTokenAccounts
 }
 
+export function explorerUrl(connection: Connection, tx: string): string {
+    // localhost default
+    let cluster = "localnet-solana"
+    if (connection.rpcEndpoint.includes("devnet")) {
+        cluster = "devnet-solana"
+    } else if (connection.rpcEndpoint.includes("mainnet")) {
+        cluster = "mainnet-qn1"
+    }
+
+    return `https://solana.fm/tx/${tx}?cluster=${cluster}`
+}
+
+
 export async function sendAndConfirmRawTransaction(
     connection: Connection,
     tx: Transaction,
@@ -81,7 +94,7 @@ export async function sendAndConfirmRawTransaction(
 
         txId = await connection.sendRawTransaction(tx.serialize(), confirmOptions);
         if (logTx) {
-            console.log("Tx id", txId);
+            console.log(explorerUrl(connection, txId));
         }
 
         const res = (
