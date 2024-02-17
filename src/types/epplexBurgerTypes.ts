@@ -892,6 +892,43 @@ export type EpplexBurger = {
           }
         ]
       }
+    },
+    {
+      "name": "VoteType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "VoteMany"
+          },
+          {
+            "name": "VoteOnce",
+            "fields": [
+              {
+                "name": "address",
+                "type": "publicKey"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteOption",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "YES"
+          },
+          {
+            "name": "NO"
+          },
+          {
+            "name": "MAYBE"
+          }
+        ]
+      }
     }
   ],
   "errors": [
@@ -1854,6 +1891,43 @@ export const IDL: EpplexBurger = {
           },
           {
             "name": "Elimination"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "VoteMany"
+          },
+          {
+            "name": "VoteOnce",
+            "fields": [
+              {
+                "name": "address",
+                "type": "publicKey"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteOption",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "YES"
+          },
+          {
+            "name": "NO"
+          },
+          {
+            "name": "MAYBE"
           }
         ]
       }
