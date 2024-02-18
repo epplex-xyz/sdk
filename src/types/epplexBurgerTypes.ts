@@ -407,6 +407,11 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "permanentDelegate",
           "isMut": false,
           "isSigner": false
@@ -446,6 +451,11 @@ export type EpplexBurger = {
         },
         {
           "name": "tokenMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
           "isMut": false,
           "isSigner": false
         },
@@ -493,6 +503,11 @@ export type EpplexBurger = {
           "isSigner": true
         },
         {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "updateAuthority",
           "isMut": false,
           "isSigner": false
@@ -526,12 +541,22 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
         },
         {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         }
@@ -546,27 +571,6 @@ export type EpplexBurger = {
       ]
     },
     {
-      "name": "gameTransition",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "gameEnd",
       "accounts": [
         {
@@ -576,6 +580,16 @@ export type EpplexBurger = {
         },
         {
           "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         },
@@ -668,19 +682,19 @@ export type EpplexBurger = {
             "type": "u8"
           },
           {
-            "name": "gameState",
+            "name": "gameRound",
             "docs": [
               "The game number"
             ],
             "type": "u8"
           },
           {
-            "name": "gamePhase",
+            "name": "gameStatus",
             "docs": [
-              "The game phase"
+              "The game status"
             ],
             "type": {
-              "defined": "GamePhase"
+              "defined": "GameStatus"
             }
           },
           {
@@ -712,6 +726,36 @@ export type EpplexBurger = {
             "type": {
               "defined": "VoteType"
             }
+          },
+          {
+            "name": "inputType",
+            "docs": [
+              "Game input type"
+            ],
+            "type": {
+              "defined": "InputType"
+            }
+          },
+          {
+            "name": "gamePrompt",
+            "docs": [
+              "Game question of 150 characters"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "isEncrypted",
+            "docs": [
+              "Is answer encrypted"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "burnAmount",
+            "docs": [
+              "Amount of burgers who perished"
+            ],
+            "type": "u16"
           }
         ]
       }
@@ -767,13 +811,13 @@ export type EpplexBurger = {
         "kind": "struct",
         "fields": [
           {
-            "name": "gameState",
+            "name": "gameRound",
             "type": "u8"
           },
           {
-            "name": "gamePhase",
+            "name": "gameStatus",
             "type": {
-              "defined": "GamePhase"
+              "defined": "GameStatus"
             }
           },
           {
@@ -789,6 +833,20 @@ export type EpplexBurger = {
             "type": {
               "defined": "VoteType"
             }
+          },
+          {
+            "name": "inputType",
+            "type": {
+              "defined": "InputType"
+            }
+          },
+          {
+            "name": "gamePrompt",
+            "type": "string"
+          },
+          {
+            "name": "isEncrypted",
+            "type": "bool"
           }
         ]
       }
@@ -886,24 +944,18 @@ export type EpplexBurger = {
       }
     },
     {
-      "name": "GamePhase",
+      "name": "GameStatus",
       "docs": [
-        "Represents each state in the lifecycle of a lotto in sequential order."
+        "Represents game activity."
       ],
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "None"
+            "name": "InProgress"
           },
           {
-            "name": "Announcement"
-          },
-          {
-            "name": "Voting"
-          },
-          {
-            "name": "Elimination"
+            "name": "Finished"
           }
         ]
       }
@@ -914,10 +966,27 @@ export type EpplexBurger = {
         "kind": "enum",
         "variants": [
           {
-            "name": "VoteMany"
+            "name": "VoteOnce"
           },
           {
-            "name": "VoteOnce"
+            "name": "VoteMany"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InputType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Choice"
+          },
+          {
+            "name": "Text"
+          },
+          {
+            "name": "Number"
           }
         ]
       }
@@ -976,8 +1045,8 @@ export type EpplexBurger = {
     },
     {
       "code": 6010,
-      "name": "GamePhaseLastStage",
-      "msg": "Already in the Last game phase"
+      "name": "GameFinished",
+      "msg": "Tring to access a finished game"
     },
     {
       "code": 6011,
@@ -993,6 +1062,21 @@ export type EpplexBurger = {
       "code": 6013,
       "name": "InvalidVoteMany",
       "msg": "Only VoteOnce is allowed"
+    },
+    {
+      "code": 6014,
+      "name": "InvalidExpiryTS",
+      "msg": "Empty expiry timestamp on metadata account"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidGameStatus",
+      "msg": "Empty game status field on metadata account"
+    },
+    {
+      "code": 6016,
+      "name": "ExpectedEmptyField",
+      "msg": "Expected additional metadata field to be empty"
     }
   ]
 };
@@ -1406,6 +1490,11 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "permanentDelegate",
           "isMut": false,
           "isSigner": false
@@ -1445,6 +1534,11 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "tokenMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
           "isMut": false,
           "isSigner": false
         },
@@ -1492,6 +1586,11 @@ export const IDL: EpplexBurger = {
           "isSigner": true
         },
         {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "updateAuthority",
           "isMut": false,
           "isSigner": false
@@ -1525,12 +1624,22 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
         },
         {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         }
@@ -1545,27 +1654,6 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
-      "name": "gameTransition",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "gameEnd",
       "accounts": [
         {
@@ -1575,6 +1663,16 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         },
@@ -1667,19 +1765,19 @@ export const IDL: EpplexBurger = {
             "type": "u8"
           },
           {
-            "name": "gameState",
+            "name": "gameRound",
             "docs": [
               "The game number"
             ],
             "type": "u8"
           },
           {
-            "name": "gamePhase",
+            "name": "gameStatus",
             "docs": [
-              "The game phase"
+              "The game status"
             ],
             "type": {
-              "defined": "GamePhase"
+              "defined": "GameStatus"
             }
           },
           {
@@ -1711,6 +1809,36 @@ export const IDL: EpplexBurger = {
             "type": {
               "defined": "VoteType"
             }
+          },
+          {
+            "name": "inputType",
+            "docs": [
+              "Game input type"
+            ],
+            "type": {
+              "defined": "InputType"
+            }
+          },
+          {
+            "name": "gamePrompt",
+            "docs": [
+              "Game question of 150 characters"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "isEncrypted",
+            "docs": [
+              "Is answer encrypted"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "burnAmount",
+            "docs": [
+              "Amount of burgers who perished"
+            ],
+            "type": "u16"
           }
         ]
       }
@@ -1766,13 +1894,13 @@ export const IDL: EpplexBurger = {
         "kind": "struct",
         "fields": [
           {
-            "name": "gameState",
+            "name": "gameRound",
             "type": "u8"
           },
           {
-            "name": "gamePhase",
+            "name": "gameStatus",
             "type": {
-              "defined": "GamePhase"
+              "defined": "GameStatus"
             }
           },
           {
@@ -1788,6 +1916,20 @@ export const IDL: EpplexBurger = {
             "type": {
               "defined": "VoteType"
             }
+          },
+          {
+            "name": "inputType",
+            "type": {
+              "defined": "InputType"
+            }
+          },
+          {
+            "name": "gamePrompt",
+            "type": "string"
+          },
+          {
+            "name": "isEncrypted",
+            "type": "bool"
           }
         ]
       }
@@ -1885,24 +2027,18 @@ export const IDL: EpplexBurger = {
       }
     },
     {
-      "name": "GamePhase",
+      "name": "GameStatus",
       "docs": [
-        "Represents each state in the lifecycle of a lotto in sequential order."
+        "Represents game activity."
       ],
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "None"
+            "name": "InProgress"
           },
           {
-            "name": "Announcement"
-          },
-          {
-            "name": "Voting"
-          },
-          {
-            "name": "Elimination"
+            "name": "Finished"
           }
         ]
       }
@@ -1913,10 +2049,27 @@ export const IDL: EpplexBurger = {
         "kind": "enum",
         "variants": [
           {
-            "name": "VoteMany"
+            "name": "VoteOnce"
           },
           {
-            "name": "VoteOnce"
+            "name": "VoteMany"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InputType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Choice"
+          },
+          {
+            "name": "Text"
+          },
+          {
+            "name": "Number"
           }
         ]
       }
@@ -1975,8 +2128,8 @@ export const IDL: EpplexBurger = {
     },
     {
       "code": 6010,
-      "name": "GamePhaseLastStage",
-      "msg": "Already in the Last game phase"
+      "name": "GameFinished",
+      "msg": "Tring to access a finished game"
     },
     {
       "code": 6011,
@@ -1992,6 +2145,21 @@ export const IDL: EpplexBurger = {
       "code": 6013,
       "name": "InvalidVoteMany",
       "msg": "Only VoteOnce is allowed"
+    },
+    {
+      "code": 6014,
+      "name": "InvalidExpiryTS",
+      "msg": "Empty expiry timestamp on metadata account"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidGameStatus",
+      "msg": "Empty game status field on metadata account"
+    },
+    {
+      "code": 6016,
+      "name": "ExpectedEmptyField",
+      "msg": "Expected additional metadata field to be empty"
     }
   ]
 };

@@ -50,13 +50,22 @@ export interface BurnTxParams {
     owner?: PublicKey;
 }
 
-type GamePhase = IdlTypes<EpplexBurger>["GamePhase"];
+type GameStatus = IdlTypes<EpplexBurger>["GameStatus"];
 type voteType = IdlTypes<EpplexBurger>["VoteType"];
+type InputType = IdlTypes<EpplexBurger>["InputType"];
 
 export interface gameCreateParams {
-    gameState: number;
-    gamePhase: GamePhase;
+    mint: PublicKey,
+    gameRound: number;
+    gameStatus: GameStatus;
     phaseStart: number;
     endTimestampOffset: number;
     voteType: voteType;
+    inputType: InputType;
+    gamePrompt: string,
+    isEncrypted: boolean,
+}
+
+export interface TokenGameResetParams {
+    mint: PublicKey
 }
