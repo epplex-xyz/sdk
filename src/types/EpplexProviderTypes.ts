@@ -51,16 +51,16 @@ export interface BurnTxParams {
 }
 
 type GameStatus = IdlTypes<EpplexBurger>["GameStatus"];
-type voteType = IdlTypes<EpplexBurger>["VoteType"];
+type VoteType = IdlTypes<EpplexBurger>["VoteType"];
 type InputType = IdlTypes<EpplexBurger>["InputType"];
 
 export interface gameCreateParams {
     mint: PublicKey,
     gameRound: number;
-    gameStatus: GameStatus;
+    gameStatus: GameStatus; // ! I think we should remove this and set it when game create is called
     phaseStart: number;
     endTimestampOffset: number;
-    voteType: voteType;
+    voteType: VoteType;
     inputType: InputType;
     gamePrompt: string,
     isEncrypted: boolean,
