@@ -4,3 +4,4 @@ lib
 .local_keys
 .env.local
 .output
+.vscode
