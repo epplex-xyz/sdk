@@ -33,6 +33,7 @@ import {
     CreateCollectionMintTxTxParams,
     CreateWhitelistMintTxParams,
     gameCreateParams,
+    TokenGameResetParams,
     TokenGameVoteTxParams,
 } from "./types/EpplexProviderTypes";
 import { EpplexProviderWallet } from "./types/WalletProvider";
@@ -335,22 +336,33 @@ class EpplexProvider {
         return getTokenBurgerMetadata(mint, this.program.programId);
     }
 
-    async gameCreate({
-        gameState,
-        gamePhase,
+    async gameCreateTx({
+        mint,
+        gameRound,
+        gameStatus,
         phaseStart,
         endTimestampOffset,
+        voteType,
+        inputType,
+        gamePrompt,
+        isEncrypted,
     }: gameCreateParams): Promise<Transaction> {
         const createTx = await this.program.methods
             .gameCreate({
-                gamePhase,
-                gameState,
+                gameRound,
+                gameStatus,
                 phaseStart,
                 endTimestampOffset,
+                voteType,
+                inputType,
+                gamePrompt,
+                isEncrypted,
             })
             .accounts({
                 gameConfig: this.provider.publicKey,
+                mint,
                 payer: getGameConfigAccount(),
+                token22Program: TOKEN_2022_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
             .transaction();
@@ -358,30 +370,38 @@ class EpplexProvider {
         return createTx;
     }
 
-    async gameTransition(): Promise<Transaction> {
-        const transitionTx = await this.program.methods
-            .gameTransition()
-            .accounts({
-                payer: this.provider.publicKey,
-                gameConfig: getGameConfigAccount(),
-                systemProgram: SystemProgram.programId,
-            })
-            .transaction();
-
-        return transitionTx;
-    }
-
-    async gameEnd(): Promise<Transaction> {
+    async gameEndTx(mint: PublicKey): Promise<Transaction> {
         const gameEndTx = await this.program.methods
             .gameEnd()
             .accounts({
                 payer: this.provider.publicKey,
+                mint,
                 gameConfig: getGameConfigAccount(),
+                token22Program: TOKEN_2022_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
             .transaction();
 
         return gameEndTx;
+    }
+
+    async tokenGameResetTx({ mint }: TokenGameResetParams) {
+        const programDelegate = this.getProgramDelegate();
+
+        const tokenBurnTx = await this.program.methods
+            .tokenGameReset({})
+            .accounts({
+                mint,
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                payer: this.provider.publicKey,
+                gameConfig: getGameConfigAccount(),
+                updateAuthority: programDelegate,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                tokenProgram: TOKEN_PROGRAM_ID
+            })
+            .transaction();
+
+        return tokenBurnTx;
     }
 }
 
