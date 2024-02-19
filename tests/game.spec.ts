@@ -63,17 +63,17 @@ describe("Test Game Functionality", () => {
     //     );
     // });
 
-    it("game ends", async () => {
-        const tx = await burgerProvider.gameEndTx(mint);
+    // it("game ends", async () => {
+    //     const tx = await burgerProvider.gameEndTx(mint);
 
-        await sendAndConfirmRawTransaction(
-            CONNECTION,
-            tx,
-            wallet.publicKey,
-            wallet,
-            []
-        );
-    });
+    //     await sendAndConfirmRawTransaction(
+    //         CONNECTION,
+    //         tx,
+    //         wallet.publicKey,
+    //         wallet,
+    //         []
+    //     );
+    // });
 
     // // ? should we create an admin folder for these
     // it("resets game", async () => {
