@@ -1078,8 +1078,5 @@
       "name": "ExpectedEmptyField",
       "msg": "Expected additional metadata field to be empty"
     }
-  ],
-  "metadata": {
-    "address": "LepByYNXCXLAQicahdRvvxBD45SMNHJgoNsAUDLyG1N"
-  }
+  ]
 }
