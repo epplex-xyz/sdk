@@ -32,6 +32,7 @@ import {
     BurnTxParams,
     CreateCollectionMintTxTxParams,
     CreateWhitelistMintTxParams,
+    GameConfig,
     gameCreateParams,
     TokenGameResetParams,
     TokenGameVoteTxParams,
@@ -319,6 +320,7 @@ class EpplexProvider {
                 mint: mint,
                 tokenAccount,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
+                gameConfig: getGameConfigAccount(),
                 payer: mintOwner,
                 updateAuthority: programDelegate,
                 token22Program: TOKEN_2022_PROGRAM_ID,
@@ -359,9 +361,9 @@ class EpplexProvider {
                 isEncrypted,
             })
             .accounts({
-                gameConfig: this.provider.publicKey,
+                gameConfig: getGameConfigAccount(),
                 mint,
-                payer: getGameConfigAccount(),
+                payer: this.provider.publicKey,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
@@ -380,6 +382,11 @@ class EpplexProvider {
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
+            .preInstructions([
+                ComputeBudgetProgram.setComputeUnitLimit({
+                    units: 500_000,
+                }),
+            ])
             .transaction();
 
         return gameEndTx;
@@ -397,11 +404,21 @@ class EpplexProvider {
                 gameConfig: getGameConfigAccount(),
                 updateAuthority: programDelegate,
                 token22Program: TOKEN_2022_PROGRAM_ID,
-                tokenProgram: TOKEN_PROGRAM_ID
+                tokenProgram: TOKEN_PROGRAM_ID,
             })
             .transaction();
 
         return tokenBurnTx;
+    }
+
+    async getGameConfig(): Promise<GameConfig> {
+        const gameConfig = getGameConfigAccount();
+
+        try {
+            return await this.program.account.gameConfig.fetch(gameConfig);
+        } catch (err) {
+            return err;
+        }
     }
 }
 

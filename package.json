@@ -41,6 +41,7 @@
 		"test-utils": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/utils.spec.ts",
 		"test-individual": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/individualMint.spec.ts",
 		"test-collection": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/collectionMint.spec.ts",
+		"test-game": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/game.spec.ts",
 		"test-burn": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burn.spec.ts"
 	},
 	"devDependencies": {
