@@ -541,6 +541,27 @@
           "isSigner": false
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameStart",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "mint",
           "isMut": true,
           "isSigner": false
@@ -565,7 +586,7 @@
         {
           "name": "params",
           "type": {
-            "defined": "GameCreateParams"
+            "defined": "GameStartParams"
           }
         }
       ]
@@ -813,7 +834,7 @@
       }
     },
     {
-      "name": "GameCreateParams",
+      "name": "GameStartParams",
       "type": {
         "kind": "struct",
         "fields": [

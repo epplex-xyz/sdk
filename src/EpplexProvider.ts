@@ -338,7 +338,17 @@ class EpplexProvider {
         return getTokenBurgerMetadata(mint, this.program.programId);
     }
 
-    async gameCreateTx({
+    async gameCreateTx(): Promise<Transaction> {
+        const createTx = await this.program.methods.gameCreate().accounts({
+            gameConfig: getGameConfigAccount(),
+            payer: this.provider.wallet.publicKey,
+            systemProgram: SystemProgram.programId,
+        }).transaction();
+
+        return createTx;
+    }
+
+    async gameStartTx({
         mint,
         gameStatus,
         phaseStart,
@@ -348,8 +358,8 @@ class EpplexProvider {
         gamePrompt,
         isEncrypted,
     }: gameCreateParams): Promise<Transaction> {
-        const createTx = await this.program.methods
-            .gameCreate({
+        const startTx = await this.program.methods
+            .gameStart({
                 gameStatus,
                 phaseStart,
                 endTimestampOffset,
@@ -367,7 +377,7 @@ class EpplexProvider {
             })
             .transaction();
 
-        return createTx;
+        return startTx;
     }
 
     async gameEndTx(mint: PublicKey): Promise<Transaction> {

@@ -541,6 +541,27 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameStart",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "mint",
           "isMut": true,
           "isSigner": false
@@ -565,7 +586,7 @@ export type EpplexBurger = {
         {
           "name": "params",
           "type": {
-            "defined": "GameCreateParams"
+            "defined": "GameStartParams"
           }
         }
       ]
@@ -813,7 +834,7 @@ export type EpplexBurger = {
       }
     },
     {
-      "name": "GameCreateParams",
+      "name": "GameStartParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1637,6 +1658,27 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameStart",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "mint",
           "isMut": true,
           "isSigner": false
@@ -1661,7 +1703,7 @@ export const IDL: EpplexBurger = {
         {
           "name": "params",
           "type": {
-            "defined": "GameCreateParams"
+            "defined": "GameStartParams"
           }
         }
       ]
@@ -1909,7 +1951,7 @@ export const IDL: EpplexBurger = {
       }
     },
     {
-      "name": "GameCreateParams",
+      "name": "GameStartParams",
       "type": {
         "kind": "struct",
         "fields": [
