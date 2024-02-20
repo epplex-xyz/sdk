@@ -340,7 +340,6 @@ class EpplexProvider {
 
     async gameCreateTx({
         mint,
-        gameRound,
         gameStatus,
         phaseStart,
         endTimestampOffset,
@@ -351,7 +350,6 @@ class EpplexProvider {
     }: gameCreateParams): Promise<Transaction> {
         const createTx = await this.program.methods
             .gameCreate({
-                gameRound,
                 gameStatus,
                 phaseStart,
                 endTimestampOffset,

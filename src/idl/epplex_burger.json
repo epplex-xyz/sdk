@@ -756,6 +756,13 @@
               "Amount of burgers who perished"
             ],
             "type": "u16"
+          },
+          {
+            "name": "submissionAmount",
+            "docs": [
+              "Amount of burgers who submitted an answer"
+            ],
+            "type": "u16"
           }
         ]
       }
@@ -810,10 +817,6 @@
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "gameRound",
-            "type": "u8"
-          },
           {
             "name": "gameStatus",
             "type": {
@@ -1045,38 +1048,51 @@
     },
     {
       "code": 6010,
+      "name": "NonOperator",
+      "msg": "Non-operator attempts to use program"
+    },
+    {
+      "code": 6011,
       "name": "GameFinished",
       "msg": "Tring to access a finished game"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "InvalidGameDuration",
       "msg": "Phase start greater than phase end"
     },
     {
-      "code": 6012,
+      "code": 6013,
       "name": "InvalidPhaseEndTS",
       "msg": "Phase end must be greater than current timestamp"
     },
     {
-      "code": 6013,
+      "code": 6014,
       "name": "InvalidVoteMany",
       "msg": "Only VoteOnce is allowed"
     },
     {
-      "code": 6014,
+      "code": 6015,
       "name": "InvalidExpiryTS",
       "msg": "Empty expiry timestamp on metadata account"
     },
     {
-      "code": 6015,
+      "code": 6016,
       "name": "InvalidGameStatus",
       "msg": "Empty game status field on metadata account"
     },
     {
-      "code": 6016,
+      "code": 6017,
       "name": "ExpectedEmptyField",
       "msg": "Expected additional metadata field to be empty"
+    },
+    {
+      "code": 6018,
+      "name": "GameInProgress",
+      "msg": "Tried to call create game IX while another game was going on"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "LepByYNXCXLAQicahdRvvxBD45SMNHJgoNsAUDLyG1N"
+  }
 }

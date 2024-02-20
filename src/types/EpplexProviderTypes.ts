@@ -56,7 +56,6 @@ type InputType = IdlTypes<EpplexBurger>["InputType"];
 
 export interface gameCreateParams {
     mint: PublicKey;
-    gameRound: number;
     gameStatus: GameStatus; // ! I think we should remove this and set it when game create is called
     phaseStart: number;
     endTimestampOffset: number;
