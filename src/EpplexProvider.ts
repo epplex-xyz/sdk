@@ -16,6 +16,7 @@ import {
     TransactionInstruction,
 } from "@solana/web3.js";
 import {
+    getGameConfigAccount,
     getProgramDelegate,
     getTokenBurgerMetadata,
 } from "./constants/burgerSeeds";
@@ -26,7 +27,6 @@ import {
 import { BURGER_PROGRAM_ID, CORE_PROGRAM_ID } from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
 import { DEFAULT_COMPUTE_BUDGET } from "./constants/transaction";
-import { getGameConfigAccount } from "./pda";
 import { IDL as BurgerIdl, EpplexBurger } from "./types/epplexBurgerTypes";
 import {
     BurnTxParams,
