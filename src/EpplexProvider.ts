@@ -339,11 +339,14 @@ class EpplexProvider {
     }
 
     async gameCreateTx(): Promise<Transaction> {
-        const createTx = await this.program.methods.gameCreate().accounts({
-            gameConfig: getGameConfigAccount(),
-            payer: this.provider.wallet.publicKey,
-            systemProgram: SystemProgram.programId,
-        }).transaction();
+        const createTx = await this.program.methods
+            .gameCreate()
+            .accounts({
+                gameConfig: getGameConfigAccount(),
+                payer: this.provider.wallet.publicKey,
+                systemProgram: SystemProgram.programId,
+            })
+            .transaction();
 
         return createTx;
     }
@@ -390,11 +393,6 @@ class EpplexProvider {
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
-            .preInstructions([
-                ComputeBudgetProgram.setComputeUnitLimit({
-                    units: 500_000,
-                }),
-            ])
             .transaction();
 
         return gameEndTx;
