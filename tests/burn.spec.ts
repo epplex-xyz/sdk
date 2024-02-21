@@ -85,10 +85,11 @@ describe('Test Burn', () => {
         }
     });
 
-    it('Burn token FAIL', async () => {
+    it('Burn token should FAIL', async () => {
         const tx = await burgerProvider.burnTokenTx({
             mint: mints[0],
             owner: wallet.publicKey,
+            useGameConfig: false
         });
         const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
         expect(res).to.be.equal(null);
@@ -102,6 +103,7 @@ describe('Test Burn', () => {
         const tx = await burgerProvider.burnTokenTx({
             mint: mints[0],
             owner: wallet.publicKey,
+            useGameConfig: false
         });
         const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
         console.log("res", res)
