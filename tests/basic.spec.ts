@@ -1,18 +1,16 @@
 import {Keypair, PublicKey} from "@solana/web3.js";
-import {EpNFTService, getGlobalCollectionConfig, getMint, sendAndConfirmRawTransaction} from "../src";
-import {CONNECTION, getSetup} from "./setup";
+import {EpNFTService, getMint, sendAndConfirmRawTransaction} from "../src";
+import {CONNECTION, getSetup, setupGlobals} from "./setup";
 import {assert} from "chai";
 import {getDefaultMetadata} from "./getDefaultMetadata";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
 import {BN} from "@coral-xyz/anchor";
 import {getTokenMetadata} from "@solana/spl-token";
 
-const {wallet, burgerProvider, coreProvider} = getSetup();
+
 const metadata = getDefaultMetadata({});
 
 describe("Testing Burger Program", () => {
-    trySetupGlobalCollectionConfig(coreProvider, wallet);
-    trySetupBurgerProgramDelegate(burgerProvider, wallet);
+    const {wallet, burgerProvider, coreProvider} = setupGlobals()
 
     let mint: PublicKey;
     it('Mint token', async () => {

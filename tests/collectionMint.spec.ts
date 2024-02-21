@@ -1,6 +1,6 @@
 import {getTokenMetadata} from "@solana/spl-token";
 import {expect} from "chai";
-import {CONNECTION, getSetup} from "./setup";
+import {CONNECTION, getSetup, setupGlobals} from "./setup";
 import {
     EpNFTService,
     getProgramDelegate, nftTransferIxs,
@@ -14,7 +14,7 @@ import {PublicKey, Transaction} from "@solana/web3.js";
 /*
 ******* SETUP
 */
-const {wallet, burgerProvider, coreProvider} = getSetup();
+
 const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
 const nTokens = 30
 const collection = {
@@ -30,9 +30,7 @@ describe('Test Collection', () => {
     let globalCollectionData;
     let addresses: string[] = []
     const recipient: PublicKey = new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj")
-
-    trySetupGlobalCollectionConfig(coreProvider, wallet);
-    trySetupBurgerProgramDelegate(burgerProvider, wallet);
+    const {wallet, burgerProvider, coreProvider} = setupGlobals();
 
     it('Create collection mint and config', async () => {
         console.log("\n \n");

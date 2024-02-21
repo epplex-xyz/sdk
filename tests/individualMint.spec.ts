@@ -1,27 +1,18 @@
-
 import { BN } from "@coral-xyz/anchor";
 import { getTokenMetadata } from "@solana/spl-token";
-import { CONNECTION, getSetup } from "./setup";
+import {CONNECTION, setupGlobals} from "./setup";
 import { getDefaultMetadata } from "./getDefaultMetadata";
 import {
     sendAndConfirmRawTransaction,
-    getGlobalCollectionConfig,
     getMint,
     nftTransferIxs,
 } from "../src";
-import {
-    trySetupBurgerProgramDelegate,
-    trySetupGlobalCollectionConfig,
-} from "./setupUtils";
 import { PublicKey, Transaction } from "@solana/web3.js";
 
-
-const { wallet, burgerProvider, coreProvider } = getSetup();
 const metadata = getDefaultMetadata({});
 
 describe("Individual mint", () => {
-    trySetupGlobalCollectionConfig(coreProvider, wallet);
-    trySetupBurgerProgramDelegate(burgerProvider, wallet);
+    const { wallet, burgerProvider, coreProvider } = setupGlobals();
 
     let mint: PublicKey;
     it("Mint token", async () => {

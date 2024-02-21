@@ -1,18 +1,16 @@
-import {CONNECTION, getSetup} from "./setup";
+import {CONNECTION, getSetup, setupGlobals} from "./setup";
 import {
     getProgramDelegate,
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
 import {sleep} from "./testUtils";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
 import {PublicKey} from "@solana/web3.js";
 import {expect} from "chai";
 
 /*
 ******* SETUP
 */
-const {wallet, burgerProvider, coreProvider} = getSetup();
 
 // 3 second expiry
 const expiryTime = 3;
@@ -30,11 +28,10 @@ const collection = {
 }
 
 describe('Test Burn', () => {
+    const {wallet, burgerProvider, coreProvider} = setupGlobals()
+
     let globalCollectionData;
     let mints: PublicKey[] = [];
-
-    trySetupGlobalCollectionConfig(coreProvider, wallet);
-    trySetupBurgerProgramDelegate(burgerProvider, wallet);
 
     it('Create collection mint and config', async () => {
         console.log("\n \n");
