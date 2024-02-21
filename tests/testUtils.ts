@@ -52,10 +52,6 @@ export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
-
-
-
 // Function to write data to file line by line
 export function writeLinesToFile(lines: string[], filePath: string) {
     console.log("fs", __filename, __dirname, process.cwd())

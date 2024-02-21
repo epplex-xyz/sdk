@@ -16,6 +16,7 @@ import {
     TransactionInstruction,
 } from "@solana/web3.js";
 import {
+    getGameConfigAccount,
     getProgramDelegate,
     getTokenBurgerMetadata,
 } from "./constants/burgerSeeds";
@@ -26,12 +27,12 @@ import {
 import { BURGER_PROGRAM_ID, CORE_PROGRAM_ID } from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
 import { DEFAULT_COMPUTE_BUDGET } from "./constants/transaction";
-import { getGameConfigAccount } from "./pda";
 import { IDL as BurgerIdl, EpplexBurger } from "./types/epplexBurgerTypes";
 import {
     BurnTxParams,
     CreateCollectionMintTxTxParams,
     CreateWhitelistMintTxParams,
+    GameConfig,
     gameCreateParams,
     TokenGameResetParams,
     TokenGameVoteTxParams,
@@ -319,6 +320,7 @@ class EpplexProvider {
                 mint: mint,
                 tokenAccount,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
+                gameConfig: getGameConfigAccount(),
                 payer: mintOwner,
                 updateAuthority: programDelegate,
                 token22Program: TOKEN_2022_PROGRAM_ID,
@@ -336,9 +338,21 @@ class EpplexProvider {
         return getTokenBurgerMetadata(mint, this.program.programId);
     }
 
-    async gameCreateTx({
+    async gameCreateTx(): Promise<Transaction> {
+        const createTx = await this.program.methods
+            .gameCreate()
+            .accounts({
+                gameConfig: getGameConfigAccount(),
+                payer: this.provider.wallet.publicKey,
+                systemProgram: SystemProgram.programId,
+            })
+            .transaction();
+
+        return createTx;
+    }
+
+    async gameStartTx({
         mint,
-        gameRound,
         gameStatus,
         phaseStart,
         endTimestampOffset,
@@ -347,9 +361,8 @@ class EpplexProvider {
         gamePrompt,
         isEncrypted,
     }: gameCreateParams): Promise<Transaction> {
-        const createTx = await this.program.methods
-            .gameCreate({
-                gameRound,
+        const startTx = await this.program.methods
+            .gameStart({
                 gameStatus,
                 phaseStart,
                 endTimestampOffset,
@@ -359,15 +372,15 @@ class EpplexProvider {
                 isEncrypted,
             })
             .accounts({
-                gameConfig: this.provider.publicKey,
+                gameConfig: getGameConfigAccount(),
                 mint,
-                payer: getGameConfigAccount(),
+                payer: this.provider.publicKey,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
             .transaction();
 
-        return createTx;
+        return startTx;
     }
 
     async gameEndTx(mint: PublicKey): Promise<Transaction> {
@@ -397,11 +410,21 @@ class EpplexProvider {
                 gameConfig: getGameConfigAccount(),
                 updateAuthority: programDelegate,
                 token22Program: TOKEN_2022_PROGRAM_ID,
-                tokenProgram: TOKEN_PROGRAM_ID
+                tokenProgram: TOKEN_PROGRAM_ID,
             })
             .transaction();
 
         return tokenBurnTx;
+    }
+
+    async getGameConfig(): Promise<GameConfig> {
+        const gameConfig = getGameConfigAccount();
+
+        try {
+            return await this.program.account.gameConfig.fetch(gameConfig);
+        } catch (err) {
+            return err;
+        }
     }
 }
 

@@ -38,3 +38,14 @@ export function getTokenBurgerMetadata(
     );
     return metadata;
 }
+
+export function getGameConfigAccount(
+    burgerProgramId = BURGER_PROGRAM_ID
+): PublicKey {
+    const [gameConfig] = PublicKey.findProgramAddressSync(
+        [Buffer.from("GAME_CONFIG")],
+        burgerProgramId
+    );
+
+    return gameConfig;
+}
