@@ -3,7 +3,7 @@ import {getTokenMetadata} from "@solana/spl-token";
 import {CONNECTION, getSetup} from "./setup";
 import {getDefaultMetadata} from "./getDefaultMetadata";
 import {sendAndConfirmRawTransaction, getGlobalCollectionConfig, getMint, nftTransferIxs} from "../src";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
 import {PublicKey, Transaction} from "@solana/web3.js";
 
 const {wallet, burgerProvider, coreProvider} = getSetup();

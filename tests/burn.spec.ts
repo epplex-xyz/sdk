@@ -4,7 +4,8 @@ import {
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
-import {sleep, trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {sleep} from "./testUtils";
+import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
 import {PublicKey} from "@solana/web3.js";
 import {expect} from "chai";
 

@@ -3,7 +3,7 @@ import {EpNFTService, getGlobalCollectionConfig, getMint, sendAndConfirmRawTrans
 import {CONNECTION, getSetup} from "./setup";
 import {assert} from "chai";
 import {getDefaultMetadata} from "./getDefaultMetadata";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./testUtils";
+import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
 import {BN} from "@coral-xyz/anchor";
 import {getTokenMetadata} from "@solana/spl-token";
 
@@ -70,15 +70,15 @@ describe("Testing Burger Program", () => {
         console.log("\n")
     })
 
-    // it("Token Burn", async() => {
-    //     const owner = wallet.publicKey;
-    //     const tx = await burgerProvider.burnTokenTx({
-    //         mint: mint.publicKey,
-    //         owner: owner,
-    //     })
-    //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
-    //
-    //     console.log("\n")
-    // })
+    it("Token Burn", async() => {
+        const owner = wallet.publicKey;
+        const tx = await burgerProvider.burnTokenTx({
+            mint: mint,
+            owner: owner,
+        })
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
+
+        console.log("\n")
+    })
 });
 
