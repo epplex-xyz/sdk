@@ -343,6 +343,19 @@ class EpplexProvider {
         return getGameConfig(this.program.programId);
     }
 
+    async getGame(): Promise<GameConfig | null> {
+        try {
+            return await this.program
+                .account
+                .gameConfig
+                .fetch(
+                    this.getGameConfig()
+                );
+        } catch (err) {
+            return null
+        }
+    }
+
     async gameCreateTx(): Promise<Transaction> {
         const createTx = await this.program.methods
             .gameCreate()
@@ -409,8 +422,6 @@ class EpplexProvider {
 
         return tokenBurnTx;
     }
-
-
 }
 
 export default EpplexProvider;
