@@ -7,7 +7,8 @@ import {
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig, writeLinesToFile} from "./testUtils";
+import {writeLinesToFile} from "./testUtils";
+import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
 import {PublicKey, Transaction} from "@solana/web3.js";
 
 /*
@@ -15,7 +16,7 @@ import {PublicKey, Transaction} from "@solana/web3.js";
 */
 const {wallet, burgerProvider, coreProvider} = getSetup();
 const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
-const nTokens = 25
+const nTokens = 30
 const collection = {
     collectionMintNme: "SDK Test", // shows up directly on the Collection NFT
     collectionMintSymbol: "SDK TEST", // shows up directly on the Collection NFT
@@ -28,6 +29,7 @@ const collection = {
 describe('Test Collection', () => {
     let globalCollectionData;
     let addresses: string[] = []
+    const recipient: PublicKey = new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj")
 
     trySetupGlobalCollectionConfig(coreProvider, wallet);
     trySetupBurgerProgramDelegate(burgerProvider, wallet);
@@ -82,18 +84,18 @@ describe('Test Collection', () => {
             await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
 
 
-            // const ixs = nftTransferIxs({
-            //     connection: CONNECTION,
-            //     mint: mint,
-            //     source: wallet.publicKey,
-            //     destination: new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj"),
-            //     payer: wallet.publicKey,
-            // })
-            // const sendTx = new Transaction().add(...ixs)
-            // const res = await sendAndConfirmRawTransaction(CONNECTION, sendTx, wallet.publicKey, wallet, [])
-            // if (res) {
-            //     addresses.push(mint.toString())
-            // }
+            const ixs = nftTransferIxs({
+                connection: CONNECTION,
+                mint: mint,
+                source: wallet.publicKey,
+                destination: new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj"),
+                payer: wallet.publicKey,
+            })
+            const sendTx = new Transaction().add(...ixs)
+            const res = await sendAndConfirmRawTransaction(CONNECTION, sendTx, wallet.publicKey, wallet, [])
+            if (res) {
+                addresses.push(mint.toString())
+            }
 
 
             // Verification
@@ -112,9 +114,23 @@ describe('Test Collection', () => {
         }
     });
 
-    // Save to text file
+    // it('Transfer all NFTs', async () => {
+    //     for (let i = 0; i < addresses.length; i++) {
+    //         const ixs = nftTransferIxs({
+    //             connection: CONNECTION,
+    //             mint: new PublicKey(addresses[i]),
+    //             source: wallet.publicKey,
+    //             destination: recipient,
+    //             payer: wallet.publicKey,
+    //         })
+    //
+    //         const sendTx = new Transaction().add(...ixs)
+    //         await sendAndConfirmRawTransaction(CONNECTION, sendTx, wallet.publicKey, wallet, [])
+    //     }
+    // });
+    //
+    // // it("Write addresses", async () => {
     // it("Write addresses", async () => {
     //     writeLinesToFile(addresses, `/Users/Mac/Documents/Crypto/epPlex-xyz/sdk/.output/mints.txt`)
     // });
-
 });
