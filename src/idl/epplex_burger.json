@@ -408,8 +408,9 @@
         },
         {
           "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
         },
         {
           "name": "permanentDelegate",
@@ -516,11 +517,6 @@
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -562,24 +558,9 @@
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "payer",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -602,21 +583,6 @@
         {
           "name": "gameConfig",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
           "isSigner": false
         }
       ],
@@ -719,7 +685,7 @@
             }
           },
           {
-            "name": "phaseStart",
+            "name": "phaseStartTimestamp",
             "docs": [
               "Phase start"
             ],
@@ -839,17 +805,7 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "gameStatus",
-            "type": {
-              "defined": "GameStatus"
-            }
-          },
-          {
-            "name": "phaseStart",
-            "type": "i64"
-          },
-          {
-            "name": "endTimestampOffset",
+            "name": "endTimestamp",
             "type": "i64"
           },
           {
@@ -993,6 +949,9 @@
         "kind": "enum",
         "variants": [
           {
+            "name": "None"
+          },
+          {
             "name": "VoteOnce"
           },
           {
@@ -1006,6 +965,9 @@
       "type": {
         "kind": "enum",
         "variants": [
+          {
+            "name": "None"
+          },
           {
             "name": "Choice"
           },
@@ -1107,16 +1069,31 @@
     },
     {
       "code": 6017,
-      "name": "GameInProgress",
-      "msg": "The game status is in progress"
+      "name": "RequiresEncryption",
+      "msg": "Message was not encrypted"
     },
     {
       "code": 6018,
-      "name": "GameFinished",
-      "msg": "The game status is finished. "
+      "name": "GameNotFinished",
+      "msg": "Game must be finished"
+    },
+    {
+      "code": 6019,
+      "name": "GameNotInProgress",
+      "msg": "Game must be in progress"
+    },
+    {
+      "code": 6020,
+      "name": "GameInProgress",
+      "msg": "Game is in progress"
+    },
+    {
+      "code": 6021,
+      "name": "AlreadySubmitted",
+      "msg": "Mint already submitted an answer"
     }
   ],
   "metadata": {
-    "address": "LepByYNXCXLAQicahdRvvxBD45SMNHJgoNsAUDLyG1N"
+    "address": "epBuJysRKuFMMWTWoX6ZKPz5WTZWb98mDqn1emVj84n"
   }
 }

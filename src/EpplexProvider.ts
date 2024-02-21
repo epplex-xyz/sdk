@@ -273,7 +273,7 @@ class EpplexProvider {
         return tx;
     }
 
-    async burnTokenTx({ mint, owner }: BurnTxParams) {
+    async burnTokenTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
         const programDelegate = this.getProgramDelegate();
         const mintOwner =
             owner ?? (await getMintOwner(this.provider.connection, mint));
@@ -289,7 +289,7 @@ class EpplexProvider {
             .accounts({
                 mint: mint,
                 tokenAccount,
-                gameConfig: this.getGameConfig(),
+                gameConfig: useGameConfig ? this.getGameConfig() : null,
                 permanentDelegate: programDelegate,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 payer: this.provider.wallet.publicKey,
@@ -313,7 +313,7 @@ class EpplexProvider {
             TOKEN_2022_PROGRAM_ID
         );
 
-        const tokenBurnTx = await this.program.methods
+        const tokenVoteTx = await this.program.methods
             .tokenGameVote({
                 message: message,
             })
@@ -328,7 +328,7 @@ class EpplexProvider {
             })
             .transaction();
 
-        return tokenBurnTx;
+        return tokenVoteTx;
     }
 
     getProgramDelegate(): PublicKey {

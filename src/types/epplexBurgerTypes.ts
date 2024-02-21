@@ -409,7 +409,8 @@ export type EpplexBurger = {
         {
           "name": "gameConfig",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "isOptional": true
         },
         {
           "name": "permanentDelegate",
@@ -1505,7 +1506,8 @@ export const IDL: EpplexBurger = {
         {
           "name": "gameConfig",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "isOptional": true
         },
         {
           "name": "permanentDelegate",

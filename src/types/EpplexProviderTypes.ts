@@ -48,6 +48,7 @@ export interface TokenGameVoteTxParams {
 export interface BurnTxParams {
     mint: PublicKey;
     owner?: PublicKey;
+    useGameConfig?: boolean;
 }
 
 export interface TokenGameResetParams {
