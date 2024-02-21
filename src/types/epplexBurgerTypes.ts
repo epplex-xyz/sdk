@@ -1091,6 +1091,11 @@ export type EpplexBurger = {
       "code": 6021,
       "name": "AlreadySubmitted",
       "msg": "Mint already submitted an answer"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidStartParams",
+      "msg": "Invalid parameters supplied to game start instruction"
     }
   ]
 };
@@ -2188,6 +2193,11 @@ export const IDL: EpplexBurger = {
       "code": 6021,
       "name": "AlreadySubmitted",
       "msg": "Mint already submitted an answer"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidStartParams",
+      "msg": "Invalid parameters supplied to game start instruction"
     }
   ]
 };

@@ -1091,9 +1091,14 @@
       "code": 6021,
       "name": "AlreadySubmitted",
       "msg": "Mint already submitted an answer"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidStartParams",
+      "msg": "Invalid parameters supplied to game start instruction"
     }
   ],
   "metadata": {
-    "address": "epBuJysRKuFMMWTWoX6ZKPz5WTZWb98mDqn1emVj84n"
+    "address": "LepByYNXCXLAQicahdRvvxBD45SMNHJgoNsAUDLyG1N"
   }
 }

@@ -59,6 +59,7 @@ describe("GAME TEST", async () => {
                 gamePrompt: "burger is awesome",
                 isEncrypted: false,
             });
+
             const res = await sendAndConfirmRawTransaction(
                 CONNECTION,
                 tx,
@@ -108,7 +109,7 @@ describe("GAME TEST", async () => {
 
     describe("game end stage", () => {
         it("ends a game", async () => {
-            const tx = await burgerProvider.gameEndTx(sharedMint);
+            const tx = await burgerProvider.gameEndTx();
             await sendAndConfirmRawTransaction(
                 CONNECTION,
                 tx,
@@ -141,6 +142,7 @@ describe("GAME TEST", async () => {
             const tx = await burgerProvider.tokenGameResetTx({
                 mint: sharedMint,
             });
+
             await sendAndConfirmRawTransaction(
                 CONNECTION,
                 tx,
@@ -148,21 +150,6 @@ describe("GAME TEST", async () => {
                 wallet,
                 []
             );
-        });
-
-        // this indicates that the user hasn't voted yet
-        it("fails to end game if metadata fields are empty", async () => {
-            const tx = await burgerProvider.gameEndTx(sharedMint);
-
-            const res = await sendAndConfirmRawTransaction(
-                CONNECTION,
-                tx,
-                wallet.publicKey,
-                wallet,
-                []
-            );
-
-            expect(res).to.be.equal(null);
         });
 
         // this indicates that the user did not give an answer for the game round and he should do so,
@@ -184,7 +171,7 @@ describe("GAME TEST", async () => {
 
         // ! MOVE THIS UP TO THE NEW ARGUMENTS VALIDATION DESCRIBE BLOCK
         it("fails to reset game if expiry timestamp reached", async () => {
-            const tx = await burgerProvider.gameEndTx(sharedMint);
+            const tx = await burgerProvider.gameEndTx();
 
             const res = await sendAndConfirmRawTransaction(
                 CONNECTION,
