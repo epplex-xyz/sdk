@@ -4,39 +4,10 @@ import { expect } from "chai";
 
 import { sendAndConfirmRawTransaction } from "../src";
 import { CONNECTION, getSetup } from "./setup";
-// import {
-//     trySetupBurgerProgramDelegate,
-//     trySetupGlobalCollectionConfig,
-// } from "./testUtils";
 const { wallet, burgerProvider } = getSetup();
 
 describe("GAME TEST", async () => {
     let sharedMint: PublicKey = new PublicKey("");
-
-    describe("Creating Game", async () => {
-        it("creates a new game", async () => {
-            const tx = await burgerProvider.gameCreateTx();
-            await sendAndConfirmRawTransaction(
-                CONNECTION,
-                tx,
-                wallet.publicKey,
-                wallet,
-                []
-            );
-        });
-
-        it("Fails to create a new game if one was previously initialized", async () => {
-            const tx = await burgerProvider.gameCreateTx();
-            let res = await sendAndConfirmRawTransaction(
-                CONNECTION,
-                tx,
-                wallet.publicKey,
-                wallet,
-                []
-            );
-            expect(res).to.be.equal(null);
-        });
-    });
 
     describe("Game start", async () => {
         const nowDate = new Date();
@@ -45,10 +16,7 @@ describe("GAME TEST", async () => {
 
         it("start a new game", async () => {
             const tx = await burgerProvider.gameStartTx({
-                mint: sharedMint,
-                gameStatus: { inProgress: {} }, // ? I think we should remove this. when game start is called and all validation passes, setting this to in progress should be okay
-                phaseStart: new BN(currentTs),
-                endTimestampOffset: new BN(oneYrLater),
+                endTimestamp: new BN(oneYrLater),
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
@@ -65,10 +33,7 @@ describe("GAME TEST", async () => {
 
         it("Fails to start a game if one is already in progress", async () => {
             const tx = await burgerProvider.gameStartTx({
-                mint: sharedMint,
-                gameStatus: { inProgress: {} }, // ? I think we should remove this. when game start is called and all validation passes, setting this to in progress should be okay
-                phaseStart: new BN(currentTs),
-                endTimestampOffset: new BN(oneYrLater),
+                endTimestamp: new BN(oneYrLater),
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
@@ -88,10 +53,7 @@ describe("GAME TEST", async () => {
 
         it("Fails to start a game if arguments provided are invalid", async () => {
             const tx = await burgerProvider.gameStartTx({
-                mint: sharedMint,
-                gameStatus: { inProgress: {} }, // ? I think we should remove this. when game start is called and all validation passes, setting this to in progress should be okay
-                phaseStart: new BN(oneYrLater),
-                endTimestampOffset: new BN(currentTs),
+                endTimestamp: new BN(currentTs),
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
@@ -236,22 +198,3 @@ describe("GAME TEST", async () => {
         });
     });
 });
-
-// describe("INVALID ARGUMENTS", () => {
-//     let sharedMint: PublicKey = new PublicKey("");
-
-//     // ! not ready
-//     it("fails to end game if phase end has already passed", async () => {
-//         const tx = await burgerProvider.gameEndTx(sharedMint);
-
-//         const res = await sendAndConfirmRawTransaction(
-//             CONNECTION,
-//             tx,
-//             wallet.publicKey,
-//             wallet,
-//             []
-//         );
-
-//         expect(res).to.be.equal(null);
-//     });
-// });
