@@ -18,6 +18,15 @@ export const SEED_PROGRAM_DELEGATE = Buffer.from(
     )
 );
 
+export const SEED_GAME_CONFIG = Buffer.from(
+    JSON.parse(
+        EpplexBurgerIdl.constants.filter((obj) => {
+            return obj.name === "SEED_GAME_CONFIG";
+        })[0].value
+    )
+);
+
+
 export function getProgramDelegate(
     burgerProgramId = BURGER_PROGRAM_ID
 ): PublicKey {
@@ -39,11 +48,11 @@ export function getTokenBurgerMetadata(
     return metadata;
 }
 
-export function getGameConfigAccount(
+export function getGameConfig(
     burgerProgramId = BURGER_PROGRAM_ID
 ): PublicKey {
     const [gameConfig] = PublicKey.findProgramAddressSync(
-        [Buffer.from("GAME_CONFIG")],
+        [SEED_GAME_CONFIG],
         burgerProgramId
     );
 
