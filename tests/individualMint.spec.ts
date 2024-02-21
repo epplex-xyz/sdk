@@ -51,17 +51,25 @@ describe("Individual mint", () => {
         );
     });
 
-    it("Transfer NFT", async() => {
+    it("Transfer NFT", async () => {
         const ixs = nftTransferIxs({
             connection: CONNECTION,
             mint: mint,
             source: wallet.publicKey,
-            destination: new PublicKey("2N6aJDX1TNs6RKkPsuufbAe4JjRAZPs1iLPcEUL4DX4z"),
+            destination: new PublicKey(
+                "2N6aJDX1TNs6RKkPsuufbAe4JjRAZPs1iLPcEUL4DX4z"
+            ),
             payer: wallet.publicKey,
-        })
-        const tx = new Transaction().add(...ixs)
+        });
+        const tx = new Transaction().add(...ixs);
 
-        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
-        console.log("\n")
-    })
+        await sendAndConfirmRawTransaction(
+            CONNECTION,
+            tx,
+            wallet.publicKey,
+            wallet,
+            []
+        );
+        console.log("\n");
+    });
 });
