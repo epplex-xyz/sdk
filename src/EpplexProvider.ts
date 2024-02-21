@@ -357,9 +357,7 @@ class EpplexProvider {
     }
 
     async gameStartTx({
-        gameStatus,
-        phaseStart,
-        endTimestampOffset,
+        endTimestamp,
         voteType,
         inputType,
         gamePrompt,
@@ -367,9 +365,7 @@ class EpplexProvider {
     }: gameStartParams): Promise<Transaction> {
         const startTx = await this.program.methods
             .gameStart({
-                gameStatus,
-                phaseStart,
-                endTimestampOffset,
+                endTimestamp,
                 voteType,
                 inputType,
                 gamePrompt,
@@ -378,23 +374,18 @@ class EpplexProvider {
             .accounts({
                 gameConfig: this.getGameConfig(),
                 payer: this.provider.publicKey,
-                token22Program: TOKEN_2022_PROGRAM_ID,
-                systemProgram: SystemProgram.programId,
             })
             .transaction();
 
         return startTx;
     }
 
-    async gameEndTx(mint: PublicKey): Promise<Transaction> {
+    async gameEndTx(): Promise<Transaction> {
         const gameEndTx = await this.program.methods
             .gameEnd()
             .accounts({
                 payer: this.provider.publicKey,
-                mint,
                 gameConfig: this.getGameConfig(),
-                token22Program: TOKEN_2022_PROGRAM_ID,
-                systemProgram: SystemProgram.programId,
             })
             .transaction();
 
@@ -413,7 +404,6 @@ class EpplexProvider {
                 gameConfig: this.getGameConfig(),
                 updateAuthority: programDelegate,
                 token22Program: TOKEN_2022_PROGRAM_ID,
-                tokenProgram: TOKEN_PROGRAM_ID,
             })
             .transaction();
 

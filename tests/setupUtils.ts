@@ -54,12 +54,12 @@ export function trySetupGameConfig(
 ) {
     it("Try create game config ", async() => {
         try {
-            const burgerDelegateData = await provider
+            const gameConfig = await provider
                 .program
                 .account
                 .gameConfig
                 .fetch(provider.getGameConfig());
-            // console.log("Program Delegate Data", burgerDelegateData)
+            console.log("Game config", gameConfig)
         } catch (e) {
             const tx = await provider.gameCreateTx();
             await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);

@@ -1,13 +1,17 @@
 import {Keypair, PublicKey} from "@solana/web3.js";
 import {EpNFTService, getMint, sendAndConfirmRawTransaction} from "../src";
-import {CONNECTION, getSetup, setupGlobals} from "./setup";
+import {CONNECTION, setupGlobals} from "./setup";
 import {assert} from "chai";
 import {getDefaultMetadata} from "./getDefaultMetadata";
 import {BN} from "@coral-xyz/anchor";
 import {getTokenMetadata} from "@solana/spl-token";
+import {sleep} from "./testUtils";
 
 
-const metadata = getDefaultMetadata({});
+const metadata = getDefaultMetadata({
+
+});
+const endTimestamp =  (Math.floor((new Date()).getTime() / 1000) + 3).toString() // 3 secs
 
 describe("Testing Burger Program", () => {
     const {wallet, burgerProvider, coreProvider} = setupGlobals()
@@ -56,6 +60,28 @@ describe("Testing Burger Program", () => {
         console.log("\n")
     })
 
+    it("Token Game Reset", async() => {
+        const tx = await burgerProvider.tokenGameResetTx({
+            mint: mint,
+        })
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
+
+        console.log("\n")
+    })
+
+    it("Start a new game", async () => {
+        const tx = await burgerProvider.gameStartTx({
+            endTimestamp: new BN(endTimestamp),
+            voteType: { voteOnce: {} },
+            inputType: { text: {} },
+            gamePrompt: "What is your favorite burger?",
+            isEncrypted: false,
+        });
+
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    });
+
+
     it("Token Game Vote", async() => {
         const owner = wallet.publicKey;
         const tx = await burgerProvider.tokenGameVoteTx({
@@ -68,7 +94,17 @@ describe("Testing Burger Program", () => {
         console.log("\n")
     })
 
+    it("Game end", async() => {
+        const tx = await burgerProvider.gameEndTx()
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
+
+        console.log("\n")
+    })
+
+
     it("Token Burn", async() => {
+        await sleep(3_000);
+
         const owner = wallet.publicKey;
         const tx = await burgerProvider.burnTokenTx({
             mint: mint,
@@ -78,5 +114,7 @@ describe("Testing Burger Program", () => {
 
         console.log("\n")
     })
+
+
 });
 

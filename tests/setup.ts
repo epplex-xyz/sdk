@@ -36,7 +36,6 @@ export function getSetup(): GetSetupReturn {
     //     CONNECTION,
     //     CONFIRM_OPTIONS
     // );
-    // try using
     const provider = new anchor.AnchorProvider(
         CONNECTION,
         wallet,

@@ -408,7 +408,7 @@ export type EpplexBurger = {
         },
         {
           "name": "gameConfig",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -516,11 +516,6 @@ export type EpplexBurger = {
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -562,24 +557,9 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "payer",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -602,21 +582,6 @@ export type EpplexBurger = {
         {
           "name": "gameConfig",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
           "isSigner": false
         }
       ],
@@ -719,7 +684,7 @@ export type EpplexBurger = {
             }
           },
           {
-            "name": "phaseStart",
+            "name": "phaseStartTimestamp",
             "docs": [
               "Phase start"
             ],
@@ -839,17 +804,7 @@ export type EpplexBurger = {
         "kind": "struct",
         "fields": [
           {
-            "name": "gameStatus",
-            "type": {
-              "defined": "GameStatus"
-            }
-          },
-          {
-            "name": "phaseStart",
-            "type": "i64"
-          },
-          {
-            "name": "endTimestampOffset",
+            "name": "endTimestamp",
             "type": "i64"
           },
           {
@@ -993,6 +948,9 @@ export type EpplexBurger = {
         "kind": "enum",
         "variants": [
           {
+            "name": "None"
+          },
+          {
             "name": "VoteOnce"
           },
           {
@@ -1006,6 +964,9 @@ export type EpplexBurger = {
       "type": {
         "kind": "enum",
         "variants": [
+          {
+            "name": "None"
+          },
           {
             "name": "Choice"
           },
@@ -1107,13 +1068,28 @@ export type EpplexBurger = {
     },
     {
       "code": 6017,
-      "name": "GameInProgress",
-      "msg": "The game status is in progress"
+      "name": "RequiresEncryption",
+      "msg": "Message was not encrypted"
     },
     {
       "code": 6018,
-      "name": "GameFinished",
-      "msg": "The game status is finished. "
+      "name": "GameNotFinished",
+      "msg": "Game must be finished"
+    },
+    {
+      "code": 6019,
+      "name": "GameNotInProgress",
+      "msg": "Game must be in progress"
+    },
+    {
+      "code": 6020,
+      "name": "GameInProgress",
+      "msg": "Game is in progress"
+    },
+    {
+      "code": 6021,
+      "name": "AlreadySubmitted",
+      "msg": "Mint already submitted an answer"
     }
   ]
 };
@@ -1528,7 +1504,7 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "gameConfig",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -1636,11 +1612,6 @@ export const IDL: EpplexBurger = {
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -1682,24 +1653,9 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "payer",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -1722,21 +1678,6 @@ export const IDL: EpplexBurger = {
         {
           "name": "gameConfig",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
           "isSigner": false
         }
       ],
@@ -1839,7 +1780,7 @@ export const IDL: EpplexBurger = {
             }
           },
           {
-            "name": "phaseStart",
+            "name": "phaseStartTimestamp",
             "docs": [
               "Phase start"
             ],
@@ -1959,17 +1900,7 @@ export const IDL: EpplexBurger = {
         "kind": "struct",
         "fields": [
           {
-            "name": "gameStatus",
-            "type": {
-              "defined": "GameStatus"
-            }
-          },
-          {
-            "name": "phaseStart",
-            "type": "i64"
-          },
-          {
-            "name": "endTimestampOffset",
+            "name": "endTimestamp",
             "type": "i64"
           },
           {
@@ -2113,6 +2044,9 @@ export const IDL: EpplexBurger = {
         "kind": "enum",
         "variants": [
           {
+            "name": "None"
+          },
+          {
             "name": "VoteOnce"
           },
           {
@@ -2126,6 +2060,9 @@ export const IDL: EpplexBurger = {
       "type": {
         "kind": "enum",
         "variants": [
+          {
+            "name": "None"
+          },
           {
             "name": "Choice"
           },
@@ -2227,13 +2164,28 @@ export const IDL: EpplexBurger = {
     },
     {
       "code": 6017,
-      "name": "GameInProgress",
-      "msg": "The game status is in progress"
+      "name": "RequiresEncryption",
+      "msg": "Message was not encrypted"
     },
     {
       "code": 6018,
-      "name": "GameFinished",
-      "msg": "The game status is finished. "
+      "name": "GameNotFinished",
+      "msg": "Game must be finished"
+    },
+    {
+      "code": 6019,
+      "name": "GameNotInProgress",
+      "msg": "Game must be in progress"
+    },
+    {
+      "code": 6020,
+      "name": "GameInProgress",
+      "msg": "Game is in progress"
+    },
+    {
+      "code": 6021,
+      "name": "AlreadySubmitted",
+      "msg": "Mint already submitted an answer"
     }
   ]
 };
