@@ -1,10 +1,9 @@
-import {CONNECTION} from "./setup";
+import {CONNECTION, getSetup} from "./setup";
 import {
     CoreProvider,
     EpplexProvider,
     sendAndConfirmRawTransaction
 } from "../src";
-import {getGameConfigAccount} from "../src/pda";
 
 export function trySetupGlobalCollectionConfig(
     provider: CoreProvider,
@@ -53,13 +52,13 @@ export function trySetupGameConfig(
     wallet,
     connection = CONNECTION,
 ) {
-    it("Try create burger delegate ", async() => {
+    it("Try create game config ", async() => {
         try {
             const burgerDelegateData = await provider
                 .program
                 .account
                 .gameConfig
-                .fetch(getGameConfigAccount());
+                .fetch(provider.getGameConfig());
             // console.log("Program Delegate Data", burgerDelegateData)
         } catch (e) {
             const tx = await provider.gameCreateTx();
@@ -69,10 +68,3 @@ export function trySetupGameConfig(
 }
 
 
-export function trySetupBurgerProgramDelegate(
-    provider: EpplexProvider,
-    wallet,
-    connection = CONNECTION,
-) {
-
-}

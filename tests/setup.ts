@@ -3,6 +3,7 @@ import {loadOrGenerateKeypair} from "./keyUtils";
 import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {CoreProvider, EpplexProvider} from "../src";
+import {trySetupBurgerProgramDelegate, trySetupGameConfig, trySetupGlobalCollectionConfig} from "./setupUtils";
 
 /*
     How to use:
@@ -56,3 +57,16 @@ export function getSetup(): GetSetupReturn {
     }
 }
 
+export function setupGlobals(): GetSetupReturn {
+    const {wallet, burgerProvider, coreProvider} = getSetup();
+    const connection = burgerProvider.provider.connection
+    trySetupGlobalCollectionConfig(coreProvider, wallet, connection);
+    trySetupBurgerProgramDelegate(burgerProvider, wallet, connection);
+    trySetupGameConfig(burgerProvider, wallet, connection);
+
+    return {
+        wallet,
+        burgerProvider,
+        coreProvider
+    }
+}
