@@ -63,7 +63,7 @@ export function explorerUrl(connection: Connection, tx: string): string {
         cluster = "mainnet-qn1"
     }
 
-    return `https://solana.fm/tx/${tx}?cluster=${cluster}`
+    return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
 }
 
 

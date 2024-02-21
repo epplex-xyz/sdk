@@ -541,6 +541,27 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameStart",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "mint",
           "isMut": true,
           "isSigner": false
@@ -565,7 +586,7 @@ export type EpplexBurger = {
         {
           "name": "params",
           "type": {
-            "defined": "GameCreateParams"
+            "defined": "GameStartParams"
           }
         }
       ]
@@ -756,6 +777,13 @@ export type EpplexBurger = {
               "Amount of burgers who perished"
             ],
             "type": "u16"
+          },
+          {
+            "name": "submissionAmount",
+            "docs": [
+              "Amount of burgers who submitted an answer"
+            ],
+            "type": "u16"
           }
         ]
       }
@@ -806,14 +834,10 @@ export type EpplexBurger = {
       }
     },
     {
-      "name": "GameCreateParams",
+      "name": "GameStartParams",
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "gameRound",
-            "type": "u8"
-          },
           {
             "name": "gameStatus",
             "type": {
@@ -952,6 +976,9 @@ export type EpplexBurger = {
         "kind": "enum",
         "variants": [
           {
+            "name": "None"
+          },
+          {
             "name": "InProgress"
           },
           {
@@ -1045,8 +1072,8 @@ export type EpplexBurger = {
     },
     {
       "code": 6010,
-      "name": "GameFinished",
-      "msg": "Tring to access a finished game"
+      "name": "NonOperator",
+      "msg": "Non-operator attempts to use program"
     },
     {
       "code": 6011,
@@ -1070,13 +1097,23 @@ export type EpplexBurger = {
     },
     {
       "code": 6015,
-      "name": "InvalidGameStatus",
-      "msg": "Empty game status field on metadata account"
+      "name": "InvalidGameState",
+      "msg": "Empty game state field on metadata account"
     },
     {
       "code": 6016,
       "name": "ExpectedEmptyField",
       "msg": "Expected additional metadata field to be empty"
+    },
+    {
+      "code": 6017,
+      "name": "GameInProgress",
+      "msg": "The game status is in progress"
+    },
+    {
+      "code": 6018,
+      "name": "GameFinished",
+      "msg": "The game status is finished. "
     }
   ]
 };
@@ -1624,6 +1661,27 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameStart",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "mint",
           "isMut": true,
           "isSigner": false
@@ -1648,7 +1706,7 @@ export const IDL: EpplexBurger = {
         {
           "name": "params",
           "type": {
-            "defined": "GameCreateParams"
+            "defined": "GameStartParams"
           }
         }
       ]
@@ -1839,6 +1897,13 @@ export const IDL: EpplexBurger = {
               "Amount of burgers who perished"
             ],
             "type": "u16"
+          },
+          {
+            "name": "submissionAmount",
+            "docs": [
+              "Amount of burgers who submitted an answer"
+            ],
+            "type": "u16"
           }
         ]
       }
@@ -1889,14 +1954,10 @@ export const IDL: EpplexBurger = {
       }
     },
     {
-      "name": "GameCreateParams",
+      "name": "GameStartParams",
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "gameRound",
-            "type": "u8"
-          },
           {
             "name": "gameStatus",
             "type": {
@@ -2035,6 +2096,9 @@ export const IDL: EpplexBurger = {
         "kind": "enum",
         "variants": [
           {
+            "name": "None"
+          },
+          {
             "name": "InProgress"
           },
           {
@@ -2128,8 +2192,8 @@ export const IDL: EpplexBurger = {
     },
     {
       "code": 6010,
-      "name": "GameFinished",
-      "msg": "Tring to access a finished game"
+      "name": "NonOperator",
+      "msg": "Non-operator attempts to use program"
     },
     {
       "code": 6011,
@@ -2153,13 +2217,23 @@ export const IDL: EpplexBurger = {
     },
     {
       "code": 6015,
-      "name": "InvalidGameStatus",
-      "msg": "Empty game status field on metadata account"
+      "name": "InvalidGameState",
+      "msg": "Empty game state field on metadata account"
     },
     {
       "code": 6016,
       "name": "ExpectedEmptyField",
       "msg": "Expected additional metadata field to be empty"
+    },
+    {
+      "code": 6017,
+      "name": "GameInProgress",
+      "msg": "The game status is in progress"
+    },
+    {
+      "code": 6018,
+      "name": "GameFinished",
+      "msg": "The game status is finished. "
     }
   ]
 };
