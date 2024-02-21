@@ -976,6 +976,9 @@
         "kind": "enum",
         "variants": [
           {
+            "name": "None"
+          },
+          {
             "name": "InProgress"
           },
           {
@@ -1074,43 +1077,43 @@
     },
     {
       "code": 6011,
-      "name": "GameFinished",
-      "msg": "Tring to access a finished game"
-    },
-    {
-      "code": 6012,
       "name": "InvalidGameDuration",
       "msg": "Phase start greater than phase end"
     },
     {
-      "code": 6013,
+      "code": 6012,
       "name": "InvalidPhaseEndTS",
       "msg": "Phase end must be greater than current timestamp"
     },
     {
-      "code": 6014,
+      "code": 6013,
       "name": "InvalidVoteMany",
       "msg": "Only VoteOnce is allowed"
     },
     {
-      "code": 6015,
+      "code": 6014,
       "name": "InvalidExpiryTS",
       "msg": "Empty expiry timestamp on metadata account"
     },
     {
-      "code": 6016,
-      "name": "InvalidGameStatus",
-      "msg": "Empty game status field on metadata account"
+      "code": 6015,
+      "name": "InvalidGameState",
+      "msg": "Empty game state field on metadata account"
     },
     {
-      "code": 6017,
+      "code": 6016,
       "name": "ExpectedEmptyField",
       "msg": "Expected additional metadata field to be empty"
     },
     {
-      "code": 6018,
+      "code": 6017,
       "name": "GameInProgress",
-      "msg": "Tried to call create game IX while another game was going on"
+      "msg": "The game status is in progress"
+    },
+    {
+      "code": 6018,
+      "name": "GameFinished",
+      "msg": "The game status is finished. "
     }
   ],
   "metadata": {
