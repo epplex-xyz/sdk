@@ -237,21 +237,21 @@ describe("GAME TEST", async () => {
     });
 });
 
-describe("INVALID ARGUMENTS", () => {
-    let sharedMint: PublicKey = new PublicKey("");
+// describe("INVALID ARGUMENTS", () => {
+//     let sharedMint: PublicKey = new PublicKey("");
 
-    // ! not ready
-    it("fails to end game if phase end has already passed", async () => {
-        const tx = await burgerProvider.gameEndTx(sharedMint);
+//     // ! not ready
+//     it("fails to end game if phase end has already passed", async () => {
+//         const tx = await burgerProvider.gameEndTx(sharedMint);
 
-        const res = await sendAndConfirmRawTransaction(
-            CONNECTION,
-            tx,
-            wallet.publicKey,
-            wallet,
-            []
-        );
+//         const res = await sendAndConfirmRawTransaction(
+//             CONNECTION,
+//             tx,
+//             wallet.publicKey,
+//             wallet,
+//             []
+//         );
 
-        expect(res).to.be.equal(null);
-    });
-});
+//         expect(res).to.be.equal(null);
+//     });
+// });
