@@ -8,15 +8,14 @@ import {getTokenMetadata} from "@solana/spl-token";
 import {sleep} from "./testUtils";
 
 
-const metadata = getDefaultMetadata({
-
-});
+const metadata = getDefaultMetadata({});
 const endTimestamp =  (Math.floor((new Date()).getTime() / 1000) + 3).toString() // 3 secs
 
 describe("Testing Burger Program", () => {
     const {wallet, burgerProvider, coreProvider} = setupGlobals()
-
     let mint: PublicKey;
+
+
     it('Mint token', async () => {
         console.log("\n \n");
         const globalCollectionData = await coreProvider
@@ -35,7 +34,6 @@ describe("Testing Burger Program", () => {
         })
 
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-        console.log("Individual Mint Metadata", await getTokenMetadata(burgerProvider.provider.connection, mint));
     });
 
 
@@ -76,6 +74,7 @@ describe("Testing Burger Program", () => {
             inputType: { text: {} },
             gamePrompt: "What is your favorite burger?",
             isEncrypted: false,
+            publicEncryptKey: "",
         });
 
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
@@ -116,5 +115,24 @@ describe("Testing Burger Program", () => {
     })
 
 
+    it('Ensure possible to mint token post flow', async () => {
+        console.log("\n \n");
+        const globalCollectionData = await coreProvider
+            .program
+            .account
+            .globalCollectionConfig
+            .fetch(coreProvider.getGlobalCollectionConfig());
+
+        mint = getMint(globalCollectionData.collectionCounter, new BN(0));
+        const tx = await burgerProvider.createWhitelistMintTx({
+            expiryDate: metadata.expiryDate,
+            name: metadata.name,
+            symbol: metadata.symbol,
+            uri: metadata.uri,
+            mint,
+        })
+
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    });
 });
 

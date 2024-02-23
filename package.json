@@ -26,8 +26,8 @@
 	"strict": true,
 	"outDir": "./lib",
 	"scripts": {
-		"dry": "yarn build && npm publish --dry-run",
-		"pub": "yarn build && npm publish --access public",
+		"dry": "npm publish --dry-run",
+		"pub": "npm publish --access public",
 		"start": "ts-node src/index.ts",
 		"build": "rm -rf lib && tsc",
 		"update-types-burger": "cp ../epPlex/target/types/epplex_burger.ts src/types/epplexBurgerTypes.ts",

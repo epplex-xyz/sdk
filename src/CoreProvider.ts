@@ -40,9 +40,7 @@ class CoreProvider {
     }
 
     /**
-
-     Create TX for Global Collection PDA
-
+     * Create TX for Global Collection PDA
      */
     async createGlobalCollectionConfigTx(): Promise<Transaction> {
         return await this.program.methods
