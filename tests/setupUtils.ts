@@ -59,7 +59,7 @@ export function trySetupGameConfig(
                 .account
                 .gameConfig
                 .fetch(provider.getGameConfig());
-            console.log("Game config", gameConfig)
+            // console.log("Game config", gameConfig)
         } catch (e) {
             const tx = await provider.gameCreateTx();
             await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
