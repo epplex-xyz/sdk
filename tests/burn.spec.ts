@@ -22,8 +22,6 @@ const collection = {
     collectionMintNme: "SDK Test",
     collectionMintSymbol: "SDK TEST",
     collectionMintUri: "https://example.com",
-    collectionName: "epplex",
-    collectionSymbol: "EPX",
     collectionSize: nTokens,
 }
 
@@ -47,9 +45,7 @@ describe('Test Burn', () => {
             collectionMintName: collection.collectionMintNme,
             collectionMintSymbol: collection.collectionMintSymbol,
             collectionMintUri: collection.collectionMintUri,
-            collectionName: collection.collectionName,
             collectionSize: collection.collectionSize,
-            collectionSymbol: collection.collectionSymbol,
             authority: getProgramDelegate(),
         });
 
@@ -106,7 +102,6 @@ describe('Test Burn', () => {
             useGameConfig: false
         });
         const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-        console.log("res", res)
         expect(res).to.not.be.empty;
     });
 

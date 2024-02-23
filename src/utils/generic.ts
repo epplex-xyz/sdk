@@ -42,6 +42,7 @@ export async function tryCreateATAIx(
         return [];
     }
 }
+
 /**
  * Get all T22 token accounts
  */
