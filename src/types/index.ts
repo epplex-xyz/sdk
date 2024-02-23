@@ -9,6 +9,14 @@ import {
     CreateCollectionTxParams,
 } from "./CoreProviderTypes";
 
+import {
+    EpplexBurger,
+} from "./epplexBurgerTypes";
+
+import {
+    EpplexCore,
+} from "./epplexCoreTypes";
+
 export {
     // EpplexProviderTypes
     EpNFT,
@@ -17,6 +25,9 @@ export {
     TokenGameVoteTxParams,
 
     // CoreProviderTypes
-    CreateCollectionTxParams
+    CreateCollectionTxParams,
+
+    EpplexBurger,
+    EpplexCore
 };
 
