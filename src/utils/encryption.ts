@@ -2,9 +2,29 @@ import * as crypto from "crypto";
 
 type KeyType = "public" | "private";
 
-async function encrypt(data: string, key: CryptoKey): Promise<string> {
+type Context = "browser" | "node";
+
+const DEFAULT_CONTEXT: Context = "browser"
+
+function getBrowserContext(context: Context) {
+    if (typeof window === 'undefined') {
+        throw new Error('Cannot execute crypto module in non-browser context.');
+    }
+    let cryptoObject: Crypto | any;
+    if (context === "browser") {
+        cryptoObject = window.crypto;
+    } else {
+        cryptoObject = crypto;
+    }
+
+    return cryptoObject
+}
+
+async function encrypt(data: string, key: CryptoKey, context = DEFAULT_CONTEXT): Promise<string> {
+    const cryptoObject = getBrowserContext(context);
+
     const encoded = new TextEncoder().encode(data);
-    const encrypted = await window.crypto.subtle.encrypt(
+    const encrypted = await cryptoObject.subtle.encrypt(
         { name: "RSA-OAEP" },
         key,
         encoded
@@ -12,6 +32,9 @@ async function encrypt(data: string, key: CryptoKey): Promise<string> {
     return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
 }
 
+/**
+ * Should decrypt only on server side
+ */
 async function decrypt(data: string, key: CryptoKey): Promise<string> {
     const decoded = atob(data);
     const arrayBuffer = new ArrayBuffer(decoded.length);
@@ -26,9 +49,13 @@ async function decrypt(data: string, key: CryptoKey): Promise<string> {
     );
     return new TextDecoder().decode(decrypted);
 }
-async function generateNonce(size: number): Promise<string> {
+
+
+async function generateNonce(size: number, context = DEFAULT_CONTEXT): Promise<string> {
+    const cryptoObject = getBrowserContext(context);
+
     const array = new Uint8Array(size);
-    window.crypto.getRandomValues(array);
+    cryptoObject.getRandomValues(array);
     return btoa(String.fromCharCode(...array));
 }
 
@@ -46,6 +73,9 @@ function str2ab(str: string): ArrayBuffer {
     return buf;
 }
 
+/**
+ * Should decrypt only on server side
+ */
 async function newKeyPair(size: number): Promise<CryptoKeyPair> {
     return crypto.subtle.generateKey(
         {
@@ -59,25 +89,37 @@ async function newKeyPair(size: number): Promise<CryptoKeyPair> {
     );
 }
 
-async function exportKey(key: CryptoKey): Promise<string> {
+async function exportKey(key: CryptoKey, context = DEFAULT_CONTEXT): Promise<string> {
+    const cryptoObject = getBrowserContext(context);
+
     const keyType = key.type;
     if (key.type !== "public" && key.type !== "private") {
         throw new Error("Invalid key type");
     }
     const format = keyType === "public" ? "spki" : "pkcs8";
-    const exported = await window.crypto.subtle.exportKey(format!, key);
+    const exported = await cryptoObject.subtle.exportKey(format!, key);
     const exportedAsString = ab2str(exported);
     const exportedAsBase64 = btoa(exportedAsString);
     return exportedAsBase64;
 }
 
-async function importKey(key: string, keyType: KeyType): Promise<CryptoKey> {
+
+/**
+ * Usage: input public key as string
+ *
+ * @param key
+ * @param keyType
+ * @param context
+ */
+async function importKey(key: string, keyType: KeyType, context= DEFAULT_CONTEXT): Promise<CryptoKey> {
+    const cryptoObject = getBrowserContext(context);
+
     const format = keyType === "public" ? "spki" : "pkcs8";
     const type = keyType === "public" ? "encrypt" : "decrypt";
     const importedAsString = atob(key);
     const importedAsArrayBuffer = str2ab(importedAsString);
 
-    return window.crypto.subtle.importKey(
+    return cryptoObject.subtle.importKey(
         format,
         importedAsArrayBuffer,
         {

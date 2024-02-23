@@ -19,6 +19,14 @@ import {
 } from "./utils/generic";
 
 import {
+  importKey,
+  generateNonce,
+  encrypt,
+  decrypt
+} from "./utils/encryption";
+
+
+import {
   getProgramDelegate,
   getTokenBurgerMetadata,
 
@@ -50,6 +58,12 @@ export {
   TokenGameVoteTxParams,
   CreateCollectionTxParams,
 
+  importKey,
+  generateNonce,
+  encrypt,
+  decrypt,
+
   nftTransferIxs,
   sendAndConfirmRawTransaction
+
 };
