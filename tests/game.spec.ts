@@ -21,6 +21,7 @@ describe("GAME TEST", async () => {
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
                 isEncrypted: false,
+                publicEncryptKey: "",
             });
             await sendAndConfirmRawTransaction(
                 CONNECTION,
@@ -38,6 +39,7 @@ describe("GAME TEST", async () => {
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
                 isEncrypted: false,
+                publicEncryptKey: "",
             });
 
             const res = await sendAndConfirmRawTransaction(
@@ -58,6 +60,7 @@ describe("GAME TEST", async () => {
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
                 isEncrypted: false,
+                publicEncryptKey: "",
             });
             const res = await sendAndConfirmRawTransaction(
                 CONNECTION,
@@ -108,7 +111,7 @@ describe("GAME TEST", async () => {
 
     describe("game end stage", () => {
         it("ends a game", async () => {
-            const tx = await burgerProvider.gameEndTx(sharedMint);
+            const tx = await burgerProvider.gameEndTx();
             await sendAndConfirmRawTransaction(
                 CONNECTION,
                 tx,
@@ -152,7 +155,7 @@ describe("GAME TEST", async () => {
 
         // this indicates that the user hasn't voted yet
         it("fails to end game if metadata fields are empty", async () => {
-            const tx = await burgerProvider.gameEndTx(sharedMint);
+            const tx = await burgerProvider.gameEndTx();
 
             const res = await sendAndConfirmRawTransaction(
                 CONNECTION,
@@ -184,7 +187,7 @@ describe("GAME TEST", async () => {
 
         // ! MOVE THIS UP TO THE NEW ARGUMENTS VALIDATION DESCRIBE BLOCK
         it("fails to reset game if expiry timestamp reached", async () => {
-            const tx = await burgerProvider.gameEndTx(sharedMint);
+            const tx = await burgerProvider.gameEndTx();
 
             const res = await sendAndConfirmRawTransaction(
                 CONNECTION,

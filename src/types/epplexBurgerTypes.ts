@@ -589,6 +589,45 @@ export type EpplexBurger = {
       "args": []
     },
     {
+      "name": "gameClose",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameUpdate",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "GameUpdateParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "programDelegateCreate",
       "accounts": [
         {
@@ -738,6 +777,13 @@ export type EpplexBurger = {
             "type": "bool"
           },
           {
+            "name": "publicEncryptKey",
+            "docs": [
+              "Public encrypt key"
+            ],
+            "type": "string"
+          },
+          {
             "name": "burnAmount",
             "docs": [
               "Amount of burgers who perished"
@@ -801,6 +847,42 @@ export type EpplexBurger = {
     },
     {
       "name": "GameStartParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "endTimestamp",
+            "type": "i64"
+          },
+          {
+            "name": "voteType",
+            "type": {
+              "defined": "VoteType"
+            }
+          },
+          {
+            "name": "inputType",
+            "type": {
+              "defined": "InputType"
+            }
+          },
+          {
+            "name": "gamePrompt",
+            "type": "string"
+          },
+          {
+            "name": "isEncrypted",
+            "type": "bool"
+          },
+          {
+            "name": "publicEncryptKey",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameUpdateParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1091,6 +1173,21 @@ export type EpplexBurger = {
       "code": 6021,
       "name": "AlreadySubmitted",
       "msg": "Mint already submitted an answer"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidStartParams",
+      "msg": "Invalid parameters supplied to game start instruction"
+    },
+    {
+      "code": 6023,
+      "name": "IncorrectInputType",
+      "msg": "Incorrect input type"
+    },
+    {
+      "code": 6024,
+      "name": "InputIsEmpty",
+      "msg": "Input cannot be empty"
     }
   ]
 };
@@ -1686,6 +1783,45 @@ export const IDL: EpplexBurger = {
       "args": []
     },
     {
+      "name": "gameClose",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "gameUpdate",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "GameUpdateParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "programDelegateCreate",
       "accounts": [
         {
@@ -1835,6 +1971,13 @@ export const IDL: EpplexBurger = {
             "type": "bool"
           },
           {
+            "name": "publicEncryptKey",
+            "docs": [
+              "Public encrypt key"
+            ],
+            "type": "string"
+          },
+          {
             "name": "burnAmount",
             "docs": [
               "Amount of burgers who perished"
@@ -1898,6 +2041,42 @@ export const IDL: EpplexBurger = {
     },
     {
       "name": "GameStartParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "endTimestamp",
+            "type": "i64"
+          },
+          {
+            "name": "voteType",
+            "type": {
+              "defined": "VoteType"
+            }
+          },
+          {
+            "name": "inputType",
+            "type": {
+              "defined": "InputType"
+            }
+          },
+          {
+            "name": "gamePrompt",
+            "type": "string"
+          },
+          {
+            "name": "isEncrypted",
+            "type": "bool"
+          },
+          {
+            "name": "publicEncryptKey",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameUpdateParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2188,6 +2367,21 @@ export const IDL: EpplexBurger = {
       "code": 6021,
       "name": "AlreadySubmitted",
       "msg": "Mint already submitted an answer"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidStartParams",
+      "msg": "Invalid parameters supplied to game start instruction"
+    },
+    {
+      "code": 6023,
+      "name": "IncorrectInputType",
+      "msg": "Incorrect input type"
+    },
+    {
+      "code": 6024,
+      "name": "InputIsEmpty",
+      "msg": "Input cannot be empty"
     }
   ]
 };

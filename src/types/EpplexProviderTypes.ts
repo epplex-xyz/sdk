@@ -61,6 +61,7 @@ export interface gameStartParams {
     inputType: InputType;
     gamePrompt: string;
     isEncrypted: boolean;
+    publicEncryptKey: string;
 }
 
 

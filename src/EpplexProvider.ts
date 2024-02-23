@@ -375,6 +375,7 @@ class EpplexProvider {
         inputType,
         gamePrompt,
         isEncrypted,
+        publicEncryptKey
     }: gameStartParams): Promise<Transaction> {
         const startTx = await this.program.methods
             .gameStart({
@@ -383,6 +384,7 @@ class EpplexProvider {
                 inputType,
                 gamePrompt,
                 isEncrypted,
+                publicEncryptKey
             })
             .accounts({
                 gameConfig: this.getGameConfig(),
