@@ -1,10 +1,10 @@
-import {CONNECTION, getSetup, setupGlobals} from "./setup";
+import {CONNECTION, getSetup, setupGlobals} from "./utils/setup";
 import {
     getProgramDelegate,
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
-import {sleep} from "./testUtils";
+import {sleep} from "./utils/testUtils";
 import {PublicKey} from "@solana/web3.js";
 import {expect} from "chai";
 

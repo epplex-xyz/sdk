@@ -3,7 +3,7 @@ import { PublicKey } from "@solana/web3.js";
 import { expect } from "chai";
 
 import { sendAndConfirmRawTransaction } from "../src";
-import { CONNECTION, getSetup } from "./setup";
+import { CONNECTION, getSetup } from "./utils/setup";
 const { wallet, burgerProvider } = getSetup();
 
 describe("GAME TEST", async () => {

@@ -1,5 +1,5 @@
 import {sendAndConfirmRawTransaction} from "../src";
-import {CONNECTION, setupGlobals} from "./setup";
+import {CONNECTION, setupGlobals} from "./utils/setup";
 
 
 describe("Reset States", () => {

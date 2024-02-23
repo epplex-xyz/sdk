@@ -67,7 +67,6 @@ export function explorerUrl(connection: Connection, tx: string): string {
     return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
 }
 
-
 export async function sendAndConfirmRawTransaction(
     connection: Connection,
     tx: Transaction,

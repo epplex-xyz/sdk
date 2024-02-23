@@ -1,7 +1,7 @@
 import {clusterApiUrl, Connection, Keypair, LAMPORTS_PER_SOL, Transaction} from "@solana/web3.js";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {EpplexProvider, nftTransferIxs, sendAndConfirmRawTransaction} from "../src";
-import {getDefaultMetadata} from "./getDefaultMetadata";
+import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 
 // TODO these needs to be deleted
 const COMMITMENT = "confirmed";

@@ -1,7 +1,7 @@
 import { BN } from "@coral-xyz/anchor";
 import { getTokenMetadata } from "@solana/spl-token";
-import {CONNECTION, setupGlobals} from "./setup";
-import { getDefaultMetadata } from "./getDefaultMetadata";
+import {CONNECTION, setupGlobals} from "./utils/setup";
+import { getDefaultMetadata } from "./utils/getDefaultMetadata";
 import {
     sendAndConfirmRawTransaction,
     getMint,

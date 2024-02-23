@@ -1,13 +1,13 @@
 import {getTokenMetadata} from "@solana/spl-token";
 import {expect} from "chai";
-import {CONNECTION, getSetup, setupGlobals} from "./setup";
+import {CONNECTION, getSetup, setupGlobals} from "./utils/setup";
 import {
     EpNFTService,
     getProgramDelegate, nftTransferIxs,
     sendAndConfirmRawTransaction
 } from "../src";
 import {BN} from "@coral-xyz/anchor";
-import {writeLinesToFile} from "./testUtils";
+import {writeLinesToFile} from "./utils/testUtils";
 import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
 import {PublicKey, Transaction} from "@solana/web3.js";
 
@@ -16,12 +16,12 @@ import {PublicKey, Transaction} from "@solana/web3.js";
 */
 
 const expiryDate: string = (Math.floor((new Date()).getTime() / 1000) + 3600).toString() // In 1 hour
-const nTokens = 30
+const nTokens = 3
 const collection = {
     collectionMintNme: "SDK Test", // shows up directly on the Collection NFT
     collectionMintSymbol: "SDK TEST", // shows up directly on the Collection NFT
     collectionMintUri: "https://example.com", // shows up directly on the Collection NFT
-    collectionSize: 2,  // can just check on-chain, but not really super important
+    collectionSize: nTokens,  // can just check on-chain, but not really super important
 }
 
 describe('Test Collection', () => {

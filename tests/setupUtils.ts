@@ -1,4 +1,4 @@
-import {CONNECTION, getSetup} from "./setup";
+import {CONNECTION, getSetup} from "./utils/setup";
 import {
     CoreProvider,
     EpplexProvider,

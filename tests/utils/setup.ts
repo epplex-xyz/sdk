@@ -2,8 +2,8 @@ import {Connection} from "@solana/web3.js";
 import {loadOrGenerateKeypair} from "./keyUtils";
 import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
-import {CoreProvider, EpplexProvider} from "../src";
-import {trySetupBurgerProgramDelegate, trySetupGameConfig, trySetupGlobalCollectionConfig} from "./setupUtils";
+import {CoreProvider, EpplexProvider} from "../../src";
+import {trySetupBurgerProgramDelegate, trySetupGameConfig, trySetupGlobalCollectionConfig} from "../setupUtils";
 
 /*
     How to use:
