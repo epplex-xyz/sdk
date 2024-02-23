@@ -16,8 +16,9 @@ import {
     getGlobalCollectionConfig, getMint,
 } from "./constants/coreSeeds";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
-import {CreateCollectionTxParams} from "./types/CoreProviderTypes";
+import {CreateCollectionTxParams, GlobalCollectionConfig} from "./types/CoreProviderTypes";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
+import {GameConfig} from "./types/EpplexProviderTypes";
 
 class CoreProvider {
     provider: anchor.AnchorProvider;
@@ -38,6 +39,11 @@ class CoreProvider {
         return epplexProvider;
     }
 
+    /**
+
+     Create TX for Global Collection PDA
+
+     */
     async createGlobalCollectionConfigTx(): Promise<Transaction> {
         return await this.program.methods
             .globalCollectionConfigCreate()
@@ -107,6 +113,19 @@ class CoreProvider {
         ];
 
         return new Transaction().add(...ixs);
+    }
+
+    async getGlobalCollectionConfigData(): Promise<GlobalCollectionConfig | null> {
+        try {
+            return await this.program
+                .account
+                .globalCollectionConfig
+                .fetch(
+                    this.getGlobalCollectionConfig()
+                );
+        } catch (err) {
+            return null
+        }
     }
 
     getGlobalCollectionConfig(): PublicKey {

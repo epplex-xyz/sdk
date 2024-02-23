@@ -1,4 +1,6 @@
 import {PublicKey} from "@solana/web3.js";
+import {IdlAccounts} from "@coral-xyz/anchor";
+import { EpplexCore } from "../types/epplexCoreTypes";
 
 export interface CreateCollectionTxParams {
     collectionConfigAddress: PublicKey,
@@ -12,3 +14,5 @@ export interface CreateCollectionTxParams {
     collectionSize: number,
     computeBudget?: number
 }
+
+export type GlobalCollectionConfig = IdlAccounts<EpplexCore>["globalCollectionConfig"];
