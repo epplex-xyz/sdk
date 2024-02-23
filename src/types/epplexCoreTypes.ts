@@ -249,6 +249,29 @@ export type EpplexCore = {
       ]
     },
     {
+      "name": "collectionClose",
+      "accounts": [
+        {
+          "name": "collectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "CollectionCloseParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "globalCollectionConfigCreate",
       "accounts": [
         {
@@ -265,6 +288,22 @@ export type EpplexCore = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "globalCollectionConfigClose",
+      "accounts": [
+        {
+          "name": "globalCollectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         }
       ],
       "args": []
@@ -312,14 +351,6 @@ export type EpplexCore = {
             "type": "u32"
           },
           {
-            "name": "collectionName",
-            "type": "string"
-          },
-          {
-            "name": "collectionSymbol",
-            "type": "string"
-          },
-          {
             "name": "mintCount",
             "type": "u64"
           }
@@ -344,6 +375,18 @@ export type EpplexCore = {
     }
   ],
   "types": [
+    {
+      "name": "CollectionCloseParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "collectionId",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "CollectionCreateParams",
       "type": {
@@ -388,14 +431,6 @@ export type EpplexCore = {
           {
             "name": "collectionSize",
             "type": "u32"
-          },
-          {
-            "name": "collectionName",
-            "type": "string"
-          },
-          {
-            "name": "collectionSymbol",
-            "type": "string"
           }
         ]
       }
@@ -746,6 +781,29 @@ export const IDL: EpplexCore = {
       ]
     },
     {
+      "name": "collectionClose",
+      "accounts": [
+        {
+          "name": "collectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "CollectionCloseParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "globalCollectionConfigCreate",
       "accounts": [
         {
@@ -762,6 +820,22 @@ export const IDL: EpplexCore = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "globalCollectionConfigClose",
+      "accounts": [
+        {
+          "name": "globalCollectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         }
       ],
       "args": []
@@ -809,14 +883,6 @@ export const IDL: EpplexCore = {
             "type": "u32"
           },
           {
-            "name": "collectionName",
-            "type": "string"
-          },
-          {
-            "name": "collectionSymbol",
-            "type": "string"
-          },
-          {
             "name": "mintCount",
             "type": "u64"
           }
@@ -841,6 +907,18 @@ export const IDL: EpplexCore = {
     }
   ],
   "types": [
+    {
+      "name": "CollectionCloseParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "collectionId",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "CollectionCreateParams",
       "type": {
@@ -885,14 +963,6 @@ export const IDL: EpplexCore = {
           {
             "name": "collectionSize",
             "type": "u32"
-          },
-          {
-            "name": "collectionName",
-            "type": "string"
-          },
-          {
-            "name": "collectionSymbol",
-            "type": "string"
           }
         ]
       }

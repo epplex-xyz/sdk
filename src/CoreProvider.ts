@@ -53,8 +53,37 @@ class CoreProvider {
             .transaction();
     }
 
-    /*
-        Both collection config and collection mint are created at the same time
+
+    /**
+     * Close Global Collection Config
+     */
+    async closeGlobalCollectionConfigTx(collectionId: number): Promise<Transaction> {
+        return await this.program.methods
+            .globalCollectionConfigClose()
+            .accounts({
+                globalCollectionConfig: this.getGlobalCollectionConfig(),
+                payer: this.provider.wallet.publicKey,
+            })
+            .transaction();
+    }
+
+    /**
+     * Close Collection Config
+     */
+    async closeCollectionConfigTx(collectionId: number): Promise<Transaction> {
+        return await this.program.methods
+            .collectionClose({collectionId: new BN(collectionId)})
+            .accounts({
+                collectionConfig: this.getCollectionConfig(new BN(collectionId)),
+                payer: this.provider.wallet.publicKey,
+            })
+            .transaction();
+    }
+
+    /**
+     * Create Collection Config Tx
+     *
+     * Both collection config and collection mint are created at the same time
      */
     async createCollectionTx({
         collectionConfigAddress,
@@ -62,8 +91,6 @@ class CoreProvider {
         collectionMintName,
         collectionMintSymbol,
         collectionMintUri,
-        collectionName,
-        collectionSymbol,
         collectionSize,
         authority,
         computeBudget = DEFAULT_COMPUTE_BUDGET
@@ -85,8 +112,6 @@ class CoreProvider {
                 standardDuration: 10000,
                 gracePeriod: new BN(10000),
                 treasury: this.provider.wallet.publicKey,
-                collectionName,
-                collectionSymbol,
                 collectionSize,
                 authority,
             })

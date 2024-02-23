@@ -313,7 +313,7 @@ class EpplexProvider {
             TOKEN_2022_PROGRAM_ID
         );
 
-        const tokenVoteTx = await this.program.methods
+        return await this.program.methods
             .tokenGameVote({
                 message: message,
             })
@@ -327,8 +327,22 @@ class EpplexProvider {
                 token22Program: TOKEN_2022_PROGRAM_ID,
             })
             .transaction();
+    }
 
-        return tokenVoteTx;
+    async tokenGameResetTx({ mint }: TokenGameResetParams) {
+        const programDelegate = this.getProgramDelegate();
+
+        return await this.program.methods
+            .tokenGameReset({})
+            .accounts({
+                mint,
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                payer: this.provider.publicKey,
+                gameConfig: this.getGameConfig(),
+                updateAuthority: programDelegate,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
     }
 
     getProgramDelegate(): PublicKey {
@@ -343,7 +357,7 @@ class EpplexProvider {
         return getGameConfig(this.program.programId);
     }
 
-    async getGame(): Promise<GameConfig | null> {
+    async getGameData(): Promise<GameConfig | null> {
         try {
             return await this.program
                 .account
@@ -357,7 +371,7 @@ class EpplexProvider {
     }
 
     async gameCreateTx(): Promise<Transaction> {
-        const createTx = await this.program.methods
+        return await this.program.methods
             .gameCreate()
             .accounts({
                 gameConfig: this.getGameConfig(),
@@ -365,8 +379,6 @@ class EpplexProvider {
                 systemProgram: SystemProgram.programId,
             })
             .transaction();
-
-        return createTx;
     }
 
     async gameStartTx({
@@ -377,7 +389,7 @@ class EpplexProvider {
         isEncrypted,
         publicEncryptKey
     }: gameStartParams): Promise<Transaction> {
-        const startTx = await this.program.methods
+        return await this.program.methods
             .gameStart({
                 endTimestamp,
                 voteType,
@@ -387,43 +399,32 @@ class EpplexProvider {
                 publicEncryptKey
             })
             .accounts({
-                gameConfig: this.getGameConfig(),
                 payer: this.provider.publicKey,
+                gameConfig: this.getGameConfig(),
             })
             .transaction();
-
-        return startTx;
     }
 
     async gameEndTx(): Promise<Transaction> {
-        const gameEndTx = await this.program.methods
+        return await this.program.methods
             .gameEnd()
             .accounts({
-                payer: this.provider.publicKey,
                 gameConfig: this.getGameConfig(),
+                payer: this.provider.publicKey,
             })
             .transaction();
-
-        return gameEndTx;
     }
 
-    async tokenGameResetTx({ mint }: TokenGameResetParams) {
-        const programDelegate = this.getProgramDelegate();
-
-        const tokenBurnTx = await this.program.methods
-            .tokenGameReset({})
+    async gameCloseTx(): Promise<Transaction> {
+        return await this.program.methods
+            .gameClose()
             .accounts({
-                mint,
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                payer: this.provider.publicKey,
                 gameConfig: this.getGameConfig(),
-                updateAuthority: programDelegate,
-                token22Program: TOKEN_2022_PROGRAM_ID,
+                payer: this.provider.publicKey,
             })
             .transaction();
-
-        return tokenBurnTx;
     }
+
 }
 
 export default EpplexProvider;

@@ -171,78 +171,15 @@ export type EpplexBurger = {
       ]
     },
     {
-      "name": "tokenBuy",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "buyerTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "seller",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "sellerTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenBuyParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "tokenRenew",
       "accounts": [
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Technically anyone could pay to renew but why would they?"
+          ]
         },
         {
           "name": "tokenMetadata",
@@ -290,100 +227,6 @@ export type EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "TokenRenewParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenDelist",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "programDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenDelistParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenSell",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "programDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenSellParams"
           }
         }
       ]
@@ -935,20 +778,6 @@ export type EpplexBurger = {
       }
     },
     {
-      "name": "TokenBuyParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenDelistParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
       "name": "TokenGameResetParams",
       "type": {
         "kind": "struct",
@@ -969,13 +798,6 @@ export type EpplexBurger = {
     },
     {
       "name": "TokenRenewParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenSellParams",
       "type": {
         "kind": "struct",
         "fields": []
@@ -1365,78 +1187,15 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
-      "name": "tokenBuy",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "buyer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "buyerTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "seller",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "sellerTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenBuyParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "tokenRenew",
       "accounts": [
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Technically anyone could pay to renew but why would they?"
+          ]
         },
         {
           "name": "tokenMetadata",
@@ -1484,100 +1243,6 @@ export const IDL: EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "TokenRenewParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenDelist",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "programDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenDelistParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenSell",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "programDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenSellParams"
           }
         }
       ]
@@ -2129,20 +1794,6 @@ export const IDL: EpplexBurger = {
       }
     },
     {
-      "name": "TokenBuyParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenDelistParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
       "name": "TokenGameResetParams",
       "type": {
         "kind": "struct",
@@ -2163,13 +1814,6 @@ export const IDL: EpplexBurger = {
     },
     {
       "name": "TokenRenewParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenSellParams",
       "type": {
         "kind": "struct",
         "fields": []
