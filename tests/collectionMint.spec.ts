@@ -21,8 +21,6 @@ const collection = {
     collectionMintNme: "SDK Test", // shows up directly on the Collection NFT
     collectionMintSymbol: "SDK TEST", // shows up directly on the Collection NFT
     collectionMintUri: "https://example.com", // shows up directly on the Collection NFT
-    collectionName: "epplex", // can just check on-chain, but not really super important
-    collectionSymbol: "EPX",  // can just check on-chain, but not really super important
     collectionSize: 2,  // can just check on-chain, but not really super important
 }
 
@@ -46,9 +44,7 @@ describe('Test Collection', () => {
             collectionMintName: collection.collectionMintNme,
             collectionMintSymbol: collection.collectionMintSymbol,
             collectionMintUri: collection.collectionMintUri,
-            collectionName: collection.collectionName,
             collectionSize: collection.collectionSize,
-            collectionSymbol: collection.collectionSymbol,
             authority: getProgramDelegate(),
         });
 

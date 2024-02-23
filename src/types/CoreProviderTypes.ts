@@ -9,8 +9,6 @@ export interface CreateCollectionTxParams {
     collectionMintName: string,
     collectionMintSymbol: string,
     collectionMintUri: string,
-    collectionName: string,
-    collectionSymbol: string,
     collectionSize: number,
     computeBudget?: number
 }
