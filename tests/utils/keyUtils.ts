@@ -1,4 +1,6 @@
+// @ts-ignore
 import fs from "fs";
+// @ts-ignore
 import path from "path";
 import {Keypair} from "@solana/web3.js";
 

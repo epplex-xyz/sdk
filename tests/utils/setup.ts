@@ -1,4 +1,4 @@
-import {Connection} from "@solana/web3.js";
+import {clusterApiUrl, Connection} from "@solana/web3.js";
 import {loadOrGenerateKeypair} from "./keyUtils";
 import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
