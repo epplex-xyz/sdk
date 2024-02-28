@@ -386,6 +386,7 @@ class EpplexProvider {
         voteType,
         inputType,
         gamePrompt,
+        gameName,
         isEncrypted,
         publicEncryptKey
     }: gameStartParams): Promise<Transaction> {
@@ -395,6 +396,7 @@ class EpplexProvider {
                 voteType,
                 inputType,
                 gamePrompt,
+                gameName,
                 isEncrypted,
                 publicEncryptKey
             })
@@ -407,13 +409,24 @@ class EpplexProvider {
 
     async gameEndTx(): Promise<Transaction> {
         return await this.program.methods
-            .gameEnd()
+            .gameEnd({})
             .accounts({
                 gameConfig: this.getGameConfig(),
                 payer: this.provider.publicKey,
             })
             .transaction();
     }
+
+    async gameEvaluate(): Promise<Transaction> {
+        return await this.program.methods
+            .gameEvaluate({})
+            .accounts({
+                gameConfig: this.getGameConfig(),
+                payer: this.provider.publicKey,
+            })
+            .transaction();
+    }
+
 
     async gameCloseTx(): Promise<Transaction> {
         return await this.program.methods

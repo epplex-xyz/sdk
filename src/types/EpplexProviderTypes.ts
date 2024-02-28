@@ -60,6 +60,7 @@ export interface gameStartParams {
     voteType: VoteType;
     inputType: InputType;
     gamePrompt: string;
+    gameName: string;
     isEncrypted: boolean;
     publicEncryptKey: string;
 }

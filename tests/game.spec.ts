@@ -20,6 +20,7 @@ describe("GAME TEST", async () => {
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
+                gameName: "Game1",
                 isEncrypted: false,
                 publicEncryptKey: "",
             });
@@ -38,6 +39,7 @@ describe("GAME TEST", async () => {
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
+                gameName: "Game1",
                 isEncrypted: false,
                 publicEncryptKey: "",
             });
@@ -59,6 +61,7 @@ describe("GAME TEST", async () => {
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
+                gameName: "Game1",
                 isEncrypted: false,
                 publicEncryptKey: "",
             });
