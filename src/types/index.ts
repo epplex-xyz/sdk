@@ -2,7 +2,9 @@ import {
     EpNFT,
     BurnTxParams,
     CreateWhitelistMintTxParams,
-    TokenGameVoteTxParams
+    TokenGameVoteTxParams,
+    GameStartParams,
+    GameUpdateParams
 } from "./EpplexProviderTypes";
 
 import {
@@ -23,6 +25,8 @@ export {
     BurnTxParams,
     CreateWhitelistMintTxParams,
     TokenGameVoteTxParams,
+    GameStartParams,
+    GameUpdateParams,
 
     // CoreProviderTypes
     CreateCollectionTxParams,

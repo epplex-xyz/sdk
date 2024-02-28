@@ -69,7 +69,7 @@ describe("Testing Burger Program", () => {
 
     it("Start a new game", async () => {
         const tx = await burgerProvider.gameStartTx({
-            endTimestamp: new BN(gameEndTimestamp),
+            endTimestamp: Number(gameEndTimestamp),
             voteType: { voteOnce: {} },
             inputType: { text: {} },
             gamePrompt: "What is your favorite burger?",

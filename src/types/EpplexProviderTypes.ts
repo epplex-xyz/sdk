@@ -55,7 +55,7 @@ export interface TokenGameResetParams {
     mint: PublicKey;
 }
 
-export interface gameStartParams {
+export interface GameStartParams {
     endTimestamp: number;
     voteType: VoteType;
     inputType: InputType;
@@ -63,6 +63,10 @@ export interface gameStartParams {
     gameName: string;
     isEncrypted: boolean;
     publicEncryptKey: string;
+}
+
+export interface GameUpdateParams {
+    newStartTimestamp: number;
 }
 
 

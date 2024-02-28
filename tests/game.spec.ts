@@ -16,7 +16,7 @@ describe("GAME TEST", async () => {
 
         it("start a new game", async () => {
             const tx = await burgerProvider.gameStartTx({
-                endTimestamp: new BN(oneYrLater),
+                endTimestamp: oneYrLater,
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
@@ -35,7 +35,7 @@ describe("GAME TEST", async () => {
 
         it("Fails to start a game if one is already in progress", async () => {
             const tx = await burgerProvider.gameStartTx({
-                endTimestamp: new BN(oneYrLater),
+                endTimestamp: oneYrLater,
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",
@@ -57,7 +57,7 @@ describe("GAME TEST", async () => {
 
         it("Fails to start a game if arguments provided are invalid", async () => {
             const tx = await burgerProvider.gameStartTx({
-                endTimestamp: new BN(currentTs),
+                endTimestamp: currentTs,
                 voteType: { voteOnce: {} },
                 inputType: { text: {} },
                 gamePrompt: "burger is awesome",

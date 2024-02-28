@@ -1,5 +1,6 @@
 import EpplexProvider from "./EpplexProvider";
 import CoreProvider from "./CoreProvider";
+import DecodeTypesService, { InputType, VoteType, GameStatus} from "./DecodeTypesService";
 import EpNFTService, { epNFTOptions, defaultEpNFTOptions} from "./EpNFTService";
 
 import {
@@ -10,6 +11,8 @@ import {
     CreateWhitelistMintTxParams,
     TokenGameVoteTxParams,
     CreateCollectionTxParams,
+    GameUpdateParams,
+    GameStartParams
 } from "./types";
 
 import {
@@ -52,6 +55,10 @@ export {
     getGlobalCollectionConfig,
     getMint,
 
+    DecodeTypesService,
+    InputType,
+    VoteType,
+    GameStatus,
 
     EpNFTService,
     EpNFT,
@@ -62,6 +69,8 @@ export {
     CreateWhitelistMintTxParams,
     TokenGameVoteTxParams,
     CreateCollectionTxParams,
+    GameUpdateParams,
+    GameStartParams,
 
     importKey,
     generateNonce,

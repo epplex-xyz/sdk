@@ -33,7 +33,7 @@ import {
     CreateCollectionMintTxTxParams,
     CreateWhitelistMintTxParams,
     GameConfig,
-    gameStartParams,
+    GameStartParams, GameUpdateParams,
     TokenGameResetParams,
     TokenGameVoteTxParams,
 } from "./types/EpplexProviderTypes";
@@ -389,10 +389,10 @@ class EpplexProvider {
         gameName,
         isEncrypted,
         publicEncryptKey
-    }: gameStartParams): Promise<Transaction> {
+    }: GameStartParams): Promise<Transaction> {
         return await this.program.methods
             .gameStart({
-                endTimestamp,
+                endTimestamp: new anchor.BN(endTimestamp),
                 voteType,
                 inputType,
                 gamePrompt,
@@ -417,7 +417,7 @@ class EpplexProvider {
             .transaction();
     }
 
-    async gameEvaluate(): Promise<Transaction> {
+    async gameEvaluateTx(): Promise<Transaction> {
         return await this.program.methods
             .gameEvaluate({})
             .accounts({
@@ -426,7 +426,19 @@ class EpplexProvider {
             })
             .transaction();
     }
-
+    async gameUpdateTx({
+        newStartTimestamp
+    }: GameUpdateParams): Promise<Transaction> {
+        return await this.program.methods
+            .gameUpdate({
+                newStartTimestamp
+            })
+            .accounts({
+                gameConfig: this.getGameConfig(),
+                payer: this.provider.publicKey,
+            })
+            .transaction();
+    }
 
     async gameCloseTx(): Promise<Transaction> {
         return await this.program.methods
