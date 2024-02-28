@@ -25,6 +25,8 @@ import {
 
 import {
     importKey,
+    exportKey,
+    newKeyPair,
     generateNonce,
     encrypt,
     decrypt
@@ -73,6 +75,8 @@ export {
     GameStartParams,
 
     importKey,
+    exportKey,
+    newKeyPair,
     generateNonce,
     encrypt,
     decrypt,
