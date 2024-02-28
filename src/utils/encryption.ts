@@ -73,11 +73,10 @@ function str2ab(str: string): ArrayBuffer {
     return buf;
 }
 
-/**
- * Should decrypt only on server side
- */
-async function newKeyPair(size: number): Promise<CryptoKeyPair> {
-    return crypto.subtle.generateKey(
+async function newKeyPair(size: number = 128, context = DEFAULT_CONTEXT): Promise<CryptoKeyPair> {
+    const cryptoObject = getBrowserContext(context);
+
+    return cryptoObject.subtle.generateKey(
         {
             name: "RSA-OAEP",
             modulusLength: size * 8,
@@ -89,14 +88,23 @@ async function newKeyPair(size: number): Promise<CryptoKeyPair> {
     );
 }
 
-async function exportKey(key: CryptoKey, context = DEFAULT_CONTEXT): Promise<string> {
+/**
+ * Converts CryptoKey to a string
+ */
+async function exportKey(key: CryptoKey, keyType?: KeyType, context = DEFAULT_CONTEXT): Promise<string> {
     const cryptoObject = getBrowserContext(context);
 
-    const keyType = key.type;
-    if (key.type !== "public" && key.type !== "private") {
-        throw new Error("Invalid key type");
+    let type;
+    if (keyType) {
+        type = keyType
+    } else {
+        if (key.type !== "public" && key.type !== "private") {
+            throw new Error("Invalid key type");
+        }
+        type = key.type
     }
-    const format = keyType === "public" ? "spki" : "pkcs8";
+
+    const format = type === "public" ? "spki" : "pkcs8";
     const exported = await cryptoObject.subtle.exportKey(format!, key);
     const exportedAsString = ab2str(exported);
     const exportedAsBase64 = btoa(exportedAsString);
