@@ -91,17 +91,21 @@ async function newKeyPair(size: number = 128, context = DEFAULT_CONTEXT): Promis
 /**
  * Converts CryptoKey to a string
  */
-async function exportKey(key: CryptoKey, keyType?: KeyType, context = DEFAULT_CONTEXT): Promise<string> {
+async function exportKey(key: CryptoKey, context = DEFAULT_CONTEXT): Promise<string> {
     const cryptoObject = getBrowserContext(context);
 
-    let type;
-    if (keyType) {
-        type = keyType
-    } else {
-        if (key.type !== "public" && key.type !== "private") {
-            throw new Error("Invalid key type");
-        }
-        type = key.type
+    // let type;
+    // if (keyType) {
+    //     type = keyType
+    // } else {
+    //     if (key.type !== "public" && key.type !== "private") {
+    //         throw new Error("Invalid key type");
+    //     }
+    //     type = key.type
+    // }
+    const type = key.type
+    if (key.type !== "public" && key.type !== "private") {
+        throw new Error("Invalid key type");
     }
 
     const format = type === "public" ? "spki" : "pkcs8";

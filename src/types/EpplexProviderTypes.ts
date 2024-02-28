@@ -57,8 +57,8 @@ export interface TokenGameResetParams {
 
 export interface GameStartParams {
     endTimestamp: number;
-    voteType: VoteType;
-    inputType: InputType;
+    voteType: IdlVoteType;
+    inputType: IdlInputType;
     gamePrompt: string;
     gameName: string;
     isEncrypted: boolean;
@@ -69,8 +69,6 @@ export interface GameUpdateParams {
     newStartTimestamp: number;
 }
 
-
-type VoteType = IdlTypes<EpplexBurger>["VoteType"];
-type InputType = IdlTypes<EpplexBurger>["InputType"];
-
+export type IdlVoteType = IdlTypes<EpplexBurger>["VoteType"];
+export type IdlInputType = IdlTypes<EpplexBurger>["InputType"];
 export type GameConfig = IdlAccounts<EpplexBurger>["gameConfig"];
