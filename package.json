@@ -1,7 +1,7 @@
 {
 	"name": "@epplex-xyz/sdk",
 	"author": "epPlex",
-	"version": "0.1.31",
+	"version": "0.1.32",
 	"description": "epPlex Typescript SDK",
 	"license": "MIT",
 	"homepage": "https://github.com/epplex-xyz/sdk",
@@ -43,6 +43,7 @@
 		"test-individual": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/individualMint.spec.ts",
 		"test-collection": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/collectionMint.spec.ts",
 		"test-game": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/game.spec.ts",
+		"test-gameflow": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/gameFlow.spec.ts",
 		"test-burn": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burn.spec.ts",
 		"test-reset": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/reset.spec.ts"
 	},

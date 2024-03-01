@@ -1178,6 +1178,11 @@ export type EpplexBurger = {
       "code": 6026,
       "name": "InputIsEmpty",
       "msg": "Input cannot be empty"
+    },
+    {
+      "code": 6027,
+      "name": "EvaluationImpossible",
+      "msg": "Unable to evaluate game"
     }
   ]
 };
@@ -2362,6 +2367,11 @@ export const IDL: EpplexBurger = {
       "code": 6026,
       "name": "InputIsEmpty",
       "msg": "Input cannot be empty"
+    },
+    {
+      "code": 6027,
+      "name": "EvaluationImpossible",
+      "msg": "Unable to evaluate game"
     }
   ]
 };
