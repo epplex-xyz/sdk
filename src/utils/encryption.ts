@@ -51,7 +51,7 @@ async function decrypt(data: string, key: CryptoKey): Promise<string> {
 }
 
 
-async function generateNonce(size: number, context = DEFAULT_CONTEXT): Promise<string> {
+async function generateNonce(size: number = 5, context = DEFAULT_CONTEXT): Promise<string> {
     const cryptoObject = getBrowserContext(context);
 
     const array = new Uint8Array(size);
