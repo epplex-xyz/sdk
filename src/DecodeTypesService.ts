@@ -1,3 +1,5 @@
+import {IdlInputType, IdlVoteType} from "./types/EpplexProviderTypes";
+
 export enum GameStatus {
     None,
     InProgress,
@@ -80,6 +82,30 @@ class DecodeTypesService {
         }
 
         throw new Error("Invalid enum object");
+    }
+
+    static convertStringVote(vote: string | undefined): IdlVoteType {
+        switch (vote) {
+            case "voteOnce":
+                return { voteOnce: {} }
+            case "voteMany":
+                return { voteMany: {} }
+            default:
+                return { voteOnce: {} }
+        }
+    }
+
+    static convertStringInput(input: string | undefined): IdlInputType {
+        switch (input) {
+            case "text":
+                return { text: {} }
+            case "choice":
+                return { choice: {} }
+            case "number":
+                return { number: {} }
+            default:
+                return { text: {} }
+        }
     }
 }
 export default DecodeTypesService;
