@@ -66,7 +66,10 @@ export interface GameStartParams {
 }
 
 export interface GameUpdateParams {
-    newStartTimestamp: number;
+    phaseStartTimestamp?: number;
+    phaseEndTimestamp?: number;
+    voteType?: IdlVoteType;
+
 }
 
 export type IdlVoteType = IdlTypes<EpplexBurger>["VoteType"];

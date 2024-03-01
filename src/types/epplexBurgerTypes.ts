@@ -891,8 +891,24 @@ export type EpplexBurger = {
         "kind": "struct",
         "fields": [
           {
-            "name": "newStartTimestamp",
-            "type": "i64"
+            "name": "phaseStartTimestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "phaseEndTimestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "voteType",
+            "type": {
+              "option": {
+                "defined": "VoteType"
+              }
+            }
           }
         ]
       }
@@ -2080,8 +2096,24 @@ export const IDL: EpplexBurger = {
         "kind": "struct",
         "fields": [
           {
-            "name": "newStartTimestamp",
-            "type": "i64"
+            "name": "phaseStartTimestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "phaseEndTimestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "voteType",
+            "type": {
+              "option": {
+                "defined": "VoteType"
+              }
+            }
           }
         ]
       }

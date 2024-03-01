@@ -426,12 +426,12 @@ class EpplexProvider {
             })
             .transaction();
     }
-    async gameUpdateTx({
-        newStartTimestamp
-    }: GameUpdateParams): Promise<Transaction> {
+    async gameUpdateTx(params: GameUpdateParams): Promise<Transaction> {
         return await this.program.methods
             .gameUpdate({
-                newStartTimestamp
+                phaseStartTimestamp: params.phaseStartTimestamp ? new anchor.BN(params.phaseStartTimestamp) : null,
+                phaseEndTimestamp: params.phaseEndTimestamp ? new anchor.BN(params.phaseEndTimestamp) : null,
+                voteType: params.voteType ?? null,
             })
             .accounts({
                 gameConfig: this.getGameConfig(),
