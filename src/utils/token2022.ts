@@ -2,7 +2,7 @@ import {Connection, PublicKey, TransactionInstruction} from "@solana/web3.js";
 import {
     createAssociatedTokenAccountInstruction,
     createCloseAccountInstruction,
-    createTransferCheckedInstruction, getAssociatedTokenAddressSync,
+    createTransferCheckedInstruction, createTransferCheckedWithTransferHookInstruction, getAssociatedTokenAddressSync,
     TOKEN_2022_PROGRAM_ID
 } from "@solana/spl-token";
 
@@ -65,4 +65,51 @@ export function nftTransferIxs(
             tokenProgramId
         )
     ]
+}
+
+
+export type NftTransferHookInputs = {
+    connection: Connection;
+    mint: PublicKey;
+    source: PublicKey;
+    destination: PublicKey;
+    payer: PublicKey;
+    allowOwnerOffCurveSource?: boolean;
+    allowOwnerOffCurveDestination?: boolean;
+    tokenProgramId?: PublicKey;
+};
+
+
+export async function buildTHtransferIx(inputs: NftTransferHookInputs) {
+    const tokenProgramId = inputs.tokenProgramId ?? TOKEN_2022_PROGRAM_ID
+
+    const sourceAta = getAssociatedTokenAddressSync(
+        inputs.mint, // mint
+        inputs.source, // source wllaet
+        undefined,
+        tokenProgramId
+    );
+
+    const destinationAta = getAssociatedTokenAddressSync(
+        inputs.mint, // mint
+        inputs.destination, // destination wallet
+        undefined,
+        tokenProgramId
+    );
+
+    // get transfer ix
+    const transferIx = await createTransferCheckedWithTransferHookInstruction(
+        inputs.connection,
+        destinationAta,
+        inputs.mint,
+        destinationAta,
+        inputs.source,
+        BigInt(1),
+        0,
+        [],
+        undefined,
+        tokenProgramId
+    );
+
+    return transferIx;
 }
