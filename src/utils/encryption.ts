@@ -7,11 +7,11 @@ type Context = "browser" | "node";
 const DEFAULT_CONTEXT: Context = "browser"
 
 function getBrowserContext(context: Context) {
-    if (typeof window === 'undefined') {
-        throw new Error('Cannot execute crypto module in non-browser context.');
-    }
     let cryptoObject: Crypto | any;
     if (context === "browser") {
+        if (typeof window === 'undefined') {
+            throw new Error('Cannot execute crypto module in non-browser context.');
+        }
         cryptoObject = window.crypto;
     } else {
         cryptoObject = crypto;
@@ -35,14 +35,16 @@ async function encrypt(data: string, key: CryptoKey, context = DEFAULT_CONTEXT):
 /**
  * Should decrypt only on server side
  */
-async function decrypt(data: string, key: CryptoKey): Promise<string> {
+async function decrypt(data: string, key: CryptoKey, context = DEFAULT_CONTEXT): Promise<string> {
+    const cryptoObject = getBrowserContext(context);
+
     const decoded = atob(data);
     const arrayBuffer = new ArrayBuffer(decoded.length);
     const uint8Array = new Uint8Array(arrayBuffer);
     for (let i = 0; i < decoded.length; i++) {
         uint8Array[i] = decoded.charCodeAt(i);
     }
-    const decrypted = await window.crypto.subtle.decrypt(
+    const decrypted = await cryptoObject.subtle.decrypt(
         { name: "RSA-OAEP" },
         key,
         arrayBuffer
@@ -94,15 +96,6 @@ async function newKeyPair(size: number = 128, context = DEFAULT_CONTEXT): Promis
 async function exportKey(key: CryptoKey, context = DEFAULT_CONTEXT): Promise<string> {
     const cryptoObject = getBrowserContext(context);
 
-    // let type;
-    // if (keyType) {
-    //     type = keyType
-    // } else {
-    //     if (key.type !== "public" && key.type !== "private") {
-    //         throw new Error("Invalid key type");
-    //     }
-    //     type = key.type
-    // }
     const type = key.type
     if (key.type !== "public" && key.type !== "private") {
         throw new Error("Invalid key type");
