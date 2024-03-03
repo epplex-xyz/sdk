@@ -56,12 +56,16 @@ export function getSetup(): GetSetupReturn {
     }
 }
 
-export function setupGlobals(): GetSetupReturn {
+
+export function setupGlobals(executeTests: boolean = true): GetSetupReturn {
     const {wallet, burgerProvider, coreProvider} = getSetup();
     const connection = burgerProvider.provider.connection
-    trySetupGlobalCollectionConfig(coreProvider, wallet, connection);
-    trySetupBurgerProgramDelegate(burgerProvider, wallet, connection);
-    trySetupGameConfig(burgerProvider, wallet, connection);
+
+    if (executeTests) {
+        trySetupGlobalCollectionConfig(coreProvider, wallet, connection);
+        trySetupBurgerProgramDelegate(burgerProvider, wallet, connection);
+        trySetupGameConfig(burgerProvider, wallet, connection);
+    }
 
     return {
         wallet,
