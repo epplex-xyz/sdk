@@ -179,59 +179,47 @@ class WenProvider {
         return ix;
     };
 
-
-    async createCollectionWithRoyaltiesTx(args: CreateCollectionArgs, collectionMint: string, authority: string) {
+    /**
+     *  1. Create a collection
+     *  2. Add distribution for royalties
+     *
+     * @param args
+     * @param authority
+     */
+    async createCollectionWithRoyaltiesTx(args: CreateCollectionArgs, authority: string) {
         const { ix: createCollectionIx } = await this.buildCreateCollectionIx(args, authority);
-        const addDistributionIx = await this.buildAddDistributionIx(collectionMint, authority);
+        const addDistributionIx = await this.buildAddDistributionIx(args.mint, authority);
         return new Transaction().add(createCollectionIx, addDistributionIx);
     }
 
+    async mintNft(args: {
+        name: string;
+        symbol: string;
+        uri: string;
+        collection: string;
+        royaltyBasisPoints: number;
+        creators: Creator[],
+        mint: string,
+        minter: string,
+        groupAuthority: string,
+        nftAuthority: string,
+        permanentDelegate?: string | null
+    }) {
+        const mintDetails: CreateNftArgs = {
+            name: args.name,
+            symbol: args.symbol,
+            uri: args.uri,
+            mint: args.mint,
+            additionalExtensions: []
+            // additionalExtensions: ["permanent"]
+        }
 
-    // async mintNft(args: { name: string; symbol: string; uri: string; collection: string; royaltyBasisPoints: number; creators: Creator[] }) {
-    //     const mint = new Keypair();
-    //     const mintPubkey = mint.publicKey;
-    //     const provider = getProvider(CONNECTION_URL);
-    //     const collectionPubkey = new PublicKey(args.collection);
-    //
-    //     const minter = USER_ACCOUNT;
-    //     const minterPubkey = minter.publicKey;
-    //
-    //     const groupAuthority = AUTHORITY_ACCOUNT;
-    //     const groupAuthPubkey = groupAuthority.publicKey;
-    //
-    //     // Doesn't have to be the same, usually will be
-    //     const nftAuthority = AUTHORITY_ACCOUNT;
-    //     const nftAuthPubkey = nftAuthority.publicKey;
-    //
-    //     const mintDetails: CreateNftArgs = {
-    //         name: args.name,
-    //         symbol: args.symbol,
-    //         uri: args.uri,
-    //         mint: mintPubkey.toString()
-    //     }
-    //
-    //     const mintIx = await buildMintNftIx(provider, mintDetails, minterPubkey.toString(), nftAuthPubkey.toString());
-    //     const addToGroupIx = await buildAddGroupIx(provider, groupAuthPubkey.toString(), mintPubkey.toString(), collectionPubkey.toString());
-    //     const addRoyaltiesToMintIx = await buildAddRoyaltiesIx(provider, nftAuthPubkey.toString(), mintPubkey.toString(), args.royaltyBasisPoints, args.creators);
-    //
-    //     let blockhash = await provider.connection
-    //         .getLatestBlockhash()
-    //         .then(res => res.blockhash);
-    //     const messageV0 = new TransactionMessage({
-    //         payerKey: minterPubkey,
-    //         recentBlockhash: blockhash,
-    //         instructions: [ mintIx, addToGroupIx, addRoyaltiesToMintIx ],
-    //     }).compileToV0Message();
-    //     const txn = new VersionedTransaction(messageV0);
-    //
-    //     txn.sign([minter, groupAuthority, nftAuthority, mint]);
-    //     const sig = await provider.connection.sendTransaction(txn);
-    //
-    //     return {
-    //         txn: sig,
-    //         mint: mintPubkey.toString()
-    //     }
-    // }
+        const mintIx = await this.buildMintNftIx(mintDetails, args.minter, args.nftAuthority, args.permanentDelegate);
+        const addToGroupIx = await this.buildAddGroupIx(args.groupAuthority, args.mint, args.collection);
+        const addRoyaltiesToMintIx = await this.buildAddRoyaltiesIx(args.nftAuthority, args.mint, args.royaltyBasisPoints, args.creators);
+
+        return new Transaction().add(mintIx, addToGroupIx, addRoyaltiesToMintIx);
+    }
 
 }
 
