@@ -45,7 +45,9 @@
 		"test-game": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/game.spec.ts",
 		"test-gameflow": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/gameFlow.spec.ts",
 		"test-burn": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burn.spec.ts",
-		"test-reset": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/reset.spec.ts"
+		"test-reset": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/reset.spec.ts",
+		"test-ephemeral": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/ephemeralMembership.spec.ts",
+		"test-wns": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/wns.spec.ts"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.4",
