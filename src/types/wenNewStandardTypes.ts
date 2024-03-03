@@ -40,7 +40,7 @@ export type WenNewStandard = {
         },
         {
           "name": "manager",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -701,7 +701,7 @@ export const IDL: WenNewStandard = {
         },
         {
           "name": "manager",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {

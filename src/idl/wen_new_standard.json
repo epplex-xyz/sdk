@@ -40,7 +40,7 @@
         },
         {
           "name": "manager",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {

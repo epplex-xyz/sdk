@@ -1,10 +1,23 @@
 import * as anchor from "@coral-xyz/anchor";
-import {ConfirmOptions, Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY,} from "@solana/web3.js";
+import {
+    ConfirmOptions,
+    Connection,
+    PublicKey,
+    SystemProgram,
+    SYSVAR_RENT_PUBKEY, Transaction,
+} from "@solana/web3.js";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
-    CreateCollectionArgs, CreateNftArgs, Creator, DistributionProgram, getDistributionProgram, getExtraMetasAccount,
+    CreateCollectionArgs,
+    CreateNftArgs,
+    Creator,
+    DistributionProgram,
+    getDistributionAccount,
+    getDistributionProgram,
+    getExtraMetasAccount,
     getGroupAccount,
-    getManagerAccount, getMemberAccount,
+    getManagerAccount,
+    getMemberAccount,
     getMetadataProgram,
     WnsProgram
 } from "./constants/wenCore";
@@ -149,6 +162,76 @@ class WenProvider {
 
         return ix;
     }
+
+    async buildAddDistributionIx(collection: string, authority: string) {
+        const authorityPubkey = new PublicKey(authority)
+        const ix = await this.distributionProgram.methods
+            .initializeDistribution()
+            .accountsStrict({
+                payer: authorityPubkey,
+                authority: authorityPubkey,
+                mint: new PublicKey(collection),
+                systemProgram: SystemProgram.programId,
+                distribution: getDistributionAccount(collection),
+            })
+            .instruction();
+
+        return ix;
+    };
+
+
+    async createCollectionWithRoyaltiesTx(args: CreateCollectionArgs, collectionMint: string, authority: string) {
+        const { ix: createCollectionIx } = await this.buildCreateCollectionIx(args, authority);
+        const addDistributionIx = await this.buildAddDistributionIx(collectionMint, authority);
+        return new Transaction().add(createCollectionIx, addDistributionIx);
+    }
+
+
+    // async mintNft(args: { name: string; symbol: string; uri: string; collection: string; royaltyBasisPoints: number; creators: Creator[] }) {
+    //     const mint = new Keypair();
+    //     const mintPubkey = mint.publicKey;
+    //     const provider = getProvider(CONNECTION_URL);
+    //     const collectionPubkey = new PublicKey(args.collection);
+    //
+    //     const minter = USER_ACCOUNT;
+    //     const minterPubkey = minter.publicKey;
+    //
+    //     const groupAuthority = AUTHORITY_ACCOUNT;
+    //     const groupAuthPubkey = groupAuthority.publicKey;
+    //
+    //     // Doesn't have to be the same, usually will be
+    //     const nftAuthority = AUTHORITY_ACCOUNT;
+    //     const nftAuthPubkey = nftAuthority.publicKey;
+    //
+    //     const mintDetails: CreateNftArgs = {
+    //         name: args.name,
+    //         symbol: args.symbol,
+    //         uri: args.uri,
+    //         mint: mintPubkey.toString()
+    //     }
+    //
+    //     const mintIx = await buildMintNftIx(provider, mintDetails, minterPubkey.toString(), nftAuthPubkey.toString());
+    //     const addToGroupIx = await buildAddGroupIx(provider, groupAuthPubkey.toString(), mintPubkey.toString(), collectionPubkey.toString());
+    //     const addRoyaltiesToMintIx = await buildAddRoyaltiesIx(provider, nftAuthPubkey.toString(), mintPubkey.toString(), args.royaltyBasisPoints, args.creators);
+    //
+    //     let blockhash = await provider.connection
+    //         .getLatestBlockhash()
+    //         .then(res => res.blockhash);
+    //     const messageV0 = new TransactionMessage({
+    //         payerKey: minterPubkey,
+    //         recentBlockhash: blockhash,
+    //         instructions: [ mintIx, addToGroupIx, addRoyaltiesToMintIx ],
+    //     }).compileToV0Message();
+    //     const txn = new VersionedTransaction(messageV0);
+    //
+    //     txn.sign([minter, groupAuthority, nftAuthority, mint]);
+    //     const sig = await provider.connection.sendTransaction(txn);
+    //
+    //     return {
+    //         txn: sig,
+    //         mint: mintPubkey.toString()
+    //     }
+    // }
 
 }
 

@@ -1,4 +1,4 @@
-export const SDK_TEST_VERSION = "2.0";
+export const SDK_TEST_VERSION = "3.0";
 
 interface MetadataPropsReturn {
     expiryDate: string,
