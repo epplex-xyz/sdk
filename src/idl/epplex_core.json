@@ -383,16 +383,6 @@
       "name": "membershipCreate",
       "accounts": [
         {
-          "name": "ruleCreator",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
           "name": "membership",
           "isMut": true,
           "isSigner": true
@@ -406,9 +396,19 @@
           ]
         },
         {
+          "name": "ruleCreator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "rule",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
           "name": "data",
@@ -416,8 +416,8 @@
           "isSigner": false
         },
         {
-          "name": "auth",
-          "isMut": true,
+          "name": "epplexAuthority",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -431,7 +431,7 @@
           "isSigner": false
         },
         {
-          "name": "token2022Program",
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         },
@@ -464,16 +464,6 @@
       "name": "membershipBurn",
       "accounts": [
         {
-          "name": "burner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "epplex",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "membership",
           "isMut": true,
           "isSigner": false,
@@ -483,6 +473,16 @@
         },
         {
           "name": "membershipAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "burner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "epplexTreasury",
           "isMut": true,
           "isSigner": false
         },
@@ -497,17 +497,12 @@
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "epplexAuthority",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -518,6 +513,14 @@
       "name": "timeAdd",
       "accounts": [
         {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -526,14 +529,6 @@
           "name": "treasury",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
         },
         {
           "name": "rule",
@@ -562,6 +557,14 @@
       "name": "timeRemove",
       "accounts": [
         {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -570,14 +573,6 @@
           "name": "treasury",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
         },
         {
           "name": "rule",

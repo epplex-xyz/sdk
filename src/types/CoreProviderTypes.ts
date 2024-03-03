@@ -12,5 +12,19 @@ export interface CreateCollectionTxParams {
     collectionSize: number,
     computeBudget?: number
 }
-
 export type GlobalCollectionConfig = IdlAccounts<EpplexCore>["globalCollectionConfig"];
+
+export interface RuleTxParams {
+    seed: number;
+    ruleCreator: PublicKey;
+    renewalPrice: number;
+    treasury?: PublicKey;
+}
+export interface TimeTxParams {
+    time: number;
+    seed: number;
+    membership: PublicKey;
+    treasury?: PublicKey;
+}
+export type EphemeralRule = IdlAccounts<EpplexCore>["ephemeralRule"];
+export type EphemeralData = IdlAccounts<EpplexCore>["ephemeralData"];

@@ -383,16 +383,6 @@ export type EpplexCore = {
       "name": "membershipCreate",
       "accounts": [
         {
-          "name": "ruleCreator",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
           "name": "membership",
           "isMut": true,
           "isSigner": true
@@ -406,9 +396,19 @@ export type EpplexCore = {
           ]
         },
         {
+          "name": "ruleCreator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "rule",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
           "name": "data",
@@ -416,8 +416,8 @@ export type EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "auth",
-          "isMut": true,
+          "name": "epplexAuthority",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -431,7 +431,7 @@ export type EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "token2022Program",
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         },
@@ -464,16 +464,6 @@ export type EpplexCore = {
       "name": "membershipBurn",
       "accounts": [
         {
-          "name": "burner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "epplex",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "membership",
           "isMut": true,
           "isSigner": false,
@@ -483,6 +473,16 @@ export type EpplexCore = {
         },
         {
           "name": "membershipAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "burner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "epplexTreasury",
           "isMut": true,
           "isSigner": false
         },
@@ -497,17 +497,12 @@ export type EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "epplexAuthority",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -518,6 +513,14 @@ export type EpplexCore = {
       "name": "timeAdd",
       "accounts": [
         {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -526,14 +529,6 @@ export type EpplexCore = {
           "name": "treasury",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
         },
         {
           "name": "rule",
@@ -562,6 +557,14 @@ export type EpplexCore = {
       "name": "timeRemove",
       "accounts": [
         {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -570,14 +573,6 @@ export type EpplexCore = {
           "name": "treasury",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
         },
         {
           "name": "rule",
@@ -1305,16 +1300,6 @@ export const IDL: EpplexCore = {
       "name": "membershipCreate",
       "accounts": [
         {
-          "name": "ruleCreator",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
           "name": "membership",
           "isMut": true,
           "isSigner": true
@@ -1328,9 +1313,19 @@ export const IDL: EpplexCore = {
           ]
         },
         {
+          "name": "ruleCreator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "rule",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
           "name": "data",
@@ -1338,8 +1333,8 @@ export const IDL: EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "auth",
-          "isMut": true,
+          "name": "epplexAuthority",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -1353,7 +1348,7 @@ export const IDL: EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "token2022Program",
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         },
@@ -1386,16 +1381,6 @@ export const IDL: EpplexCore = {
       "name": "membershipBurn",
       "accounts": [
         {
-          "name": "burner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "epplex",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "membership",
           "isMut": true,
           "isSigner": false,
@@ -1405,6 +1390,16 @@ export const IDL: EpplexCore = {
         },
         {
           "name": "membershipAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "burner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "epplexTreasury",
           "isMut": true,
           "isSigner": false
         },
@@ -1419,17 +1414,12 @@ export const IDL: EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "epplexAuthority",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -1440,6 +1430,14 @@ export const IDL: EpplexCore = {
       "name": "timeAdd",
       "accounts": [
         {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -1448,14 +1446,6 @@ export const IDL: EpplexCore = {
           "name": "treasury",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
         },
         {
           "name": "rule",
@@ -1484,6 +1474,14 @@ export const IDL: EpplexCore = {
       "name": "timeRemove",
       "accounts": [
         {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
           "name": "payer",
           "isMut": true,
           "isSigner": true
@@ -1492,14 +1490,6 @@ export const IDL: EpplexCore = {
           "name": "treasury",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
         },
         {
           "name": "rule",
