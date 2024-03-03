@@ -3,7 +3,7 @@ import {BN} from "@coral-xyz/anchor";
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
-    Connection, PublicKey,
+    Connection, Keypair, PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
@@ -12,26 +12,35 @@ import {EpplexCore, IDL as CoreIdl} from "./types/epplexCoreTypes";
 import {CORE_PROGRAM_ID} from "./constants/ids";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
-    getCollectionConfig, getCollectionMint,
+    getCollectionConfig, getCollectionMint, getEphemeralAuth, getEphemeralData, getEphemeralRule,
     getGlobalCollectionConfig, getMint,
 } from "./constants/coreSeeds";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
-import {CreateCollectionTxParams, GlobalCollectionConfig} from "./types/CoreProviderTypes";
+import {
+    CreateCollectionTxParams,
+    EphemeralData,
+    EphemeralRule,
+    GlobalCollectionConfig, RuleTxParams, TimeTxParams
+} from "./types/CoreProviderTypes";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
-import {GameConfig} from "./types/EpplexProviderTypes";
+import {PAYER_ADMIN} from "./constants/keys";
+import {getMintOwner} from "./utils/generic";
 
 class CoreProvider {
     provider: anchor.AnchorProvider;
     program: anchor.Program < EpplexCore >
+    treasury: PublicKey;
 
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
-        coreProgramId: PublicKey = CORE_PROGRAM_ID
+        coreProgramId: PublicKey = CORE_PROGRAM_ID,
+        epplexTreasury?: PublicKey
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
         this.program = new anchor.Program(CoreIdl, coreProgramId, this.provider);
+        this.treasury = epplexTreasury ?? PAYER_ADMIN
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider) : CoreProvider {
@@ -166,6 +175,186 @@ class CoreProvider {
     getMint(collectionCounter: BN, mintCount: BN): PublicKey {
         return getMint(collectionCounter, mintCount, this.program.programId);
     }
+
+    /*
+     * Ephemeral Membership
+     */
+    async memberShipBurnTx(membership: PublicKey, seed: number, owner?: PublicKey): Promise<Transaction> {
+        const membershipOwner =
+            owner ?? (await getMintOwner(this.provider.connection, membership));
+        const membershipAta = getAssociatedTokenAddressSync(
+            membership,
+            membershipOwner,
+            undefined,
+            TOKEN_2022_PROGRAM_ID
+        );
+
+        return await this.program.methods
+            .membershipBurn()
+            .accounts({
+                burner: this.provider.wallet.publicKey,
+                epplexTreasury: this.treasury,
+                membership,
+                membershipAta,
+                rule: this.getEphemeralRule(seed),
+                data: this.getEphemeralData(membership),
+                epplexAuthority: this.getEphemeralAuth(),
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+    }
+
+    /**
+     * Create Membership NFT
+     *
+     * @param time: Added onto the current time
+     * @param name
+     * @param symbol
+     * @param uri
+     */
+    async membershipCreateTx(
+        time: number, name: string, symbol: string, uri: string,
+        membership: PublicKey, ruleCreator: PublicKey, seed: number
+    ): Promise<Transaction> {
+        const membershipAta = getAssociatedTokenAddressSync(
+            membership,
+            this.provider.wallet.publicKey,
+            false,
+            TOKEN_2022_PROGRAM_ID
+        );
+
+        return await this.program.methods
+            .membershipCreate(new BN(time), name, symbol, uri)
+            .accounts({
+                ruleCreator,
+                payer: this.provider.wallet.publicKey,
+                membership,
+                membershipAta,
+                rule: this.getEphemeralRule(seed),
+                data: this.getEphemeralData(membership),
+                epplexAuthority: this.getEphemeralAuth(),
+                rent: SYSVAR_RENT_PUBKEY,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                systemProgram: SystemProgram.programId,
+            })
+            .transaction();
+    }
+
+    async ruleCreateTx({
+        seed,
+        ruleCreator,
+        renewalPrice,
+        treasury
+    }: RuleTxParams): Promise<Transaction> {
+        return await this.program.methods
+            .ruleCreate({
+                seed: new BN(seed),
+                ruleCreator: ruleCreator,
+                renewalPrice: new BN(renewalPrice),
+                treasury: treasury
+            })
+            .accounts({
+                rule: this.getEphemeralRule(seed),
+                signer: this.provider.wallet.publicKey,
+                systemProgram: SystemProgram.programId,
+            })
+            .transaction();
+    }
+
+    async ruleModifyTx({
+        seed,
+        ruleCreator,
+        renewalPrice,
+        treasury
+    }: RuleTxParams): Promise<Transaction> {
+        return await this.program.methods
+            .ruleModify({
+                seed: new BN(seed),
+                ruleCreator: ruleCreator,
+                renewalPrice: new BN(renewalPrice),
+                treasury: treasury
+            })
+            .accounts({
+                rule: this.getEphemeralRule(seed),
+                signer: this.provider.wallet.publicKey,
+                systemProgram: SystemProgram.programId,
+            })
+            .transaction();
+    }
+
+    async timeRemoveTx({
+        time,
+        seed,
+        membership,
+        treasury
+    }: TimeTxParams): Promise<Transaction> {
+        return await this.program.methods
+            .timeRemove(new BN(time))
+            .accounts({
+                treasury,
+                membership: membership,
+                rule: this.getEphemeralRule(seed),
+                data: this.getEphemeralData(membership),
+            })
+            .transaction();
+    }
+
+    async timeAddTx({
+        time,
+        seed,
+        membership,
+        treasury
+    }: TimeTxParams): Promise<Transaction> {
+        return await this.program.methods
+            .timeAdd(new BN(time))
+            .accounts({
+                treasury,
+                membership: membership,
+                rule: this.getEphemeralRule(seed),
+                data: this.getEphemeralData(membership),
+            })
+            .transaction();
+    }
+
+    getEphemeralData(membership: PublicKey): PublicKey {
+        return getEphemeralData(membership, this.program.programId);
+    }
+
+    getEphemeralAuth(): PublicKey {
+        return getEphemeralAuth(this.program.programId);
+    }
+
+    getEphemeralRule(seed: number): PublicKey {
+        return getEphemeralRule(new BN(seed), this.program.programId);
+    }
+
+    async getRuleData(seed: number): Promise<EphemeralRule | null> {
+        try {
+            return await this.program
+                .account
+                .ephemeralRule
+                .fetch(
+                    this.getEphemeralRule(seed)
+                );
+        } catch (err) {
+            return null
+        }
+    }
+
+    async getEphemeralDataAccount(membership: PublicKey): Promise<EphemeralData | null> {
+        try {
+            return await this.program
+                .account
+                .ephemeralData
+                .fetch(
+                    this.getEphemeralData(membership)
+                );
+        } catch (err) {
+            return null
+        }
+    }
+
 }
 
 export default CoreProvider;

@@ -34,7 +34,6 @@ export const SEED_MINT = Buffer.from(JSON.parse(
 ));
 
 
-
 export function getGlobalCollectionConfig(coreProgramId = CORE_PROGRAM_ID): PublicKey {
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [SEED_GLOBAL_COLLECTION],
@@ -81,3 +80,56 @@ export function getMint(collectionCounter: BN, mintCount: BN, coreProgramId = CO
     return globalCollectionConfig;
 }
 
+/*
+ * Ephemeral Membership
+ */
+
+export const SEED_EPHEMERAL_DATA = Buffer.from(JSON.parse(
+    CoreIdl.constants.filter(obj => {
+        return obj.name === "SEED_EPHEMERAL_DATA";
+    })[0].value
+));
+
+export const SEED_EPHEMERAL_AUTH = Buffer.from(JSON.parse(
+    CoreIdl.constants.filter(obj => {
+        return obj.name === "SEED_EPHEMERAL_AUTH";
+    })[0].value
+));
+
+export const SEED_EPHEMERAL_RULE = Buffer.from(JSON.parse(
+    CoreIdl.constants.filter(obj => {
+        return obj.name === "SEED_EPHEMERAL_RULE";
+    })[0].value
+));
+
+export function getEphemeralData(membership: PublicKey, coreProgramId = CORE_PROGRAM_ID): PublicKey {
+    const [data] = PublicKey.findProgramAddressSync(
+        [
+            SEED_EPHEMERAL_DATA,
+            membership.toBuffer(),
+        ],
+        coreProgramId
+    );
+    return data;
+}
+
+export function getEphemeralAuth(coreProgramId = CORE_PROGRAM_ID): PublicKey {
+    const [auth] = PublicKey.findProgramAddressSync(
+        [
+            SEED_EPHEMERAL_AUTH
+        ],
+        coreProgramId
+    );
+    return auth;
+}
+
+export function getEphemeralRule(seed: BN, coreProgramId = CORE_PROGRAM_ID): PublicKey {
+    const [rule] = PublicKey.findProgramAddressSync(
+        [
+            SEED_EPHEMERAL_RULE,
+            seed.toArrayLike(Buffer, "le", 8),
+        ],
+        coreProgramId
+    );
+    return rule;
+}
