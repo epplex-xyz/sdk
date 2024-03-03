@@ -4,6 +4,7 @@ import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {CoreProvider, EpplexProvider} from "../../src";
 import {trySetupBurgerProgramDelegate, trySetupGameConfig, trySetupGlobalCollectionConfig} from "../setupUtils";
+import WenProvider from "../../src/WenProvider";
 
 /*
     How to use:
@@ -26,21 +27,18 @@ export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 interface GetSetupReturn {
     wallet: NodeWallet,
     burgerProvider: EpplexProvider,
-    coreProvider: CoreProvider
+    coreProvider: CoreProvider,
+    wenProvider: WenProvider
 }
 export function getSetup(): GetSetupReturn {
     const wallet = new NodeWallet(PAYER_ADMIN);
 
-    // const burgerProvider = new EpplexProvider(
-    //     wallet,
-    //     CONNECTION,
-    //     CONFIRM_OPTIONS
-    // );
     const provider = new anchor.AnchorProvider(
         CONNECTION,
         wallet,
         CONFIRM_OPTIONS
     )
+    // Another way of doing it
     const burgerProvider = EpplexProvider.fromAnchorProvider(provider)
 
     const coreProvider = new CoreProvider(
@@ -49,16 +47,23 @@ export function getSetup(): GetSetupReturn {
         CONFIRM_OPTIONS
     );
 
+    const wenProvider = new WenProvider(
+        wallet,
+        CONNECTION,
+        CONFIRM_OPTIONS
+    );
+
     return {
         wallet,
         burgerProvider,
-        coreProvider
+        coreProvider,
+        wenProvider,
     }
 }
 
 
 export function setupGlobals(executeTests: boolean = true): GetSetupReturn {
-    const {wallet, burgerProvider, coreProvider} = getSetup();
+    const {wallet, burgerProvider, coreProvider, wenProvider} = getSetup();
     const connection = burgerProvider.provider.connection
 
     if (executeTests) {
@@ -70,6 +75,7 @@ export function setupGlobals(executeTests: boolean = true): GetSetupReturn {
     return {
         wallet,
         burgerProvider,
-        coreProvider
+        coreProvider,
+        wenProvider
     }
 }

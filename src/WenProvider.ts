@@ -2,7 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import {ConfirmOptions, Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY,} from "@solana/web3.js";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
-    CreateCollectionArgs, CreateNftArgs, Creator, getExtraMetasAccount,
+    CreateCollectionArgs, CreateNftArgs, Creator, DistributionProgram, getDistributionProgram, getExtraMetasAccount,
     getGroupAccount,
     getManagerAccount, getMemberAccount,
     getMetadataProgram,
@@ -12,7 +12,8 @@ import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_P
 
 class WenProvider {
     provider: anchor.AnchorProvider;
-    program: WnsProgram
+    metadataProgram: WnsProgram
+    distributionProgram: DistributionProgram
     treasury: PublicKey;
 
     constructor(
@@ -21,13 +22,9 @@ class WenProvider {
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = getMetadataProgram(this.provider);
+        this.metadataProgram = getMetadataProgram(this.provider);
+        this.distributionProgram = getDistributionProgram(this.provider)
     }
-
-    static fromAnchorProvider(provider: anchor.AnchorProvider) : WenProvider {
-        return new WenProvider(provider.wallet, provider.connection, provider.opts);
-    }
-
     async buildCreateCollectionIx(args: CreateCollectionArgs, authority: string)  {
         const groupAccount = getGroupAccount(args.mint);
         const managerAccount = getManagerAccount();
@@ -43,8 +40,7 @@ class WenProvider {
             ASSOCIATED_TOKEN_PROGRAM_ID
         );
 
-
-        const ix = await this.program.methods
+        const ix = await this.metadataProgram.methods
             .createGroupAccount({
                 name: args.name,
                 symbol: args.symbol,
@@ -87,7 +83,7 @@ class WenProvider {
             ASSOCIATED_TOKEN_PROGRAM_ID
         );
 
-        const ix = await this.program.methods
+        const ix = await this.metadataProgram.methods
             .createMintAccount(args)
             .accountsStrict({
                 payer: minterPubkey,
@@ -113,7 +109,7 @@ class WenProvider {
         const collectionAuthPubkey = new PublicKey(collectionAuthority);
         const mintPubkey = new PublicKey(mint);
 
-        const ix = await this.program.methods
+        const ix = await this.metadataProgram.methods
             .addGroupToMint()
             .accountsStrict({
                 payer: collectionAuthPubkey,
@@ -134,7 +130,7 @@ class WenProvider {
         const metadataAuthPubkey = new PublicKey(metadataAuthority);
         const mintPubkey = new PublicKey(mint);
 
-        const ix = await this.program.methods
+        const ix = await this.metadataProgram.methods
             .addRoyaltiesToMint({
                 royaltyBasisPoints,
                 creators
