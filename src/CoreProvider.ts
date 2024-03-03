@@ -3,16 +3,16 @@ import {BN} from "@coral-xyz/anchor";
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
-    Connection, Keypair, PublicKey,
+    Connection, PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
 } from "@solana/web3.js";
-import {EpplexCore, IDL as CoreIdl} from "./types/epplexCoreTypes";
 import {CORE_PROGRAM_ID} from "./constants/ids";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
-    getCollectionConfig, getCollectionMint, getEphemeralAuth, getEphemeralData, getEphemeralRule,
+    CoreProgram,
+    getCollectionConfig, getCollectionMint, getEphemeralAuth, getEphemeralData, getEphemeralRule, getEpplexCoreProgram,
     getGlobalCollectionConfig, getMint,
 } from "./constants/coreSeeds";
 import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
@@ -28,7 +28,7 @@ import {getMintOwner} from "./utils/generic";
 
 class CoreProvider {
     provider: anchor.AnchorProvider;
-    program: anchor.Program < EpplexCore >
+    program: CoreProgram
     treasury: PublicKey;
 
     constructor(
@@ -39,7 +39,7 @@ class CoreProvider {
         epplexTreasury?: PublicKey
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = new anchor.Program(CoreIdl, coreProgramId, this.provider);
+        this.program = getEpplexCoreProgram(this.provider, coreProgramId);
         this.treasury = epplexTreasury ?? PAYER_ADMIN
     }
 

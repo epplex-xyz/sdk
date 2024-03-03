@@ -1,6 +1,14 @@
 import { PublicKey } from "@solana/web3.js";
 import EpplexBurgerIdl from "../idl/epplex_burger.json";
-import { BURGER_PROGRAM_ID } from "./ids";
+import {BURGER_PROGRAM_ID} from "./ids";
+import * as anchor from "@coral-xyz/anchor";
+import {EpplexBurger, IDL as BurgerIdl,} from "../types/epplexBurgerTypes";
+import {Provider} from "@coral-xyz/anchor";
+
+export type BurgerProgram = anchor.Program < EpplexBurger >;
+export function getEpplexBurgerProgram(provider: Provider, burgerProgramId: PublicKey) {
+    return new anchor.Program(BurgerIdl, burgerProgramId, provider);
+}
 
 export const SEED_BURGER_METADATA = Buffer.from(
     JSON.parse(

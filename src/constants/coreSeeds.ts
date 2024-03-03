@@ -1,8 +1,13 @@
-import {BN} from "@coral-xyz/anchor";
-import CoreIdl from "../idl/epplex_core.json";
+import {BN, Provider} from "@coral-xyz/anchor";
 import {PublicKey} from "@solana/web3.js";
 import {CORE_PROGRAM_ID} from "./ids";
+import * as anchor from "@coral-xyz/anchor";
+import {EpplexCore, IDL as CoreIdl} from "../types/epplexCoreTypes";
 
+export type CoreProgram = anchor.Program < EpplexCore >;
+export function getEpplexCoreProgram(provider: Provider, coreProgramId: PublicKey) {
+    return new anchor.Program(CoreIdl, coreProgramId, provider);
+}
 export const SEED_GLOBAL_COLLECTION = Buffer.from(JSON.parse(
     CoreIdl.constants.filter(obj => {
         // GLOBAL_COLLECTION

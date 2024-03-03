@@ -16,6 +16,8 @@ import {
     TransactionInstruction,
 } from "@solana/web3.js";
 import {
+    BurgerProgram,
+    getEpplexBurgerProgram,
     getGameConfig,
     getProgramDelegate,
     getTokenBurgerMetadata,
@@ -27,7 +29,6 @@ import {
 import { BURGER_PROGRAM_ID, CORE_PROGRAM_ID } from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
 import { DEFAULT_COMPUTE_BUDGET } from "./constants/transaction";
-import { IDL as BurgerIdl, EpplexBurger } from "./types/epplexBurgerTypes";
 import {
     BurnTxParams,
     CreateCollectionMintTxTxParams,
@@ -43,7 +44,7 @@ import { getMintOwner, tryCreateATAIx } from "./utils/generic";
 // This is more like Burger Program
 class EpplexProvider {
     provider: anchor.AnchorProvider;
-    program: anchor.Program<EpplexBurger>;
+    program: BurgerProgram;
 
     constructor(
         wallet: EpplexProviderWallet,
@@ -52,11 +53,7 @@ class EpplexProvider {
         epplexProgramId: PublicKey = BURGER_PROGRAM_ID
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = new anchor.Program(
-            BurgerIdl,
-            epplexProgramId,
-            this.provider
-        );
+        this.program = getEpplexBurgerProgram(this.provider, epplexProgramId);
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider): EpplexProvider {
@@ -449,8 +446,6 @@ class EpplexProvider {
             })
             .transaction();
     }
-
-
 }
 
 export default EpplexProvider;
