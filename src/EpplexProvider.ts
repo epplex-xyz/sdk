@@ -123,6 +123,7 @@ class EpplexProvider {
 
         return new Transaction().add(...ixs);
     }
+
     async createWhitelistMintTx({
         expiryDate,
         name,

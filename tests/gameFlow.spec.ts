@@ -49,6 +49,7 @@ describe("Testing Game Flow", () => {
             })
             const id = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
 
+            // https://solana.stackexchange.com/questions/3463/how-to-parse-event-in-transaction-log-with-anchor
             const parsedTx = await burgerProvider.provider.connection.getParsedTransaction(id)
             const events = burgerProvider.eventParser.parseLogs(parsedTx.meta.logMessages);
             console.log("events", events);
@@ -83,14 +84,10 @@ describe("Testing Game Flow", () => {
     //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
     // });
 
-
-
     // it("Create Game", async () => {
     //     const tx = await burgerProvider.gameCreateTx();
     //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
     // });
-
-
 
     // it("Start Game", async () => {
     //     const tx = await burgerProvider.gameStartTx({

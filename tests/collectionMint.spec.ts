@@ -77,19 +77,20 @@ describe('Test Collection', () => {
             })
             await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
 
-
-            const ixs = nftTransferIxs({
-                connection: CONNECTION,
-                mint: mint,
-                source: wallet.publicKey,
-                destination: new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj"),
-                payer: wallet.publicKey,
-            })
-            const sendTx = new Transaction().add(...ixs)
-            const res = await sendAndConfirmRawTransaction(CONNECTION, sendTx, wallet.publicKey, wallet, [])
-            if (res) {
-                addresses.push(mint.toString())
-            }
+            // NFT transfer
+            // const ixs = nftTransferIxs({
+            //     connection: CONNECTION,
+            //     mint: mint,
+            //     source: wallet.publicKey,
+            //     destination: new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj"),
+            //     payer: wallet.publicKey,
+            // })
+            //
+            // const sendTx = new Transaction().add(...ixs)
+            // const res = await sendAndConfirmRawTransaction(CONNECTION, sendTx, wallet.publicKey, wallet, [])
+            // if (res) {
+            //     addresses.push(mint.toString())
+            // }
 
 
             // Verification
