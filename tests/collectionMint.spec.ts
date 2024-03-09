@@ -63,8 +63,8 @@ describe('Test Collection', () => {
         for (let i = 0; i < nTokens; i++) {
             const newMintCount = mintCount + i;
             const mint = coreProvider.getMint(
-                globalCollectionData.collectionCounter,
-                new BN(newMintCount)
+                Number(globalCollectionData.collectionCounter),
+                newMintCount
             );
 
             const tx = await burgerProvider.createCollectionMintTx({
@@ -109,21 +109,6 @@ describe('Test Collection', () => {
         }
     });
 
-    // it('Transfer all NFTs', async () => {
-    //     for (let i = 0; i < addresses.length; i++) {
-    //         const ixs = nftTransferIxs({
-    //             connection: CONNECTION,
-    //             mint: new PublicKey(addresses[i]),
-    //             source: wallet.publicKey,
-    //             destination: recipient,
-    //             payer: wallet.publicKey,
-    //         })
-    //
-    //         const sendTx = new Transaction().add(...ixs)
-    //         await sendAndConfirmRawTransaction(CONNECTION, sendTx, wallet.publicKey, wallet, [])
-    //     }
-    // });
-    //
     // // it("Write addresses", async () => {
     // it("Write addresses", async () => {
     //     writeLinesToFile(addresses, `/Users/Mac/Documents/Crypto/epPlex-xyz/sdk/.output/mints.txt`)
