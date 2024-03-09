@@ -48,22 +48,22 @@ export function getGlobalCollectionConfig(coreProgramId = CORE_PROGRAM_ID): Publ
 }
 
 // From globalCollection counter
-export function getCollectionConfig(collectionCounter: BN, coreProgramId = CORE_PROGRAM_ID): PublicKey {
+export function getCollectionConfig(collectionCounter: number, coreProgramId = CORE_PROGRAM_ID): PublicKey {
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [
             SEED_COLLECTION_CONFIG,
-            collectionCounter.toArrayLike(Buffer, "le", 8)
+            new BN(collectionCounter).toArrayLike(Buffer, "le", 8)
         ],
         coreProgramId
     );
     return globalCollectionConfig;
 }
 
-export function getCollectionMint(collectionCounter: BN, coreProgramId = CORE_PROGRAM_ID): PublicKey {
+export function getCollectionMint(collectionCounter: number, coreProgramId = CORE_PROGRAM_ID): PublicKey {
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [
             SEED_COLLECTION_MINT,
-            collectionCounter.toArrayLike(Buffer, "le", 8),
+            new BN(collectionCounter).toArrayLike(Buffer, "le", 8),
         ],
         coreProgramId
     );
@@ -73,12 +73,12 @@ export function getCollectionMint(collectionCounter: BN, coreProgramId = CORE_PR
 
 
 // From globalCollection counter
-export function getMint(collectionCounter: BN, mintCount: BN, coreProgramId = CORE_PROGRAM_ID): PublicKey {
+export function getMint(collectionCounter: number, mintCount: number, coreProgramId = CORE_PROGRAM_ID): PublicKey {
     const [globalCollectionConfig] = PublicKey.findProgramAddressSync(
         [
             SEED_MINT,
-            collectionCounter.toArrayLike(Buffer, "le", 8),
-            mintCount.toArrayLike(Buffer, "le", 8)
+            new BN(collectionCounter).toArrayLike(Buffer, "le", 8),
+            new BN(mintCount).toArrayLike(Buffer, "le", 8)
         ],
         coreProgramId
     );
