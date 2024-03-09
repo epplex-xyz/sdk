@@ -16,7 +16,7 @@ import {
     TransactionInstruction,
 } from "@solana/web3.js";
 import {
-    BurgerProgram,
+    BurgerProgram, getEpplexBurgerEventParser,
     getEpplexBurgerProgram,
     getGameConfig,
     getProgramDelegate,
@@ -45,6 +45,7 @@ import { getMintOwner, tryCreateATAIx } from "./utils/generic";
 class EpplexProvider {
     provider: anchor.AnchorProvider;
     program: BurgerProgram;
+    eventParser: anchor.EventParser;
 
     constructor(
         wallet: EpplexProviderWallet,
@@ -54,6 +55,7 @@ class EpplexProvider {
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
         this.program = getEpplexBurgerProgram(this.provider, epplexProgramId);
+        this.eventParser = getEpplexBurgerEventParser(epplexProgramId)
     }
 
     static fromAnchorProvider(provider: anchor.AnchorProvider): EpplexProvider {

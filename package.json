@@ -47,7 +47,8 @@
 		"test-burn": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burn.spec.ts",
 		"test-reset": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/reset.spec.ts",
 		"test-ephemeral": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/ephemeralMembership.spec.ts",
-		"test-wns": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/wns.spec.ts"
+		"test-wns": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/wns.spec.ts",
+		"test-blockchain": "mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/blockchain.spec.ts"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.4",

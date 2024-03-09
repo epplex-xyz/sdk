@@ -324,6 +324,87 @@ export type EpplexBurger = {
       ]
     },
     {
+      "name": "tokenGameBurn",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "groupMember",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rule",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "* Epplex Core accounts"
+          ]
+        },
+        {
+          "name": "data",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "epplexAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "epplexTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "epplexCore",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenGameBurnParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "tokenGameVote",
       "accounts": [
         {
@@ -782,6 +863,46 @@ export type EpplexBurger = {
               "Amount of burgers who submitted an answer within a round"
             ],
             "type": "u16"
+          },
+          {
+            "name": "groupPda",
+            "docs": [
+              "Seed for ephemeral rule"
+            ],
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "myTokenGroupMember",
+      "docs": [
+        "Data struct for a `TokenGroupMember`"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "docs": [
+              "The associated mint, used to counter spoofing to be sure that member",
+              "belongs to a particular mint"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "group",
+            "docs": [
+              "The pubkey of the `TokenGroup`"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "memberNumber",
+            "docs": [
+              "The member number"
+            ],
+            "type": "u32"
           }
         ]
       }
@@ -935,6 +1056,13 @@ export type EpplexBurger = {
       }
     },
     {
+      "name": "TokenGameBurnParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
       "name": "TokenGameImmunityParams",
       "type": {
         "kind": "struct",
@@ -976,6 +1104,30 @@ export type EpplexBurger = {
     },
     {
       "name": "WhitelistMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "expiryDate",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WnsMintParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1057,6 +1209,53 @@ export type EpplexBurger = {
           }
         ]
       }
+    }
+  ],
+  "events": [
+    {
+      "name": "EvTokenGameVote",
+      "fields": [
+        {
+          "name": "answer",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "participant",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvTokenGameBurn",
+      "fields": [
+        {
+          "name": "answer",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "participant",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvTokenGameReset",
+      "fields": [
+        {
+          "name": "answer",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "participant",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
     }
   ],
   "errors": [
@@ -1529,6 +1728,87 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
+      "name": "tokenGameBurn",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "groupMember",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rule",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "* Epplex Core accounts"
+          ]
+        },
+        {
+          "name": "data",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "epplexAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "epplexTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "epplexCore",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenGameBurnParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "tokenGameVote",
       "accounts": [
         {
@@ -1987,6 +2267,46 @@ export const IDL: EpplexBurger = {
               "Amount of burgers who submitted an answer within a round"
             ],
             "type": "u16"
+          },
+          {
+            "name": "groupPda",
+            "docs": [
+              "Seed for ephemeral rule"
+            ],
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "myTokenGroupMember",
+      "docs": [
+        "Data struct for a `TokenGroupMember`"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "docs": [
+              "The associated mint, used to counter spoofing to be sure that member",
+              "belongs to a particular mint"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "group",
+            "docs": [
+              "The pubkey of the `TokenGroup`"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "memberNumber",
+            "docs": [
+              "The member number"
+            ],
+            "type": "u32"
           }
         ]
       }
@@ -2140,6 +2460,13 @@ export const IDL: EpplexBurger = {
       }
     },
     {
+      "name": "TokenGameBurnParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
       "name": "TokenGameImmunityParams",
       "type": {
         "kind": "struct",
@@ -2181,6 +2508,30 @@ export const IDL: EpplexBurger = {
     },
     {
       "name": "WhitelistMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "expiryDate",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WnsMintParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2262,6 +2613,53 @@ export const IDL: EpplexBurger = {
           }
         ]
       }
+    }
+  ],
+  "events": [
+    {
+      "name": "EvTokenGameVote",
+      "fields": [
+        {
+          "name": "answer",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "participant",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvTokenGameBurn",
+      "fields": [
+        {
+          "name": "answer",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "participant",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvTokenGameReset",
+      "fields": [
+        {
+          "name": "answer",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "participant",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
     }
   ],
   "errors": [
