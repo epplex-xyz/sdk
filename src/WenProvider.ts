@@ -221,6 +221,17 @@ class WenProvider {
         return new Transaction().add(mintIx, addToGroupIx, addRoyaltiesToMintIx);
     }
 
+    async initManagerAccountTx() {
+        return await this.metadataProgram.methods
+            .initManagerAccount()
+            .accountsStrict({
+                payer: this.provider.publicKey,
+                manager: getManagerAccount(),
+                systemProgram: SystemProgram.programId,
+            })
+            .transaction()
+    }
+
 }
 
 export default WenProvider;

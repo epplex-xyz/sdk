@@ -1,8 +1,8 @@
-import {Keypair, Transaction,} from "@solana/web3.js";
+import {Keypair,} from "@solana/web3.js";
 import {CONNECTION, setupGlobals} from "./utils/setup";
 import {sendAndConfirmRawTransaction} from "../src";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
-import {getGroupAccount, getMemberAccount} from "../src/constants/wenCore";
+import {getGroupAccount, getManagerAccount, getMemberAccount} from "../src/constants/wenCore";
 
 describe("WNS", () => {
     const {wallet, wenProvider} = setupGlobals(false)
@@ -18,6 +18,20 @@ describe("WNS", () => {
         uri: metadata.uri,
         maxSize: maxSize
     }
+
+    it("Create manager account", async () => {
+        try {
+            const burgerDelegateData = await wenProvider
+                .metadataProgram
+                .account
+                .manager
+                .fetch(getManagerAccount());
+            // console.log("Program Delegate Data", burgerDelegateData)
+        } catch (e) {
+            const tx = await wenProvider.initManagerAccountTx();
+            await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+        }
+    });
 
     it("Create a collection", async () => {
         const tx = await wenProvider.createCollectionWithRoyaltiesTx(
