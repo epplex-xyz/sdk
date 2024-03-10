@@ -82,7 +82,7 @@ describe('Test Burn', () => {
     });
 
     it('Burn token should FAIL', async () => {
-        const tx = await burgerProvider.burnTokenTx({
+        const tx = await burgerProvider.tokenBurnTx({
             mint: mints[0],
             owner: wallet.publicKey,
             useGameConfig: false
@@ -96,7 +96,7 @@ describe('Test Burn', () => {
         console.log("Sleeping for 4 seconds");
         await sleep(4_000);
 
-        const tx = await burgerProvider.burnTokenTx({
+        const tx = await burgerProvider.tokenBurnTx({
             mint: mints[0],
             owner: wallet.publicKey,
             useGameConfig: false
