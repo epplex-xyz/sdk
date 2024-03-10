@@ -297,30 +297,6 @@ class EpplexProvider {
             .transaction();
     }
 
-    async tokenFreezeTx({ mint, owner }: {mint: PublicKey; owner?: PublicKey })    {
-        const programDelegate = this.getProgramDelegate();
-        const mintOwner =
-            owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAssociatedTokenAddressSync(
-            mint,
-            mintOwner,
-            undefined,
-            TOKEN_2022_PROGRAM_ID
-        );
-
-        return await this.program.methods
-            .tokenFreeze({})
-            .accountsStrict({
-                mint: mint,
-                tokenAccount,
-                permanentDelegate: programDelegate,
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                payer: this.provider.wallet.publicKey,
-                token22Program: TOKEN_2022_PROGRAM_ID,
-            })
-            .transaction();
-    }
-
 
     async tokenGameVoteTx({ mint, message, owner }: TokenGameVoteTxParams) {
         const programDelegate = this.getProgramDelegate();

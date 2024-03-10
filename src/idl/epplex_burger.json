@@ -324,49 +324,6 @@
       ]
     },
     {
-      "name": "tokenFreeze",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenFreezeParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "tokenGameBurn",
       "accounts": [
         {
@@ -1093,13 +1050,6 @@
     },
     {
       "name": "TokenBurnParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenFreezeParams",
       "type": {
         "kind": "struct",
         "fields": []
