@@ -324,6 +324,49 @@
       ]
     },
     {
+      "name": "tokenFreeze",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenFreezeParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "tokenGameBurn",
       "accounts": [
         {
@@ -1056,6 +1099,13 @@
       }
     },
     {
+      "name": "TokenFreezeParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
       "name": "TokenGameBurnParams",
       "type": {
         "kind": "struct",
@@ -1399,8 +1449,5 @@
       "name": "EvaluationImpossible",
       "msg": "Unable to evaluate game"
     }
-  ],
-  "metadata": {
-    "address": "epBuJysRKuFMMWTWoX6ZKPz5WTZWb98mDqn1emVj84n"
-  }
+  ]
 }

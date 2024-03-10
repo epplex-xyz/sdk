@@ -96,7 +96,7 @@ class EpplexProvider {
                 /// TODO: get this from somewhere more solid
                 collectionCounter: bigCollectionId,
             })
-            .accounts({
+            .accountsStrict({
                 mint: mint,
                 tokenAccount: ata,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
@@ -150,7 +150,7 @@ class EpplexProvider {
                 uri: uri,
                 expiryDate: expiryDate,
             })
-            .accounts({
+            .accountsStrict({
                 mint,
                 tokenAccount: ata,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
@@ -239,7 +239,7 @@ class EpplexProvider {
             .tokenRenew({
                 renewTerms: 1,
             })
-            .accounts({
+            .accountsStrict({
                 mint,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 mintPayment: WSOL_NATIVE_ADDRESS,
@@ -261,19 +261,18 @@ class EpplexProvider {
 
     async createProgramDelegateTx() {
         const programDelegate = this.getProgramDelegate();
-        const tx = await this.program.methods
+
+        return await this.program.methods
             .programDelegateCreate({})
-            .accounts({
+            .accountsStrict({
                 programDelegate,
                 payer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })
             .transaction();
-
-        return tx;
     }
 
-    async burnTokenTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
+    async tokenBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
         const programDelegate = this.getProgramDelegate();
         const mintOwner =
             owner ?? (await getMintOwner(this.provider.connection, mint));
@@ -284,9 +283,9 @@ class EpplexProvider {
             TOKEN_2022_PROGRAM_ID
         );
 
-        const tokenBurnTx = await this.program.methods
+        return await this.program.methods
             .tokenBurn({})
-            .accounts({
+            .accountsStrict({
                 mint: mint,
                 tokenAccount,
                 gameConfig: useGameConfig ? this.getGameConfig() : null,
@@ -296,9 +295,32 @@ class EpplexProvider {
                 token22Program: TOKEN_2022_PROGRAM_ID,
             })
             .transaction();
-
-        return tokenBurnTx;
     }
+
+    async tokenFreezeTx({ mint, owner }: {mint: PublicKey; owner?: PublicKey })    {
+        const programDelegate = this.getProgramDelegate();
+        const mintOwner =
+            owner ?? (await getMintOwner(this.provider.connection, mint));
+        const tokenAccount = getAssociatedTokenAddressSync(
+            mint,
+            mintOwner,
+            undefined,
+            TOKEN_2022_PROGRAM_ID
+        );
+
+        return await this.program.methods
+            .tokenFreeze({})
+            .accountsStrict({
+                mint: mint,
+                tokenAccount,
+                permanentDelegate: programDelegate,
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                payer: this.provider.wallet.publicKey,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+    }
+
 
     async tokenGameVoteTx({ mint, message, owner }: TokenGameVoteTxParams) {
         const programDelegate = this.getProgramDelegate();
@@ -317,7 +339,7 @@ class EpplexProvider {
             .tokenGameVote({
                 message: message,
             })
-            .accounts({
+            .accountsStrict({
                 mint: mint,
                 tokenAccount,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
@@ -334,7 +356,7 @@ class EpplexProvider {
 
         return await this.program.methods
             .tokenGameReset({})
-            .accounts({
+            .accountsStrict({
                 mint,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 payer: this.provider.publicKey,
@@ -373,7 +395,7 @@ class EpplexProvider {
     async gameCreateTx(): Promise<Transaction> {
         return await this.program.methods
             .gameCreate()
-            .accounts({
+            .accountsStrict({
                 gameConfig: this.getGameConfig(),
                 payer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
@@ -400,7 +422,7 @@ class EpplexProvider {
                 isEncrypted,
                 publicEncryptKey
             })
-            .accounts({
+            .accountsStrict({
                 payer: this.provider.publicKey,
                 gameConfig: this.getGameConfig(),
             })
@@ -410,7 +432,7 @@ class EpplexProvider {
     async gameEndTx(): Promise<Transaction> {
         return await this.program.methods
             .gameEnd({})
-            .accounts({
+            .accountsStrict({
                 gameConfig: this.getGameConfig(),
                 payer: this.provider.publicKey,
             })
@@ -420,7 +442,7 @@ class EpplexProvider {
     async gameEvaluateTx(): Promise<Transaction> {
         return await this.program.methods
             .gameEvaluate({})
-            .accounts({
+            .accountsStrict({
                 gameConfig: this.getGameConfig(),
                 payer: this.provider.publicKey,
             })
@@ -433,7 +455,7 @@ class EpplexProvider {
                 phaseEndTimestamp: params.phaseEndTimestamp ? new anchor.BN(params.phaseEndTimestamp) : null,
                 voteType: params.voteType ?? null,
             })
-            .accounts({
+            .accountsStrict({
                 gameConfig: this.getGameConfig(),
                 payer: this.provider.publicKey,
             })
@@ -443,7 +465,7 @@ class EpplexProvider {
     async gameCloseTx(): Promise<Transaction> {
         return await this.program.methods
             .gameClose()
-            .accounts({
+            .accountsStrict({
                 gameConfig: this.getGameConfig(),
                 payer: this.provider.publicKey,
             })

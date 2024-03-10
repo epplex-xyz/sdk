@@ -912,8 +912,5 @@
       "name": "AlreadyExpired",
       "msg": "The membership has already expired! You cannot remove time from it."
     }
-  ],
-  "metadata": {
-    "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"
-  }
+  ]
 }
