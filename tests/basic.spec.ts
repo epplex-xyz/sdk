@@ -4,8 +4,6 @@ import {CONNECTION, setupGlobals} from "./utils/setup";
 import {assert} from "chai";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 import {BN} from "@coral-xyz/anchor";
-import {getTokenMetadata} from "@solana/spl-token";
-import {sleep} from "./utils/testUtils";
 
 
 const metadata = getDefaultMetadata({});

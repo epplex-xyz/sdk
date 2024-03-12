@@ -1,15 +1,8 @@
 import {getTokenMetadata} from "@solana/spl-token";
 import {expect} from "chai";
-import {CONNECTION, getSetup, setupGlobals} from "./utils/setup";
-import {
-    EpNFTService,
-    getProgramDelegate, nftTransferIxs,
-    sendAndConfirmRawTransaction
-} from "../src";
-import {BN} from "@coral-xyz/anchor";
-import {writeLinesToFile} from "./utils/testUtils";
-import {trySetupBurgerProgramDelegate, trySetupGlobalCollectionConfig} from "./setupUtils";
-import {PublicKey, Transaction} from "@solana/web3.js";
+import {CONNECTION, setupGlobals} from "./utils/setup";
+import {EpNFTService, getProgramDelegate, sendAndConfirmRawTransaction} from "../src";
+import {PublicKey} from "@solana/web3.js";
 
 /*
 ******* SETUP
