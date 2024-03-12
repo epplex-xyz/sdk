@@ -1224,6 +1224,16 @@ export type EpplexBurger = {
           "name": "participant",
           "type": "publicKey",
           "index": false
+        },
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "nft",
+          "type": "publicKey",
+          "index": false
         }
       ]
     },
@@ -2626,6 +2636,16 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "participant",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "nft",
           "type": "publicKey",
           "index": false
         }
