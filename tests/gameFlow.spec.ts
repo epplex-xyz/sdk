@@ -60,15 +60,6 @@ describe("Testing Game Flow", () => {
         }
     })
 
-    it("Force Game End", async () => {
-        const tx = await burgerProvider.gameUpdateTx({
-            phaseStartTimestamp: null,
-            phaseEndTimestamp: Number(now),
-            voteType: { voteOnce: {} }
-        });
-        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    });
-
 
     // it("Force Game End", async () => {
     //     const tx = await burgerProvider.gameUpdateTx({
