@@ -1,31 +1,40 @@
-import {sendAndConfirmRawTransaction} from "../src";
+import {getMint, sendAndConfirmRawTransaction} from "../src";
 import {CONNECTION, setupGlobals} from "./utils/setup";
-import {PublicKey} from "@solana/web3.js";
-import {EpNFTService} from "../src";
 import {sleep} from "./utils/testUtils";
 import {expect} from "chai";
+import {BN} from "@coral-xyz/anchor";
+import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 
+const metadata = getDefaultMetadata({});
 const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
 const now = (Math.floor((new Date()).getTime() / 1000)).toString()
-describe("Testing Game Flow", () => {
+describe("Testing Game Flow:\n create ->\n mint ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
     const {wallet, burgerProvider, coreProvider} = setupGlobals()
-    // const owner = new PublicKey("2N6aJDX1TNs6RKkPsuufbAe4JjRAZPs1iLPcEUL4DX4z")
-    const owner = wallet.publicKey
-    let nfts = [];
+    let mint;
+    it("Mint token", async () => {
+        console.log("\n \n");
+        const globalCollectionData = await coreProvider.program.account.globalCollectionConfig.fetch(
+            coreProvider.getGlobalCollectionConfig()
+        );
+
+        mint = getMint(globalCollectionData.collectionCounter, new BN(0));
+        const tx = await burgerProvider.createWhitelistMintTx({
+            ...metadata,
+            mint,
+        });
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    });
 
     it("Reset All Tokens (None gamestate)", async() => {
-        nfts = await EpNFTService.getEpNFTs(
-            burgerProvider.provider.connection,
-            owner
-        );
-        console.log("Number of NFTs", nfts.length);
+        // const myNFts = await EpNFTService.getEpNFTs(
+        //     epplexProvider.provider.connection,
+        //     owner
+        // );
+        // nfts = myNFts.slice(1,2);
+        // console.log("Number of NFTs", nfts.length);
 
-        for (const {mint} of nfts) {
-            const tx = await burgerProvider.tokenGameResetTx({
-                mint,
-            })
-            await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
-        }
+        const tx = await burgerProvider.tokenGameResetTx({mint,})
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
     })
 
     it("Start Game", async () => {
@@ -42,78 +51,41 @@ describe("Testing Game Flow", () => {
     });
 
     it("Token Game vote", async() => {
-        for (const {mint} of nfts) {
-            const tx = await burgerProvider.tokenGameVoteTx({
-                mint,
-                message: "hello",
-            })
-            const id = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
-
-            // https://solana.stackexchange.com/questions/3463/how-to-parse-event-in-transaction-log-with-anchor
-            const parsedTx = await burgerProvider.provider.connection.getParsedTransaction(id)
-            const events = burgerProvider.eventParser.parseLogs(parsedTx.meta.logMessages);
-            console.log("events", events);
-            // @ts-ignore
-            for (let event of events) {
-                console.log(event);
-            }
-        }
+        const tx = await burgerProvider.tokenGameVoteTx({mint, message: "hello"})
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
     })
 
+    it("Force Game End: update endTime to now", async () => {
+        const tx = await burgerProvider.gameUpdateTx({
+            phaseStartTimestamp: null,
+            phaseEndTimestamp: Number(now),
+            voteType: { voteOnce: {} }
+        });
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    });
 
-    // it("Force Game End", async () => {
-    //     const tx = await burgerProvider.gameUpdateTx({
-    //         phaseStartTimestamp: null,
-    //         phaseEndTimestamp: Number(now),
-    //         voteType: { voteOnce: {} }
-    //     });
-    //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    // });
+    it("Evaluate Game", async () => {
+        const tx = await burgerProvider.gameEvaluateTx();
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    });
 
-    // it("Evaluate Game", async () => {
-    //     const tx = await burgerProvider.gameEvaluateTx();
-    //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    // });
+    it('Burn token', async () => {
+        await sleep(1_000);
 
-    // it("Create Game", async () => {
-    //     const tx = await burgerProvider.gameCreateTx();
-    //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    // });
+        const tx = await burgerProvider.tokenBurnTx({
+            mint: mint,
+            owner: wallet.publicKey,
+            useGameConfig: true
+        });
+        const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+        expect(res).to.not.be.empty;
+    });
 
-    // it("Start Game", async () => {
-    //     const tx = await burgerProvider.gameStartTx({
-    //         endTimestamp: Number(newTimestamp),
-    //         voteType: { voteOnce: {} },
-    //         inputType: { text: {} },
-    //         gamePrompt: "What is your favorite burger?",
-    //         gameName: "Game1",
-    //         isEncrypted: false,
-    //         publicEncryptKey: "",
-    //     });
-    //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    // });
 
-    // it('Burn token SUCCESS', async () => {
-    //     console.log("Sleeping for 4 seconds");
-    //     await sleep(4_000);
-    //
-    //     const tx = await burgerProvider.burnTokenTx({
-    //         mint: new PublicKey("CKRXBicpi23pcAinUknkRGFn6KcRsSYg8R7Whh7pBe4G"),
-    //         owner: wallet.publicKey,
-    //         useGameConfig: false
-    //     });
-    //     const res = await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    //     expect(res).to.not.be.empty;
-    // });
-
-    // it("Update Game", async () => {
-    //     const tx = await burgerProvider.gameUpdateTx({
-    //         phaseStartTimestamp: null,
-    //         phaseEndTimestamp: Number(newTimestamp),
-    //         voteType: { voteMany: {} }
-    //     });
-    //     await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
-    // });
+    it("End game", async () => {
+        const tx = await burgerProvider.gameEndTx();
+        await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
+    });
 
     it("Close Game", async () => {
         const tx = await burgerProvider.gameCloseTx();
