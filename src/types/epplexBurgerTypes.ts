@@ -1241,13 +1241,23 @@ export type EpplexBurger = {
       "name": "EvTokenGameBurn",
       "fields": [
         {
-          "name": "answer",
-          "type": "string",
+          "name": "nft",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "gameRoundId",
+          "type": "u8",
           "index": false
         },
         {
           "name": "participant",
           "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "burnTimestamp",
+          "type": "i64",
           "index": false
         }
       ]
@@ -2655,13 +2665,23 @@ export const IDL: EpplexBurger = {
       "name": "EvTokenGameBurn",
       "fields": [
         {
-          "name": "answer",
-          "type": "string",
+          "name": "nft",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "gameRoundId",
+          "type": "u8",
           "index": false
         },
         {
           "name": "participant",
           "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "burnTimestamp",
+          "type": "i64",
           "index": false
         }
       ]

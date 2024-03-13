@@ -19,8 +19,12 @@ import {
     EpplexCore,
 } from "./epplexCoreTypes";
 
+import {
+    TokenGameVoteEvent,
+    TokenGameBurnEvent
+} from "./eventTypes";
+
 export {
-    // EpplexProviderTypes
     EpNFT,
     BurnTxParams,
     CreateWhitelistMintTxParams,
@@ -28,11 +32,11 @@ export {
     GameStartParams,
     GameUpdateParams,
 
-    // CoreProviderTypes
+    TokenGameVoteEvent,
+    TokenGameBurnEvent,
+
     CreateCollectionTxParams,
 
     EpplexBurger,
     EpplexCore
 };
-
-export * from "./eventTypes";

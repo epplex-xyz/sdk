@@ -12,7 +12,9 @@ import {
     TokenGameVoteTxParams,
     CreateCollectionTxParams,
     GameUpdateParams,
-    GameStartParams
+    GameStartParams,
+    TokenGameVoteEvent,
+    TokenGameBurnEvent,
 } from "./types";
 
 import {
@@ -73,6 +75,8 @@ export {
     CreateCollectionTxParams,
     GameUpdateParams,
     GameStartParams,
+    TokenGameVoteEvent,
+    TokenGameBurnEvent,
 
     importKey,
     exportKey,
