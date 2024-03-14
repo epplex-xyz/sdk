@@ -58,66 +58,14 @@ export const getExtraMetasAccount = (mint: string, programId: PublicKey = WNS_PR
     return extraMetasAccount;
 }
 
-export const getDistributionAccount = (collection: string, programId: PublicKey = DISTRIBUTION_PROGRAM_ID) => {
-    const [distributionAccount] = PublicKey.findProgramAddressSync([new PublicKey(collection).toBuffer()], programId);
+export const getDistributionAccount = (groupMint: string, paymentMint: string, programId: PublicKey) => {
+    const [distributionAccount] = PublicKey.findProgramAddressSync([new PublicKey(groupMint).toBuffer(), new PublicKey(paymentMint).toBuffer()], programId);
 
     return distributionAccount;
-}
+};
 
 export const getManagerAccount = (programId: PublicKey = WNS_PROGRAM_ID) => {
     const [managerAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("manager")], programId);
 
     return managerAccount;
-}
-
-// Create collection
-export interface CreateCollectionArgs {
-    mint: string;
-    name: string;
-    symbol: string;
-    uri: string;
-    maxSize: number;
-}
-
-/*
-    INDIVIDUAL NFT
-*/
-// Create NFT
-export interface CreateNftArgs {
-    mint: string;
-    name: string;
-    symbol: string;
-    uri: string;
-    additionalExtensions: string[];
-}
-
-// Add NFT to Group
-export interface AddToGroupArgs {
-    mint: string;
-    group: string;
-}
-
-// Creator Details
-export interface Creator {
-    address: string;
-    share: number;
-}
-
-export interface RoyaltyEnforcementArgs {
-    royaltyBasisPoints: number;
-    creators: Creator[];
-}
-
-// Purchase NFT
-export interface PurchaseNftArgs {
-    collection: string;
-    nftMint: string;
-    paymentLamports: number;
-    buyer: string;
-}
-
-// Transfer NFT
-export interface TransferNftArgs {
-    nftMint: string;
-    to: string;
 }
