@@ -75,6 +75,7 @@ export function trySetupManagerAccount(
 ) {
     it("Try init manager account ", async() => {
         const acc = await provider.getManagerAccount();
+        // Manager account already exists
         if (acc !== undefined) {
             return;
         }
@@ -82,7 +83,6 @@ export function trySetupManagerAccount(
         const tx = await provider.initManagerAccountTx();
         const ix = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
         expect(ix).to.be.not.empty;
-
     })
 }
 
