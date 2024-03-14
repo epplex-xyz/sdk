@@ -2,7 +2,7 @@ import { IdlAccounts, IdlTypes } from "@coral-xyz/anchor";
 import { RawAccount } from "@solana/spl-token";
 import { TokenMetadata } from "@solana/spl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
-import { EpplexBurger } from "../types/epplexBurgerTypes";
+import { EpplexBurger } from "./epplexBurgerTypes";
 
 export interface TokenMetadataField {
     tokenMetadata: TokenMetadata;

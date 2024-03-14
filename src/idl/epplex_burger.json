@@ -337,11 +337,6 @@
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "gameConfig",
           "isMut": false,
           "isSigner": false
@@ -870,39 +865,6 @@
               "Seed for ephemeral rule"
             ],
             "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MyTokenGroupMember",
-      "docs": [
-        "Data struct for a `TokenGroupMember`"
-      ],
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "mint",
-            "docs": [
-              "The associated mint, used to counter spoofing to be sure that member",
-              "belongs to a particular mint"
-            ],
-            "type": "publicKey"
-          },
-          {
-            "name": "group",
-            "docs": [
-              "The pubkey of the `TokenGroup`"
-            ],
-            "type": "publicKey"
-          },
-          {
-            "name": "memberNumber",
-            "docs": [
-              "The member number"
-            ],
-            "type": "u32"
           }
         ]
       }

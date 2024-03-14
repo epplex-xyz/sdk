@@ -461,6 +461,55 @@ export type EpplexCore = {
       ]
     },
     {
+      "name": "membershipAppend",
+      "accounts": [
+        {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "burner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "rule",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ruleCreator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "data",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "time",
+          "type": "i64"
+        }
+      ]
+    },
+    {
       "name": "membershipBurn",
       "accounts": [
         {
@@ -1374,6 +1423,55 @@ export const IDL: EpplexCore = {
         {
           "name": "uri",
           "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "membershipAppend",
+      "accounts": [
+        {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "burner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "rule",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ruleCreator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "data",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "time",
+          "type": "i64"
         }
       ]
     },
