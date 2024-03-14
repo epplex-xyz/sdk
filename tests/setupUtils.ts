@@ -1,9 +1,11 @@
-import {CONNECTION, getSetup} from "./utils/setup";
+import {CONNECTION} from "./utils/setup";
 import {
     CoreProvider,
     EpplexProvider,
     sendAndConfirmRawTransaction
 } from "../src";
+import WenProvider from "../src/WenProvider";
+import {expect} from "chai";
 
 export function trySetupGlobalCollectionConfig(
     provider: CoreProvider,
@@ -59,7 +61,6 @@ export function trySetupGameConfig(
                 .account
                 .gameConfig
                 .fetch(provider.getGameConfig());
-            // console.log("Game config", gameConfig)
         } catch (e) {
             const tx = await provider.gameCreateTx();
             await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
@@ -67,4 +68,21 @@ export function trySetupGameConfig(
     })
 }
 
+export function trySetupManagerAccount(
+    provider: WenProvider,
+    wallet,
+    connection = CONNECTION,
+) {
+    it("Try init manager account ", async() => {
+        const acc = await provider.getManagerAccount();
+        if (acc !== undefined) {
+            return;
+        }
+
+        const tx = await provider.initManagerAccountTx();
+        const ix = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+        expect(ix).to.be.not.empty;
+
+    })
+}
 
