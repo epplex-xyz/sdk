@@ -10,7 +10,7 @@ import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
     CreateCollectionArgs,
     CreateNftArgs,
-    Creator,
+    Creator, DISTRIBUTION_PROGRAM_ID,
     DistributionProgram,
     getDistributionAccount,
     getDistributionProgram,
@@ -18,10 +18,11 @@ import {
     getGroupAccount,
     getManagerAccount,
     getMemberAccount,
-    getMetadataProgram,
+    getMetadataProgram, WNS_PROGRAM_ID,
     WnsProgram
 } from "./constants/wenCore";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
+import {GroupAccount, GroupMemberAccount} from "./types/wenTypes";
 
 class WenProvider {
     provider: anchor.AnchorProvider;
@@ -33,10 +34,12 @@ class WenProvider {
         wallet: EpplexProviderWallet,
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        metadataProgramId: PublicKey = WNS_PROGRAM_ID,
+        distributionProgramId: PublicKey = DISTRIBUTION_PROGRAM_ID,
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.metadataProgram = getMetadataProgram(this.provider);
-        this.distributionProgram = getDistributionProgram(this.provider)
+        this.metadataProgram = getMetadataProgram(this.provider, metadataProgramId);
+        this.distributionProgram = getDistributionProgram(this.provider, distributionProgramId)
     }
     async buildCreateCollectionIx(args: CreateCollectionArgs, authority: string)  {
         const groupAccount = getGroupAccount(args.mint);
@@ -81,87 +84,121 @@ class WenProvider {
         };
     };
 
-    async buildMintNftIx(args: CreateNftArgs, minter: string, authority: string, permanentDelegate: string | null = null) {
-        const mintPubkey = new PublicKey(args.mint);
-        const managerAccount = getManagerAccount();
-        const authorityPubkey = new PublicKey(authority);
-        const minterPubkey = new PublicKey(minter);
-        const extraMetasAccount = getExtraMetasAccount(args.mint);
+    // async buildMintNftIx(args: CreateNftArgs, minter: string, authority: string, permanentDelegate: string | null = null) {
+    //     const mintPubkey = new PublicKey(args.mint);
+    //     const managerAccount = getManagerAccount();
+    //     const authorityPubkey = new PublicKey(authority);
+    //     const minterPubkey = new PublicKey(minter);
+    //     const extraMetasAccount = getExtraMetasAccount(args.mint);
+    //
+    //     const mintAta = getAssociatedTokenAddressSync(
+    //         mintPubkey,
+    //         authorityPubkey,
+    //         undefined,
+    //         TOKEN_2022_PROGRAM_ID,
+    //         ASSOCIATED_TOKEN_PROGRAM_ID
+    //     );
+    //
+    //     const ix = await this.metadataProgram.methods
+    //         .createMintAccount(args)
+    //         .accountsStrict({
+    //             payer: minterPubkey,
+    //             authority: authorityPubkey,
+    //             receiver: minterPubkey,
+    //             mint: mintPubkey,
+    //             mintTokenAccount: mintAta,
+    //             systemProgram: SystemProgram.programId,
+    //             rent: SYSVAR_RENT_PUBKEY,
+    //             associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+    //             tokenProgram: TOKEN_2022_PROGRAM_ID,
+    //             manager: managerAccount,
+    //             extraMetasAccount,
+    //             permanentDelegate
+    //         })
+    //         .instruction();
+    //     return ix;
+    // };
+    //
+    // async buildAddGroupIx(collectionAuthority: string, mint: string, collectionMint: string) {
+    //     const groupAccount = getGroupAccount(collectionMint);
+    //     const memberAccount = getMemberAccount(mint);
+    //     const collectionAuthPubkey = new PublicKey(collectionAuthority);
+    //     const mintPubkey = new PublicKey(mint);
+    //
+    //     const ix = await this.metadataProgram.methods
+    //         .addGroupToMint()
+    //         .accountsStrict({
+    //             payer: collectionAuthPubkey,
+    //             authority: collectionAuthPubkey,
+    //             mint: mintPubkey,
+    //             systemProgram: SystemProgram.programId,
+    //             tokenProgram: TOKEN_2022_PROGRAM_ID,
+    //             group: groupAccount,
+    //             member: memberAccount
+    //         })
+    //         .instruction();
+    //
+    //     return ix;
+    // }
 
-        const mintAta = getAssociatedTokenAddressSync(
-            mintPubkey,
-            authorityPubkey,
-            undefined,
-            TOKEN_2022_PROGRAM_ID,
-            ASSOCIATED_TOKEN_PROGRAM_ID
-        );
-
-        const ix = await this.metadataProgram.methods
-            .createMintAccount(args)
-            .accountsStrict({
-                payer: minterPubkey,
-                authority: authorityPubkey,
-                receiver: minterPubkey,
-                mint: mintPubkey,
-                mintTokenAccount: mintAta,
-                systemProgram: SystemProgram.programId,
-                rent: SYSVAR_RENT_PUBKEY,
-                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                tokenProgram: TOKEN_2022_PROGRAM_ID,
-                manager: managerAccount,
-                extraMetasAccount,
-                permanentDelegate
-            })
-            .instruction();
-        return ix;
-    };
-
-    async buildAddGroupIx(collectionAuthority: string, mint: string, collectionMint: string) {
-        const groupAccount = getGroupAccount(collectionMint);
-        const memberAccount = getMemberAccount(mint);
-        const collectionAuthPubkey = new PublicKey(collectionAuthority);
-        const mintPubkey = new PublicKey(mint);
-
-        const ix = await this.metadataProgram.methods
-            .addGroupToMint()
-            .accountsStrict({
-                payer: collectionAuthPubkey,
-                authority: collectionAuthPubkey,
-                mint: mintPubkey,
-                systemProgram: SystemProgram.programId,
-                tokenProgram: TOKEN_2022_PROGRAM_ID,
-                group: groupAccount,
-                member: memberAccount
-            })
-            .instruction();
-
-        return ix;
+    getManagerAccountPda(): PublicKey {
+        return getManagerAccount(this.metadataProgram.programId);
     }
 
-    async buildAddRoyaltiesIx(metadataAuthority: string, mint: string, royaltyBasisPoints: number, creators: Creator[]) {
-        const extraMetasAccount = getExtraMetasAccount(mint);
-        const metadataAuthPubkey = new PublicKey(metadataAuthority);
-        const mintPubkey = new PublicKey(mint);
-
-        const ix = await this.metadataProgram.methods
-            .addRoyaltiesToMint({
-                royaltyBasisPoints,
-                creators
-            })
-            .accountsStrict({
-                payer: metadataAuthPubkey,
-                authority: metadataAuthPubkey,
-                systemProgram: SystemProgram.programId,
-                rent: SYSVAR_RENT_PUBKEY,
-                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                tokenProgram: TOKEN_2022_PROGRAM_ID,
-                extraMetasAccount,
-                mint: mintPubkey,
-            })
-            .instruction();
-
-        return ix;
+    async getManagerAccount(): Promise<GroupMemberAccount | undefined> {
+        return this.metadataProgram.account.manager
+            .fetch(this.getManagerAccountPda())
+            .then(account => account)
+            .catch(() => undefined);
     }
+
+    // async buildAddRoyaltiesIx(metadataAuthority: string, mint: string, royaltyBasisPoints: number, creators: Creator[]) {
+    //     const extraMetasAccount = getExtraMetasAccount(mint);
+    //     const metadataAuthPubkey = new PublicKey(metadataAuthority);
+    //     const mintPubkey = new PublicKey(mint);
+    //
+    //     const ix = await this.metadataProgram.methods
+    //         .addRoyalties({
+    //             royaltyBasisPoints,
+    //             creators
+    //         })
+    //         .accountsStrict({
+    //             payer: metadataAuthPubkey,
+    //             authority: metadataAuthPubkey,
+    //             systemProgram: SystemProgram.programId,
+    //             rent: SYSVAR_RENT_PUBKEY,
+    //             associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+    //             tokenProgram: TOKEN_2022_PROGRAM_ID,
+    //             extraMetasAccount,
+    //             mint: mintPubkey,
+    //         })
+    //         .instruction();
+    //
+    //     return ix;
+    // }
+
+    getMemberAccountPda(mint: string): PublicKey {
+        return getMemberAccount(mint, this.metadataProgram.programId)
+    }
+
+    async getGroupMemberAccount(mint: string): Promise<GroupMemberAccount | undefined> {
+        return this.metadataProgram.account.tokenGroupMember
+            .fetch(this.getMemberAccountPda(mint))
+            .then(account => account)
+            .catch(() => undefined);
+    }
+
+    getGroupAccountPda(mint: string): PublicKey {
+        return getMemberAccount(mint, this.metadataProgram.programId)
+    }
+
+    async getGroupAccount(groupMint: string): Promise<GroupAccount | undefined> {
+        return this.metadataProgram.account.tokenGroup
+            .fetch(this.getGroupAccountPda(groupMint))
+            .then(account => account)
+            .catch(() => undefined);
+    }
+
 
     async buildAddDistributionIx(collection: string, authority: string) {
         const authorityPubkey = new PublicKey(authority)
@@ -179,13 +216,13 @@ class WenProvider {
         return ix;
     };
 
-    /**
-     *  1. Create a collection
-     *  2. Add distribution for royalties
-     *
-     * @param args
-     * @param authority
-     */
+    // /**
+    //  *  1. Create a collection
+    //  *  2. Add distribution for royalties
+    //  *
+    //  * @param args
+    //  * @param authority
+    //  */
     async createCollectionWithRoyaltiesTx(args: CreateCollectionArgs, authority: string) {
         const { ix: createCollectionIx } = await this.buildCreateCollectionIx(args, authority);
         const addDistributionIx = await this.buildAddDistributionIx(args.mint, authority);
@@ -226,7 +263,7 @@ class WenProvider {
             .initManagerAccount()
             .accountsStrict({
                 payer: this.provider.publicKey,
-                manager: getManagerAccount(),
+                manager: this.getManagerAccount(),
                 systemProgram: SystemProgram.programId,
             })
             .transaction()
