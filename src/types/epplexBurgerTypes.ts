@@ -1196,6 +1196,11 @@ export type EpplexBurger = {
           "name": "nft",
           "type": "publicKey",
           "index": false
+        },
+        {
+          "name": "voteTimestamp",
+          "type": "i64",
+          "index": false
         }
       ]
     },
@@ -1228,13 +1233,97 @@ export type EpplexBurger = {
       "name": "EvTokenGameReset",
       "fields": [
         {
-          "name": "answer",
-          "type": "string",
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "nft",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "resetTimestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvTokenGameImmunity",
+      "fields": [
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "nft",
+          "type": "publicKey",
           "index": false
         },
         {
           "name": "participant",
           "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "immunityTimestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvGameEnd",
+      "fields": [
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "endTimestamp",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "gamePrompt",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "gameName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "voteType",
+          "type": {
+            "defined": "VoteType"
+          },
+          "index": false
+        },
+        {
+          "name": "inputType",
+          "type": {
+            "defined": "InputType"
+          },
+          "index": false
+        },
+        {
+          "name": "publicEncryptKey",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "burnAmount",
+          "type": "u16",
+          "index": false
+        },
+        {
+          "name": "submissionAmount",
+          "type": "u16",
           "index": false
         }
       ]
@@ -2582,6 +2671,11 @@ export const IDL: EpplexBurger = {
           "name": "nft",
           "type": "publicKey",
           "index": false
+        },
+        {
+          "name": "voteTimestamp",
+          "type": "i64",
+          "index": false
         }
       ]
     },
@@ -2614,13 +2708,97 @@ export const IDL: EpplexBurger = {
       "name": "EvTokenGameReset",
       "fields": [
         {
-          "name": "answer",
-          "type": "string",
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "nft",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "resetTimestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvTokenGameImmunity",
+      "fields": [
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "nft",
+          "type": "publicKey",
           "index": false
         },
         {
           "name": "participant",
           "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "immunityTimestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EvGameEnd",
+      "fields": [
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "endTimestamp",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "gamePrompt",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "gameName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "voteType",
+          "type": {
+            "defined": "VoteType"
+          },
+          "index": false
+        },
+        {
+          "name": "inputType",
+          "type": {
+            "defined": "InputType"
+          },
+          "index": false
+        },
+        {
+          "name": "publicEncryptKey",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "burnAmount",
+          "type": "u16",
+          "index": false
+        },
+        {
+          "name": "submissionAmount",
+          "type": "u16",
           "index": false
         }
       ]

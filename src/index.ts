@@ -15,6 +15,9 @@ import {
     GameStartParams,
     TokenGameVoteEvent,
     TokenGameBurnEvent,
+    TokenGameResetEvent,
+    TokenGameImmunityEvent,
+    GameEndEvent,
 } from "./types";
 
 import {
@@ -77,6 +80,9 @@ export {
     GameStartParams,
     TokenGameVoteEvent,
     TokenGameBurnEvent,
+    TokenGameResetEvent,
+    TokenGameImmunityEvent,
+    GameEndEvent,
 
     importKey,
     exportKey,
