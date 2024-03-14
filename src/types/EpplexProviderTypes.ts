@@ -27,7 +27,17 @@ export interface CreateWhitelistMintTxParams {
     coreProgramId?: PublicKey;
 }
 
-// Maybe should extend the above
+export interface WnsMintParams {
+    expiryDate: string;
+    name: string;
+    symbol: string;
+    uri: string;
+    mint: PublicKey;
+    globalCollectionConfig?: PublicKey;
+    computeBudget?: number;
+    coreProgramId?: PublicKey;
+}
+
 export interface CreateCollectionMintTxTxParams {
     collectionId: number;
     expiryDate: string;

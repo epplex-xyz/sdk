@@ -36,12 +36,10 @@ import {
     GameConfig,
     GameStartParams, GameUpdateParams,
     TokenGameResetParams,
-    TokenGameVoteTxParams,
+    TokenGameVoteTxParams, WnsMintParams,
 } from "./types/EpplexProviderTypes";
 import { EpplexProviderWallet } from "./types/WalletProvider";
 import { getMintOwner, tryCreateATAIx } from "./utils/generic";
-
-// This is more like Burger Program
 class EpplexProvider {
     provider: anchor.AnchorProvider;
     program: BurgerProgram;
@@ -145,6 +143,59 @@ class EpplexProvider {
 
         const tokenCreateIx = await this.program.methods
             .whitelistMint({
+                name: name,
+                symbol: symbol,
+                uri: uri,
+                expiryDate: expiryDate,
+            })
+            .accountsStrict({
+                mint,
+                tokenAccount: ata,
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                permanentDelegate: permanentDelegate,
+                globalCollectionConfig:
+                    getGlobalCollectionConfig(coreProgramId),
+                payer: payer,
+
+                rent: SYSVAR_RENT_PUBKEY,
+                systemProgram: SystemProgram.programId,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
+                epplexCore: coreProgramId,
+            })
+            .instruction();
+
+        const ixs = [
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: computeBudget,
+            }),
+            tokenCreateIx,
+        ];
+
+        return new Transaction().add(...ixs);
+    }
+
+    async wnsMintTx({
+        expiryDate,
+        name,
+        symbol,
+        uri,
+        mint,
+        computeBudget = DEFAULT_COMPUTE_BUDGET,
+        coreProgramId = CORE_PROGRAM_ID,
+    }: WnsMintParams) {
+        const permanentDelegate = this.getProgramDelegate();
+        const payer = this.provider.wallet.publicKey;
+        const ata = getAssociatedTokenAddressSync(
+            mint,
+            payer,
+            undefined,
+            TOKEN_2022_PROGRAM_ID,
+            ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+
+        const tokenCreateIx = await this.program.methods
+            .wnsMint({
                 name: name,
                 symbol: symbol,
                 uri: uri,
