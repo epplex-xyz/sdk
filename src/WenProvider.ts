@@ -4,13 +4,11 @@ import {
     Connection,
     PublicKey,
     SystemProgram,
-    SYSVAR_RENT_PUBKEY, Transaction,
+    SYSVAR_RENT_PUBKEY, TransactionMessage, VersionedTransaction,
 } from "@solana/web3.js";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
-    CreateCollectionArgs,
-    CreateNftArgs,
-    Creator, DISTRIBUTION_PROGRAM_ID,
+    DISTRIBUTION_PROGRAM_ID,
     DistributionProgram,
     getDistributionAccount,
     getDistributionProgram,
@@ -22,7 +20,16 @@ import {
     WnsProgram
 } from "./constants/wenCore";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
-import {GroupAccount, GroupMemberAccount} from "./types/wenTypes";
+import {
+    AddDistributionArgs,
+    CreateGroupArgs,
+    GroupAccount,
+    GroupMemberAccount,
+    CreateCollectionArgs,
+    AdditionalAccountArgs
+} from "./types/wenTypes";
+import {getAtaAddress} from "./utils/generic";
+import {CreateCollectionMintTxTxParams} from "./types/EpplexProviderTypes";
 
 class WenProvider {
     provider: anchor.AnchorProvider;
@@ -152,6 +159,29 @@ class WenProvider {
             .catch(() => undefined);
     }
 
+    async createCollectionIxes(args: CreateCollectionArgs & AdditionalAccountArgs) {
+        const groupArgs = {
+            groupMint: args.mint,
+            name: args.name,
+            symbol: args.symbol,
+            uri: args.uri,
+            maxSize: args.maxSize,
+            receiver: args.receiver,
+            payer: args.payer,
+            authority: args.authority,
+        };
+        const createGroupIx = await this.getCreateGroupIx(groupArgs);
+
+        const addDistributionArgs = {
+            groupMint: groupArgs.groupMint,
+            paymentMint: PublicKey.default.toString(),
+            payer: args.payer,
+            authority: args.authority,
+        };
+        const addDistributionIx = await this.getAddDistributionIx(addDistributionArgs);
+        return [createGroupIx, addDistributionIx]
+    }
+
     // async buildAddRoyaltiesIx(metadataAuthority: string, mint: string, royaltyBasisPoints: number, creators: Creator[]) {
     //     const extraMetasAccount = getExtraMetasAccount(mint);
     //     const metadataAuthPubkey = new PublicKey(metadataAuthority);
@@ -188,8 +218,8 @@ class WenProvider {
             .catch(() => undefined);
     }
 
-    getGroupAccountPda(mint: string): PublicKey {
-        return getMemberAccount(mint, this.metadataProgram.programId)
+    getGroupAccountPda(groupMint: string): PublicKey {
+        return getGroupAccount(groupMint, this.metadataProgram.programId)
     }
 
     async getGroupAccount(groupMint: string): Promise<GroupAccount | undefined> {
@@ -200,21 +230,67 @@ class WenProvider {
     }
 
 
-    async buildAddDistributionIx(collection: string, authority: string) {
-        const authorityPubkey = new PublicKey(authority)
-        const ix = await this.distributionProgram.methods
-            .initializeDistribution()
+    async getCreateGroupIx(args: CreateGroupArgs) {
+        const ix = await this.metadataProgram.methods
+            .createGroupAccount({
+                name: args.name,
+                symbol: args.symbol,
+                uri: args.uri,
+                maxSize: args.maxSize,
+            })
             .accountsStrict({
-                payer: authorityPubkey,
-                authority: authorityPubkey,
-                mint: new PublicKey(collection),
+                payer: args.payer,
+                authority: args.authority,
+                receiver: args.receiver,
+                mint: args.groupMint,
+                mintTokenAccount: getAtaAddress(args.groupMint, args.receiver),
                 systemProgram: SystemProgram.programId,
-                distribution: getDistributionAccount(collection),
+                rent: SYSVAR_RENT_PUBKEY,
+                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                tokenProgram: TOKEN_2022_PROGRAM_ID,
+                group: this.getGroupAccountPda(args.groupMint),
+                manager: this.getManagerAccountPda(),
             })
             .instruction();
 
         return ix;
     };
+
+    getDistributionAccountPda(groupMint: string, paymentMint: string): PublicKey {
+        return getDistributionAccount(groupMint, paymentMint, this.distributionProgram.programId)
+    }
+
+    async getAddDistributionIx(args: AddDistributionArgs) {
+        const distributionAccount = this.getDistributionAccountPda(args.groupMint, args.paymentMint);
+
+        const ix = await this.distributionProgram.methods
+            .initializeDistribution(new PublicKey(args.paymentMint))
+            .accountsStrict({
+                payer: args.payer,
+                groupMint: args.groupMint,
+                systemProgram: SystemProgram.programId,
+                distributionAccount,
+            })
+            .instruction();
+
+        return ix;
+    };
+
+    // async buildAddDistributionIx(collection: string, authority: string) {
+    //     const authorityPubkey = new PublicKey(authority)
+    //     const ix = await this.distributionProgram.methods
+    //         .initializeDistribution()
+    //         .accountsStrict({
+    //             payer: authorityPubkey,
+    //             authority: authorityPubkey,
+    //             mint: new PublicKey(collection),
+    //             systemProgram: SystemProgram.programId,
+    //             distribution: getDistributionAccount(collection),
+    //         })
+    //         .instruction();
+    //
+    //     return ix;
+    // };
 
     // /**
     //  *  1. Create a collection
@@ -223,47 +299,47 @@ class WenProvider {
     //  * @param args
     //  * @param authority
     //  */
-    async createCollectionWithRoyaltiesTx(args: CreateCollectionArgs, authority: string) {
-        const { ix: createCollectionIx } = await this.buildCreateCollectionIx(args, authority);
-        const addDistributionIx = await this.buildAddDistributionIx(args.mint, authority);
-        return new Transaction().add(createCollectionIx, addDistributionIx);
-    }
-
-    async mintNft(args: {
-        name: string;
-        symbol: string;
-        uri: string;
-        collection: string;
-        royaltyBasisPoints: number;
-        creators: Creator[],
-        mint: string,
-        minter: string,
-        groupAuthority: string,
-        nftAuthority: string,
-        permanentDelegate?: string | null
-    }) {
-        const mintDetails: CreateNftArgs = {
-            name: args.name,
-            symbol: args.symbol,
-            uri: args.uri,
-            mint: args.mint,
-            additionalExtensions: []
-            // additionalExtensions: ["permanent"]
-        }
-
-        const mintIx = await this.buildMintNftIx(mintDetails, args.minter, args.nftAuthority, args.permanentDelegate);
-        const addToGroupIx = await this.buildAddGroupIx(args.groupAuthority, args.mint, args.collection);
-        const addRoyaltiesToMintIx = await this.buildAddRoyaltiesIx(args.nftAuthority, args.mint, args.royaltyBasisPoints, args.creators);
-
-        return new Transaction().add(mintIx, addToGroupIx, addRoyaltiesToMintIx);
-    }
+    // async createCollectionWithRoyaltiesTx(args: CreateCollectionArgs, authority: string) {
+    //     const { ix: createCollectionIx } = await this.buildCreateCollectionIx(args, authority);
+    //     const addDistributionIx = await this.buildAddDistributionIx(args.mint, authority);
+    //     return new Transaction().add(createCollectionIx, addDistributionIx);
+    // }
+    //
+    // async mintNft(args: {
+    //     name: string;
+    //     symbol: string;
+    //     uri: string;
+    //     collection: string;
+    //     royaltyBasisPoints: number;
+    //     creators: Creator[],
+    //     mint: string,
+    //     minter: string,
+    //     groupAuthority: string,
+    //     nftAuthority: string,
+    //     permanentDelegate?: string | null
+    // }) {
+    //     const mintDetails: CreateNftArgs = {
+    //         name: args.name,
+    //         symbol: args.symbol,
+    //         uri: args.uri,
+    //         mint: args.mint,
+    //         additionalExtensions: []
+    //         // additionalExtensions: ["permanent"]
+    //     }
+    //
+    //     const mintIx = await this.buildMintNftIx(mintDetails, args.minter, args.nftAuthority, args.permanentDelegate);
+    //     const addToGroupIx = await this.buildAddGroupIx(args.groupAuthority, args.mint, args.collection);
+    //     const addRoyaltiesToMintIx = await this.buildAddRoyaltiesIx(args.nftAuthority, args.mint, args.royaltyBasisPoints, args.creators);
+    //
+    //     return new Transaction().add(mintIx, addToGroupIx, addRoyaltiesToMintIx);
+    // }
 
     async initManagerAccountTx() {
         return await this.metadataProgram.methods
             .initManagerAccount()
             .accountsStrict({
                 payer: this.provider.publicKey,
-                manager: this.getManagerAccount(),
+                manager: this.getManagerAccountPda(),
                 systemProgram: SystemProgram.programId,
             })
             .transaction()
