@@ -131,7 +131,6 @@ class EpplexProvider {
         computeBudget = DEFAULT_COMPUTE_BUDGET,
         coreProgramId = CORE_PROGRAM_ID,
     }: CreateWhitelistMintTxParams) {
-        const permanentDelegate = this.getProgramDelegate();
         const payer = this.provider.wallet.publicKey;
         const ata = getAssociatedTokenAddressSync(
             mint,
@@ -152,7 +151,7 @@ class EpplexProvider {
                 mint,
                 tokenAccount: ata,
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
-                permanentDelegate: permanentDelegate,
+                permanentDelegate: this.getProgramDelegate(),
                 globalCollectionConfig:
                     getGlobalCollectionConfig(coreProgramId),
                 payer: payer,
@@ -311,12 +310,10 @@ class EpplexProvider {
     }
 
     async createProgramDelegateTx() {
-        const programDelegate = this.getProgramDelegate();
-
         return await this.program.methods
             .programDelegateCreate({})
             .accountsStrict({
-                programDelegate,
+                programDelegate: this.getProgramDelegate(),
                 payer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })
@@ -324,7 +321,6 @@ class EpplexProvider {
     }
 
     async tokenBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
-        const programDelegate = this.getProgramDelegate();
         const mintOwner =
             owner ?? (await getMintOwner(this.provider.connection, mint));
         const tokenAccount = getAssociatedTokenAddressSync(
@@ -340,7 +336,7 @@ class EpplexProvider {
                 mint: mint,
                 tokenAccount,
                 gameConfig: useGameConfig ? this.getGameConfig() : null,
-                permanentDelegate: programDelegate,
+                permanentDelegate: this.getProgramDelegate(),
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 payer: this.provider.wallet.publicKey,
                 token22Program: TOKEN_2022_PROGRAM_ID,
@@ -348,10 +344,31 @@ class EpplexProvider {
             .transaction();
     }
 
+    async tokenGameBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
+        const mintOwner =
+            owner ?? (await getMintOwner(this.provider.connection, mint));
+        const tokenAccount = getAssociatedTokenAddressSync(
+            mint,
+            mintOwner,
+            undefined,
+            TOKEN_2022_PROGRAM_ID
+        );
+
+        return await this.program.methods
+            .tokenBurn({})
+            .accountsStrict({
+                mint: mint,
+                tokenAccount,
+                gameConfig: useGameConfig ? this.getGameConfig() : null,
+                permanentDelegate: this.getProgramDelegate(),
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                payer: this.provider.wallet.publicKey,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+    }
 
     async tokenGameVoteTx({ mint, message, owner }: TokenGameVoteTxParams) {
-        const programDelegate = this.getProgramDelegate();
-
         // Could just do this.provider.wallet.publicKey
         const mintOwner =
             owner ?? (await getMintOwner(this.provider.connection, mint));
@@ -372,15 +389,13 @@ class EpplexProvider {
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 gameConfig: this.getGameConfig(),
                 payer: mintOwner,
-                updateAuthority: programDelegate,
+                updateAuthority: this.getProgramDelegate(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
             })
             .transaction();
     }
 
     async tokenGameResetTx({ mint }: TokenGameResetParams) {
-        const programDelegate = this.getProgramDelegate();
-
         return await this.program.methods
             .tokenGameReset({})
             .accountsStrict({
@@ -388,7 +403,7 @@ class EpplexProvider {
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 payer: this.provider.publicKey,
                 gameConfig: this.getGameConfig(),
-                updateAuthority: programDelegate,
+                updateAuthority: this.getProgramDelegate(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
             })
             .transaction();
