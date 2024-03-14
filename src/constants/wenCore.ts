@@ -19,53 +19,53 @@ export const getProvider = (connectionUrl: string) => {
     return provider;
 }
 
-export const getMetadataProgram = (provider: Provider) => {
+export const getMetadataProgram = (provider: Provider, programId: PublicKey = WNS_PROGRAM_ID) => {
     return new Program(
         WenNewStandardIdl as Idl,
-        WNS_PROGRAM_ID,
+        programId,
         provider
     ) as WnsProgram;
 }
 
-export const getDistributionProgram = (provider: Provider) => {
+export const getDistributionProgram = (provider: Provider, programId: PublicKey = DISTRIBUTION_PROGRAM_ID) => {
     return new Program(
         WenRoyaltyDistributionIdl as Idl,
-        DISTRIBUTION_PROGRAM_ID,
+        programId,
         provider
     ) as DistributionProgram;
 }
-export const getGroupAccount = (mint: string) => {
-    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("group"), new PublicKey(mint).toBuffer()], WNS_PROGRAM_ID);
+export const getGroupAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("group"), new PublicKey(mint).toBuffer()], programId);
 
     return groupAccount;
 }
 
-export const getMemberAccount = (mint: string) => {
-    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("member"), new PublicKey(mint).toBuffer()], WNS_PROGRAM_ID);
+export const getMemberAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("member"), new PublicKey(mint).toBuffer()], programId);
 
     return groupAccount;
 }
 
-export const getApprovalAccount = (mint: string) => {
-    const [approvalAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("approve-account"), new PublicKey(mint).toBuffer()], WNS_PROGRAM_ID);
+export const getApprovalAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const [approvalAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("approve-account"), new PublicKey(mint).toBuffer()], programId);
 
     return approvalAccount;
 }
 
-export const getExtraMetasAccount = (mint: string) => {
-    const [extraMetasAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("extra-account-metas"), new PublicKey(mint).toBuffer()], WNS_PROGRAM_ID);
+export const getExtraMetasAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const [extraMetasAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("extra-account-metas"), new PublicKey(mint).toBuffer()], programId);
 
     return extraMetasAccount;
 }
 
-export const getDistributionAccount = (collection: string) => {
-    const [distributionAccount] = PublicKey.findProgramAddressSync([new PublicKey(collection).toBuffer()], DISTRIBUTION_PROGRAM_ID);
+export const getDistributionAccount = (collection: string, programId: PublicKey = DISTRIBUTION_PROGRAM_ID) => {
+    const [distributionAccount] = PublicKey.findProgramAddressSync([new PublicKey(collection).toBuffer()], programId);
 
     return distributionAccount;
 }
 
-export const getManagerAccount = () => {
-    const [managerAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("manager")], WNS_PROGRAM_ID);
+export const getManagerAccount = (programId: PublicKey = WNS_PROGRAM_ID) => {
+    const [managerAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("manager")], programId);
 
     return managerAccount;
 }
