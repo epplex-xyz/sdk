@@ -6,11 +6,26 @@ import {
     ParsedAccountData,
     PublicKey, SendOptions,
     Transaction,
-    TransactionInstruction,
-    TransactionSignature
+    TransactionInstruction, TransactionMessage,
+    TransactionSignature, VersionedTransaction
 } from "@solana/web3.js";
-import {createAssociatedTokenAccountInstruction, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
+import {
+    ASSOCIATED_TOKEN_PROGRAM_ID,
+    createAssociatedTokenAccountInstruction,
+    TOKEN_2022_PROGRAM_ID
+} from "@solana/spl-token";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
+
+export const getProgramAddress = (seeds: Uint8Array[], programId: PublicKey) => {
+    const [key] = PublicKey.findProgramAddressSync(seeds, programId);
+    return key;
+};
+export function getAtaAddress(mint: string, owner: string, tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID): PublicKey {
+    return getProgramAddress(
+        [new PublicKey(owner).toBuffer(), tokenProgramId.toBuffer(), new PublicKey(mint).toBuffer()],
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+    )
+};
 
 export async function getMintOwner(connection: Connection, mint: PublicKey): Promise<PublicKey> {
     const largestAccounts = await connection.getTokenLargestAccounts(mint);
@@ -97,6 +112,61 @@ export async function sendAndConfirmRawTransaction(
             console.log(explorerUrl(connection, txId));
         }
 
+        const res = (
+            await connection.confirmTransaction(
+                {
+                    signature: txId,
+                    blockhash: latestBlockhash.blockhash,
+                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+                },
+                commitment
+            )
+        );
+
+        if (res.value.err) {
+            // For some reason this is not logged
+            console.log(`Raw transaction ${txId} failed (${JSON.stringify(res.value.err)})`);
+            throw res.value.err;
+        }
+
+        return txId;
+    } catch (e: any) {
+        console.error("Caught TX error", e);
+        return null;
+    }
+}
+
+export async function sendAndConfirmRawVersionedTransaction(
+    connection: Connection,
+    ixs: TransactionInstruction[],
+    feePayer: PublicKey,
+    wallet?: NodeWallet,
+    signers: Keypair[] = [],
+    commitment: Commitment = "confirmed",
+    logTx: boolean = true,
+    confirmOptions: SendOptions = {skipPreflight: true},
+): Promise<TransactionSignature | null> {
+    const latestBlockhash = await connection
+        .getLatestBlockhash()
+    const messageV0 = new TransactionMessage({
+        payerKey: feePayer,
+        recentBlockhash: latestBlockhash.blockhash,
+        instructions: ixs,
+    }).compileToV0Message();
+
+    let tx = new VersionedTransaction(messageV0);
+    let txId = "";
+    try {
+        if (wallet !== undefined) {
+            tx = await wallet.signTransaction(tx);
+        }
+        tx.sign(signers);
+
+        txId = await connection.sendRawTransaction(tx.serialize(), confirmOptions);
+
+        if (logTx) {
+            console.log(explorerUrl(connection, txId));
+        }
         const res = (
             await connection.confirmTransaction(
                 {
