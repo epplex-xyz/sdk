@@ -3,12 +3,7 @@ import {loadOrGenerateKeypair} from "./keyUtils";
 import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {CoreProvider, EpplexProvider} from "../../src";
-import {
-    trySetupBurgerProgramDelegate,
-    trySetupGameConfig,
-    trySetupGlobalCollectionConfig,
-    trySetupManagerAccount
-} from "../setupUtils";
+import {trySetupBurgerProgramDelegate, trySetupGameConfig, trySetupGlobalCollectionConfig} from "../setupUtils";
 import WenProvider from "../../src/WenProvider";
 
 /*
@@ -66,6 +61,7 @@ export function getSetup(): GetSetupReturn {
     }
 }
 
+
 export function setupGlobals(executeTests: boolean = true): GetSetupReturn {
     const {wallet, burgerProvider, coreProvider, wenProvider} = getSetup();
     const connection = burgerProvider.provider.connection
@@ -74,7 +70,6 @@ export function setupGlobals(executeTests: boolean = true): GetSetupReturn {
         trySetupGlobalCollectionConfig(coreProvider, wallet, connection);
         trySetupBurgerProgramDelegate(burgerProvider, wallet, connection);
         trySetupGameConfig(burgerProvider, wallet, connection);
-        trySetupManagerAccount(wenProvider, wallet, connection);
     }
 
     return {
