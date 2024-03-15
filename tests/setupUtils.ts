@@ -23,7 +23,8 @@ export function trySetupGlobalCollectionConfig(
             // console.log("Global collection config data", globalCollectionData)
         } catch (e) {
             const tx = await provider.createGlobalCollectionConfigTx();
-            await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            expect(id).to.be.not.empty;
         }
     });
 }
@@ -43,7 +44,8 @@ export function trySetupBurgerProgramDelegate(
             // console.log("Program Delegate Data", burgerDelegateData)
         } catch (e) {
             const tx = await provider.createProgramDelegateTx();
-            await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            expect(id).to.be.not.empty;
         }
     })
 }
@@ -63,7 +65,8 @@ export function trySetupGameConfig(
                 .fetch(provider.getGameConfig());
         } catch (e) {
             const tx = await provider.gameCreateTx();
-            await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            expect(id).to.be.not.empty;
         }
     })
 }
@@ -81,8 +84,8 @@ export function trySetupManagerAccount(
         }
 
         const tx = await provider.initManagerAccountTx();
-        const ix = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
-        expect(ix).to.be.not.empty;
+        const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+        expect(id).to.be.not.empty;
     })
 }
 

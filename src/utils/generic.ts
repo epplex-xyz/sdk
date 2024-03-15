@@ -15,11 +15,13 @@ import {
     TOKEN_2022_PROGRAM_ID
 } from "@solana/spl-token";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
+import {COMMITMENT, CONFIRM_OPTIONS} from "./settings";
 
 export const getProgramAddress = (seeds: Uint8Array[], programId: PublicKey) => {
     const [key] = PublicKey.findProgramAddressSync(seeds, programId);
     return key;
 };
+
 export function getAtaAddress(mint: string, owner: string, tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID): PublicKey {
     return getProgramAddress(
         [new PublicKey(owner).toBuffer(), tokenProgramId.toBuffer(), new PublicKey(mint).toBuffer()],
@@ -88,9 +90,9 @@ export async function sendAndConfirmRawTransaction(
     feePayer: PublicKey,
     wallet?: NodeWallet,
     signers: Keypair[] = [],
-    commitment: Commitment = "confirmed",
+    commitment: Commitment = COMMITMENT,
     logTx: boolean = true,
-    confirmOptions: SendOptions = {skipPreflight: true},
+    confirmOptions: SendOptions = CONFIRM_OPTIONS,
 ): Promise<TransactionSignature | null> {
     const latestBlockhash = await connection.getLatestBlockhash(commitment);
     tx.recentBlockhash = latestBlockhash.blockhash;
@@ -124,8 +126,6 @@ export async function sendAndConfirmRawTransaction(
         );
 
         if (res.value.err) {
-            // For some reason this is not logged
-            console.log(`Raw transaction ${txId} failed (${JSON.stringify(res.value.err)})`);
             throw res.value.err;
         }
 
@@ -142,9 +142,9 @@ export async function sendAndConfirmRawVersionedTransaction(
     feePayer: PublicKey,
     wallet?: NodeWallet,
     signers: Keypair[] = [],
-    commitment: Commitment = "confirmed",
+    commitment: Commitment = COMMITMENT,
     logTx: boolean = true,
-    confirmOptions: SendOptions = {skipPreflight: true},
+    confirmOptions: SendOptions = CONFIRM_OPTIONS,
 ): Promise<TransactionSignature | null> {
     const latestBlockhash = await connection
         .getLatestBlockhash()
@@ -179,8 +179,6 @@ export async function sendAndConfirmRawVersionedTransaction(
         );
 
         if (res.value.err) {
-            // For some reason this is not logged
-            console.log(`Raw transaction ${txId} failed (${JSON.stringify(res.value.err)})`);
             throw res.value.err;
         }
 
