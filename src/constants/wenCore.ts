@@ -58,7 +58,7 @@ export const getExtraMetasAccount = (mint: string, programId: PublicKey = WNS_PR
     return extraMetasAccount;
 }
 
-export const getDistributionAccount = (groupMint: string, paymentMint: string, programId: PublicKey) => {
+export const getDistributionAccount = (groupMint: string, paymentMint: string, programId: PublicKey = DISTRIBUTION_PROGRAM_ID) => {
     const [distributionAccount] = PublicKey.findProgramAddressSync([new PublicKey(groupMint).toBuffer(), new PublicKey(paymentMint).toBuffer()], programId);
 
     return distributionAccount;
