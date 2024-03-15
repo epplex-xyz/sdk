@@ -3,8 +3,14 @@ import {loadOrGenerateKeypair} from "./keyUtils";
 import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {CoreProvider, EpplexProvider} from "../../src";
-import {trySetupBurgerProgramDelegate, trySetupGameConfig, trySetupGlobalCollectionConfig} from "../setupUtils";
+import {
+    trySetupBurgerProgramDelegate,
+    trySetupGameConfig,
+    trySetupGlobalCollectionConfig,
+    trySetupManagerAccount
+} from "../setupUtils";
 import WenProvider from "../../src/WenProvider";
+import {COMMITMENT, CONFIRM_OPTIONS} from "../../src/utils/settings";
 
 /*
     How to use:
@@ -13,8 +19,7 @@ import WenProvider from "../../src/WenProvider";
  */
 
 
-const COMMITMENT = "confirmed";
-const CONFIRM_OPTIONS = {skipPreflight: true}
+
 export const CONNECTION = new Connection(
     "http://127.0.0.1:8899",
     // clusterApiUrl("devnet"),
@@ -70,6 +75,7 @@ export function setupGlobals(executeTests: boolean = true): GetSetupReturn {
         trySetupGlobalCollectionConfig(coreProvider, wallet, connection);
         trySetupBurgerProgramDelegate(burgerProvider, wallet, connection);
         trySetupGameConfig(burgerProvider, wallet, connection);
+        trySetupManagerAccount(wenProvider, wallet, connection);
     }
 
     return {
