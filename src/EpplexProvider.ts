@@ -8,7 +8,7 @@ import {
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
-    Connection,
+    Connection, Keypair,
     PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
@@ -49,38 +49,61 @@ import {
     getMemberAccount,
     WNS_PROGRAM_ID
 } from "./constants/wenCore";
+import {getReadonlyWallet} from "./utils/wallet";
+
+interface Programs {
+    burger: PublicKey;
+    core?: PublicKey;
+    wns?: PublicKey;
+    royalty?: PublicKey;
+}
+
+const DEFAULT_PROGRAMS: Programs = {
+    burger: BURGER_PROGRAM_ID,
+    core: CORE_PROGRAM_ID,
+    wns: WNS_PROGRAM_ID,
+    royalty: DISTRIBUTION_PROGRAM_ID
+}
+
 class EpplexProvider {
     provider: anchor.AnchorProvider;
     program: BurgerProgram;
     eventParser: anchor.EventParser;
-    coreProgramId: PublicKey;
-    wnsProgramId: PublicKey;
-    royaltyProgram: PublicKey
+    programIds: Programs;
 
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
-        epplexProgramId: PublicKey = BURGER_PROGRAM_ID,
-        coreProgramId: PublicKey = CORE_PROGRAM_ID,
-        wnsProgramId: PublicKey = WNS_PROGRAM_ID,
-        royaltiesProgramId: PublicKey = DISTRIBUTION_PROGRAM_ID,
+        programIds: Programs = DEFAULT_PROGRAMS,
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = getEpplexBurgerProgram(this.provider, epplexProgramId);
-        this.eventParser = getEpplexBurgerEventParser(epplexProgramId)
-        this.coreProgramId = coreProgramId;
-        this.wnsProgramId = wnsProgramId;
-        this.royaltyProgram = royaltiesProgramId;
+        this.program = getEpplexBurgerProgram(this.provider, programIds.burger);
+        this.eventParser = getEpplexBurgerEventParser(programIds.burger)
+        this.programIds = {
+            burger: programIds.burger,
+            core: programIds.core ?? DEFAULT_PROGRAMS.core,
+            wns: programIds.wns ?? DEFAULT_PROGRAMS.wns,
+            royalty: programIds.royalty ?? DEFAULT_PROGRAMS.royalty
+        }
     }
 
-    static fromAnchorProvider(provider: anchor.AnchorProvider): EpplexProvider {
+    static fromAnchorProvider(provider: anchor.AnchorProvider, programs: Programs = DEFAULT_PROGRAMS): EpplexProvider {
         const epplexProvider = new EpplexProvider(
             provider.wallet,
             provider.connection,
-            provider.opts
+            provider.opts,
+            programs
         );
         return epplexProvider;
+    }
+
+    static getReadOnlyProvider(
+        connection: Connection,
+        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        programs: Programs = DEFAULT_PROGRAMS,
+    ): EpplexProvider {
+        return new EpplexProvider(getReadonlyWallet(), connection, opts, programs);
     }
 
     async createCollectionMintTx({
@@ -110,13 +133,13 @@ class EpplexProvider {
                 payer: payer,
                 collectionConfig: getCollectionConfig(
                     bigCollectionId,
-                    this.coreProgramId
+                    this.programIds.core
                 ),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                epplexCore: this.coreProgramId,
+                epplexCore: this.programIds.core,
             })
             .instruction();
 
@@ -152,13 +175,13 @@ class EpplexProvider {
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 permanentDelegate: this.getProgramDelegate(),
                 globalCollectionConfig:
-                    getGlobalCollectionConfig(this.coreProgramId),
+                    getGlobalCollectionConfig(this.programIds.core),
                 payer: payer,
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                epplexCore: this.coreProgramId,
+                epplexCore: this.programIds.core,
             })
             .instruction();
 
@@ -188,16 +211,16 @@ class EpplexProvider {
                 tokenAccount: getAtaAddress(params.groupMint.toString(), payer.toString()),
                 permanentDelegate: this.getProgramDelegate(),
                 payer: payer,
-                group: getGroupAccount(params.groupMint.toString(), this.wnsProgramId),
-                extraMetasAccount: getExtraMetasAccount(params.groupMint.toString(), this.wnsProgramId),
-                distributionAccount: getDistributionAccount(params.groupMint.toString(), paymentMint.toString(), this.royaltyProgram),
-                manager: getManagerAccount(this.wnsProgramId),
+                group: getGroupAccount(params.groupMint.toString(), this.programIds.wns),
+                extraMetasAccount: getExtraMetasAccount(params.groupMint.toString(), this.programIds.wns),
+                distributionAccount: getDistributionAccount(params.groupMint.toString(), paymentMint.toString(), this.programIds.royalty),
+                manager: getManagerAccount(this.programIds.wns),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                wns: this.wnsProgramId,
-                royaltyProgram: this.royaltyProgram
+                wns: this.programIds.wns,
+                royaltyProgram: this.programIds.royalty
             })
             .instruction();
 
@@ -232,51 +255,59 @@ class EpplexProvider {
                 tokenMetadata: this.getTokenBurgerMetadata(params.mint),
                 permanentDelegate: this.getProgramDelegate(),
                 payer: payer,
-                group: getGroupAccount(params.groupMint.toString(), this.wnsProgramId),
-                member: getMemberAccount(params.mint.toString(), this.wnsProgramId),
-                extraMetasAccount: getExtraMetasAccount(params.mint.toString(), this.wnsProgramId),
-                manager: getManagerAccount(this.wnsProgramId),
+                group: getGroupAccount(params.groupMint.toString(), this.programIds.wns),
+                member: getMemberAccount(params.mint.toString(), this.programIds.wns),
+                extraMetasAccount: getExtraMetasAccount(params.mint.toString(), this.programIds.wns),
+                manager: getManagerAccount(this.programIds.wns),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                wns: this.wnsProgramId
+                wns: this.programIds.wns
             })
             .instruction();
-
-        // const mintProcessIx = await this.program.methods
-        //     .wnsMemberProcess({
-        //     })
-        //     .accounts({
-        //         mint: params.mint,
-        //         tokenAccount: getAtaAddress(params.mint.toString(), payer.toString()),
-        //         permanentDelegate: this.getProgramDelegate(),
-        //         payer: payer,
-        //         group: getGroupAccount(params.groupMint.toString(), this.wnsProgramId),
-        //         member: getMemberAccount(params.mint.toString(), this.wnsProgramId),
-        //         extraMetasAccount: getExtraMetasAccount(params.mint.toString(), this.wnsProgramId),
-        //         manager: getManagerAccount(this.wnsProgramId),
-        //         rent: SYSVAR_RENT_PUBKEY,
-        //         systemProgram: SystemProgram.programId,
-        //         token22Program: TOKEN_2022_PROGRAM_ID,
-        //         associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-        //         wns: this.wnsProgramId
-        //     })
-        //     .instruction();
 
         const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
                 units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET, //
             }),
             mintIx,
-            // mintProcessIx,
         ];
 
         return new Transaction().add(...ixs);
     }
 
-
-
+    // async wnsMemberMintProcessTx(params: WnsMemberMintParams) {
+    //     const mintProcessIx = await this.program.methods
+    //         .wnsMemberProcess({
+    //         })
+    //         .accounts({
+    //             mint: params.mint,
+    //             tokenAccount: getAtaAddress(params.mint.toString(), payer.toString()),
+    //             permanentDelegate: this.getProgramDelegate(),
+    //             payer: payer,
+    //             group: getGroupAccount(params.groupMint.toString(), this.wnsProgramId),
+    //             member: getMemberAccount(params.mint.toString(), this.wnsProgramId),
+    //             extraMetasAccount: getExtraMetasAccount(params.mint.toString(), this.wnsProgramId),
+    //             manager: getManagerAccount(this.wnsProgramId),
+    //             rent: SYSVAR_RENT_PUBKEY,
+    //             systemProgram: SystemProgram.programId,
+    //             token22Program: TOKEN_2022_PROGRAM_ID,
+    //             associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
+    //             wns: this.wnsProgramId
+    //         })
+    //         .instruction();
+    //
+    //     const ixs = [
+    //         ComputeBudgetProgram.setComputeUnitLimit({
+    //             units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET, //
+    //         }),
+    //         mintIx,
+    //         // mintProcessIx,
+    //     ];
+    //
+    //     return new Transaction().add(...ixs);
+    // }
 
     async renewTokenTx(
         mint: PublicKey,
