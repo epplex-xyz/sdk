@@ -4,6 +4,7 @@ import {sleep} from "./utils/testUtils";
 import {expect} from "chai";
 import {BN} from "@coral-xyz/anchor";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
+import {PublicKey} from "@solana/web3.js";
 
 const metadata = getDefaultMetadata({});
 const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
@@ -46,6 +47,8 @@ describe("Testing Game Flow:\n create ->\n mint ->\n reset mints ->\n start ->\n
             gameName: "Game1",
             isEncrypted: false,
             publicEncryptKey: "",
+            ruleSeed: 0,
+            tokenGroup: PublicKey.default
         });
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
     });
