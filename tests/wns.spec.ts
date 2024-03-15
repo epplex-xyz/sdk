@@ -8,7 +8,7 @@ describe("WNS", () => {
     const collectionMint = Keypair.generate();
 
     const metadata = getDefaultMetadata({})
-    const maxSize = 1;
+    const maxSize = 3;
     const collectionArgs ={
         groupMint: collectionMint.publicKey,
         name: metadata.name,
@@ -16,14 +16,6 @@ describe("WNS", () => {
         uri: metadata.uri,
         maxSize: maxSize
     }
-
-    // create mint
-    // create rule
-    // start game
-
-    //todo
-    // token game burn
-    // nft freezing
 
     it("Create a collection", async () => {
         const tx = await burgerProvider.wnsGroupMintTx(collectionArgs)
@@ -44,15 +36,7 @@ describe("WNS", () => {
 
             const tx = await burgerProvider.wnsMemberMintTx(mintArgs);
             await sendAndConfirmRawVersionedTransaction(
-                CONNECTION, [
-                    ...tx.instructions,
-                    // await wenProvider.getAddNftToGroupIx({
-                    //     authority: wenProvider.provider.publicKey.toString(),
-                    //     payer: wenProvider.provider.publicKey.toString(),
-                    //     mint: mint.publicKey.toString(),
-                    //     group: collectionMint.publicKey.toString()
-                    // })
-                ], wallet.publicKey, wallet, [mint]
+                CONNECTION, [...tx.instructions,], wallet.publicKey, wallet, [mint]
             );
         }
     });
