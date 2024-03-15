@@ -43,3 +43,9 @@ export type AddDistributionArgs = {
     groupMint: string;
     paymentMint: string;
 } & CommonArgs;
+
+
+export type AddGroupArgs = {
+    mint: string;
+    group: string;
+} & CommonArgs;

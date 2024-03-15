@@ -26,7 +26,7 @@ import {
     GroupAccount,
     GroupMemberAccount,
     CreateCollectionArgs,
-    AdditionalAccountArgs
+    AdditionalAccountArgs, AddGroupArgs
 } from "./types/wenTypes";
 import {getAtaAddress} from "./utils/generic";
 import {CreateCollectionMintTxTxParams} from "./types/EpplexProviderTypes";
@@ -163,6 +163,24 @@ class WenProvider {
             })
             .transaction()
     }
+
+    async getAddNftToGroupIx(args: AddGroupArgs) {
+        const ix = await this.metadataProgram.methods
+            .addMintToGroup()
+            .accountsStrict({
+                payer: args.payer,
+                authority: args.authority,
+                mint: args.mint,
+                systemProgram: SystemProgram.programId,
+                tokenProgram: TOKEN_2022_PROGRAM_ID,
+                group: this.getGroupAccountPda(args.group) ,
+                member: this.getMemberAccountPda(args.mint),
+                manager: this.getManagerAccountPda(),
+            })
+            .instruction();
+
+        return ix;
+    };
 
 }
 
