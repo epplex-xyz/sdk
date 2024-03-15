@@ -80,7 +80,7 @@ export type NftTransferHookInputs = {
 };
 
 
-export async function buildTHtransferIx(inputs: NftTransferHookInputs) {
+export async function buildTransferHookTransferIx(inputs: NftTransferHookInputs) {
     const tokenProgramId = inputs.tokenProgramId ?? TOKEN_2022_PROGRAM_ID
 
     const sourceAta = getAssociatedTokenAddressSync(
@@ -100,7 +100,7 @@ export async function buildTHtransferIx(inputs: NftTransferHookInputs) {
     // get transfer ix
     const transferIx = await createTransferCheckedWithTransferHookInstruction(
         inputs.connection,
-        destinationAta,
+        sourceAta,
         inputs.mint,
         destinationAta,
         inputs.source,
