@@ -24,7 +24,8 @@ import {
     TokenGameBurnEvent,
     TokenGameResetEvent,
     TokenGameImmunityEvent,
-    GameEndEvent
+    GameEndEvent,
+    GameStartEvent
 } from "./eventTypes";
 
 export {
@@ -40,6 +41,7 @@ export {
     TokenGameResetEvent,
     TokenGameImmunityEvent,
     GameEndEvent,
+    GameStartEvent,
 
     CreateCollectionTxParams,
 

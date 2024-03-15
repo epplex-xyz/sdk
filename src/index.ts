@@ -18,6 +18,7 @@ import {
     TokenGameResetEvent,
     TokenGameImmunityEvent,
     GameEndEvent,
+    GameStartEvent,
 } from "./types";
 
 import {
@@ -83,6 +84,7 @@ export {
     TokenGameResetEvent,
     TokenGameImmunityEvent,
     GameEndEvent,
+    GameStartEvent,
 
     importKey,
     exportKey,
