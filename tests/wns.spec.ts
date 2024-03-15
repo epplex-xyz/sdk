@@ -4,63 +4,57 @@ import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 import {sendAndConfirmRawVersionedTransaction} from "../src/utils/generic";
 
 describe("WNS", () => {
-    const {wallet, wenProvider} = setupGlobals()
+    const {wallet, burgerProvider, wenProvider} = setupGlobals()
     const collectionMint = Keypair.generate();
 
     const metadata = getDefaultMetadata({})
-    const maxSize = 3;
+    const maxSize = 1;
     const collectionArgs ={
-        mint: collectionMint.publicKey.toString(),
+        groupMint: collectionMint.publicKey,
         name: metadata.name,
         symbol: metadata.symbol,
         uri: metadata.uri,
         maxSize: maxSize
     }
 
-    it("Create a collection", async () => {
-        const ixs = await wenProvider.createCollectionIxes({
-            ...collectionArgs,
-            payer: wallet.publicKey.toString(),
-            authority: wallet.publicKey.toString(),
-            receiver: wallet.publicKey.toString()
-        })
-        await sendAndConfirmRawVersionedTransaction(CONNECTION, ixs, wallet.publicKey, wallet, [collectionMint]);
+    // create mint
+    // create rule
+    // start game
 
+    //todo
+    // token game burn
+    // nft freezing
+
+    it("Create a collection", async () => {
+        const tx = await burgerProvider.wnsGroupMintTx(collectionArgs)
+        await sendAndConfirmRawVersionedTransaction(CONNECTION, tx.instructions, wallet.publicKey, wallet, [collectionMint]);
     });
 
-    // it("Max mint nfts into collection", async () => {
-    //     for(let i = 0; i < maxSize; i++){
-    //         const mint = Keypair.generate();
-    //         const mintArgs ={
-    //             name: metadata.name,
-    //             symbol: metadata.symbol,
-    //             uri: metadata.uri,
-    //             collection: collectionMint.publicKey.toString(),
-    //             royaltyBasisPoints: 500,
-    //             creators: [
-    //                 {
-    //                     address: wallet.publicKey.toString(),
-    //                     share: 100
-    //                 }
-    //             ],
-    //             mint: mint.publicKey.toString(),
-    //             minter: wallet.publicKey.toString(),
-    //             groupAuthority: wallet.publicKey.toString(),
-    //             nftAuthority: wallet.publicKey.toString(),
-    //             permanentDelegate: null
-    //         }
-    //
-    //         const tx = await wenProvider.mintNft(mintArgs);
-    //         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [mint]);
-    //
-    //         const memberAccount = getMemberAccount(mint.publicKey.toString())
-    //         const acc = await wenProvider
-    //             .metadataProgram
-    //             .account
-    //             .tokenGroupMember
-    //             .fetch(memberAccount)
-    //         console.log("Member account data", i, memberAccount.toString(), acc);
-    //     }
-    // });
+    it("Max mint nfts into collection", async () => {
+        for(let i = 0; i < maxSize; i++){
+            const mint = Keypair.generate();
+            const mintArgs ={
+                groupMint: collectionMint.publicKey,
+                mint: mint.publicKey,
+                name: metadata.name,
+                symbol: metadata.symbol,
+                uri: metadata.uri,
+                expiryDate: metadata.expiryDate,
+            }
+
+            const tx = await burgerProvider.wnsMemberMintTx(mintArgs);
+            await sendAndConfirmRawVersionedTransaction(
+                CONNECTION, [
+                    ...tx.instructions,
+                    // await wenProvider.getAddNftToGroupIx({
+                    //     authority: wenProvider.provider.publicKey.toString(),
+                    //     payer: wenProvider.provider.publicKey.toString(),
+                    //     mint: mint.publicKey.toString(),
+                    //     group: collectionMint.publicKey.toString()
+                    // })
+                ], wallet.publicKey, wallet, [mint]
+            );
+        }
+    });
 
 });
