@@ -34,12 +34,19 @@ import {
     CreateCollectionMintTxTxParams,
     CreateWhitelistMintTxParams,
     GameConfig,
-    GameStartParams, GameUpdateParams,
+    GameStartParams, GameUpdateParams, TokenGameBurnTxParams,
     TokenGameResetParams,
     TokenGameVoteTxParams, WnsMintParams,
 } from "./types/EpplexProviderTypes";
 import { EpplexProviderWallet } from "./types/WalletProvider";
-import { getMintOwner, tryCreateATAIx } from "./utils/generic";
+import {getAtaAddress, getMintOwner, tryCreateATAIx} from "./utils/generic";
+import {
+    getExtraMetasAccount,
+    getGroupAccount,
+    getManagerAccount,
+    getMemberAccount,
+    WNS_PROGRAM_ID
+} from "./constants/wenCore";
 class EpplexProvider {
     provider: anchor.AnchorProvider;
     program: BurgerProgram;
@@ -91,7 +98,6 @@ class EpplexProvider {
                 symbol: symbol,
                 uri: uri,
                 expiryDate: expiryDate,
-                /// TODO: get this from somewhere more solid
                 collectionCounter: bigCollectionId,
             })
             .accountsStrict({
@@ -174,26 +180,27 @@ class EpplexProvider {
         return new Transaction().add(...ixs);
     }
 
+    /*
+     * 1. Create a mint
+     * 2. Add mint to grou
+     * 3. Add royalties
+     * 4. Add other metadata
+     */
     async wnsMintTx({
+        groupMint,
+        mint,
         expiryDate,
         name,
         symbol,
         uri,
-        mint,
         computeBudget = DEFAULT_COMPUTE_BUDGET,
         coreProgramId = CORE_PROGRAM_ID,
+        wnsProgramId = WNS_PROGRAM_ID,
     }: WnsMintParams) {
         const permanentDelegate = this.getProgramDelegate();
         const payer = this.provider.wallet.publicKey;
-        const ata = getAssociatedTokenAddressSync(
-            mint,
-            payer,
-            undefined,
-            TOKEN_2022_PROGRAM_ID,
-            ASSOCIATED_TOKEN_PROGRAM_ID
-        );
 
-        const tokenCreateIx = await this.program.methods
+        const mintIx = await this.program.methods
             .wnsMint({
                 name: name,
                 symbol: symbol,
@@ -202,26 +209,28 @@ class EpplexProvider {
             })
             .accountsStrict({
                 mint,
-                tokenAccount: ata,
+                tokenAccount: getAtaAddress(mint.toString(), payer.toString()),
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 permanentDelegate: permanentDelegate,
-                globalCollectionConfig:
-                    getGlobalCollectionConfig(coreProgramId),
                 payer: payer,
-
+                group: getGroupAccount(groupMint.toString(), wnsProgramId),
+                member: getMemberAccount(mint.toString(), wnsProgramId),
+                extraMetasAccount: getExtraMetasAccount(mint.toString(), wnsProgramId),
+                manager: getManagerAccount(wnsProgramId),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
                 epplexCore: coreProgramId,
+                wns: wnsProgramId
             })
             .instruction();
 
         const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget,
+                units: 500_000,
             }),
-            tokenCreateIx,
+            mintIx,
         ];
 
         return new Transaction().add(...ixs);
@@ -344,29 +353,30 @@ class EpplexProvider {
             .transaction();
     }
 
-    async tokenGameBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
-        const mintOwner =
-            owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAssociatedTokenAddressSync(
-            mint,
-            mintOwner,
-            undefined,
-            TOKEN_2022_PROGRAM_ID
-        );
-
-        return await this.program.methods
-            .tokenBurn({})
-            .accountsStrict({
-                mint: mint,
-                tokenAccount,
-                gameConfig: useGameConfig ? this.getGameConfig() : null,
-                permanentDelegate: this.getProgramDelegate(),
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                payer: this.provider.wallet.publicKey,
-                token22Program: TOKEN_2022_PROGRAM_ID,
-            })
-            .transaction();
-    }
+    // async tokenGameBurnTx({ mint, owner, wnsProgramId = WNS_PROGRAM_ID, epplexCoreProgramId = CORE_PROGRAM_ID }: TokenGameBurnTxParams) {
+    //     const mintOwner =
+    //         owner ?? (await getMintOwner(this.provider.connection, mint));
+    //     const tokenAccount = getAssociatedTokenAddressSync(
+    //         mint,
+    //         mintOwner,
+    //         undefined,
+    //         TOKEN_2022_PROGRAM_ID
+    //     );
+    //
+    //     return await this.program.methods
+    //         .tokenGameBurn({})
+    //         .accountsStrict({
+    //             mint: mint,
+    //             tokenAccount,
+    //             gameConfig: this.getGameConfig(),
+    //             permanentDelegate: this.getProgramDelegate(),
+    //             groupMember: getMemberAccount(mint.toString(), wnsProgramId)
+    //             payer: this.provider.wallet.publicKey,
+    //             token22Program: TOKEN_2022_PROGRAM_ID,
+    //             epplexCore: epplexCoreProgramId,
+    //         })
+    //         .transaction();
+    // }
 
     async tokenGameVoteTx({ mint, message, owner }: TokenGameVoteTxParams) {
         // Could just do this.provider.wallet.publicKey

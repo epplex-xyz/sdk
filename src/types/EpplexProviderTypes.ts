@@ -28,14 +28,15 @@ export interface CreateWhitelistMintTxParams {
 }
 
 export interface WnsMintParams {
+    groupMint: PublicKey,
+    mint: PublicKey;
     expiryDate: string;
     name: string;
     symbol: string;
     uri: string;
-    mint: PublicKey;
-    globalCollectionConfig?: PublicKey;
     computeBudget?: number;
     coreProgramId?: PublicKey;
+    wnsProgramId?: PublicKey;
 }
 
 export interface CreateCollectionMintTxTxParams {
@@ -55,6 +56,12 @@ export interface TokenGameVoteTxParams {
     owner?: PublicKey;
 }
 
+export interface TokenGameBurnTxParams {
+    mint: PublicKey;
+    owner?: PublicKey;
+    wnsProgramId?: PublicKey;
+    epplexCoreProgramId?: PublicKey;
+}
 export interface BurnTxParams {
     mint: PublicKey;
     owner?: PublicKey;

@@ -99,7 +99,7 @@ export type EpplexBurger = {
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false,
+          "isSigner": true,
           "docs": [
             "CHECK"
           ]
@@ -119,7 +119,7 @@ export type EpplexBurger = {
         },
         {
           "name": "permanentDelegate",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -134,12 +134,12 @@ export type EpplexBurger = {
         },
         {
           "name": "member",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "extraMetasAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -1668,7 +1668,7 @@ export const IDL: EpplexBurger = {
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false,
+          "isSigner": true,
           "docs": [
             "CHECK"
           ]
@@ -1688,7 +1688,7 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "permanentDelegate",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -1703,12 +1703,12 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "member",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "extraMetasAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {

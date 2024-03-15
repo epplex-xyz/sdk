@@ -99,7 +99,7 @@
         {
           "name": "mint",
           "isMut": true,
-          "isSigner": false,
+          "isSigner": true,
           "docs": [
             "CHECK"
           ]
@@ -119,7 +119,7 @@
         },
         {
           "name": "permanentDelegate",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -134,12 +134,12 @@
         },
         {
           "name": "member",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "extraMetasAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
