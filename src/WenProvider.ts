@@ -1,53 +1,96 @@
 import * as anchor from "@coral-xyz/anchor";
-import {
-    ConfirmOptions,
-    Connection,
-    PublicKey,
-    SystemProgram,
-    SYSVAR_RENT_PUBKEY,
-} from "@solana/web3.js";
+import {ConfirmOptions, Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY,} from "@solana/web3.js";
 import {EpplexProviderWallet} from "./types/WalletProvider";
 import {
     DISTRIBUTION_PROGRAM_ID,
     DistributionProgram,
     getDistributionAccount,
     getDistributionProgram,
-    getExtraMetasAccount,
     getGroupAccount,
     getManagerAccount,
     getMemberAccount,
-    getMetadataProgram, WNS_PROGRAM_ID,
+    getMetadataProgram,
+    WNS_PROGRAM_ID,
     WnsProgram
 } from "./constants/wenCore";
-import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
+import {ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 import {
     AddDistributionArgs,
-    CreateGroupArgs,
-    GroupAccount,
-    GroupMemberAccount,
+    AddGroupArgs,
+    AdditionalAccountArgs,
     CreateCollectionArgs,
-    AdditionalAccountArgs, AddGroupArgs
+    CreateGroupArgs, FreezeNftArgs,
+    GroupAccount,
+    GroupMemberAccount, ThawNftArgs
 } from "./types/wenTypes";
 import {getAtaAddress} from "./utils/generic";
-import {CreateCollectionMintTxTxParams} from "./types/EpplexProviderTypes";
+import {getReadonlyWallet} from "./utils/wallet";
+
+interface Programs {
+    metadata: PublicKey;
+    royalty?: PublicKey;
+}
+
+const DEFAULT_PROGRAMS: Programs = {
+    metadata: WNS_PROGRAM_ID,
+    royalty: DISTRIBUTION_PROGRAM_ID
+}
 
 class WenProvider {
     provider: anchor.AnchorProvider;
     metadataProgram: WnsProgram
     distributionProgram: DistributionProgram
-    treasury: PublicKey;
+    programIds: Programs
 
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
-        metadataProgramId: PublicKey = WNS_PROGRAM_ID,
-        distributionProgramId: PublicKey = DISTRIBUTION_PROGRAM_ID,
+        programIds: Programs = DEFAULT_PROGRAMS,
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.metadataProgram = getMetadataProgram(this.provider, metadataProgramId);
-        this.distributionProgram = getDistributionProgram(this.provider, distributionProgramId)
+        this.metadataProgram = getMetadataProgram(this.provider, programIds.metadata);
+        this.distributionProgram = getDistributionProgram(this.provider, programIds.royalty);
+        this.programIds = programIds;
     }
+
+    static getReadOnlyProvider(
+        connection: Connection,
+        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        programs: Programs = DEFAULT_PROGRAMS,
+    ): WenProvider {
+        return new WenProvider(getReadonlyWallet(), connection, opts, programs);
+    }
+
+    async getThawNftIx(args: ThawNftArgs) {
+        return await this.metadataProgram.methods
+            .thawMintAccount()
+            .accountsStrict({
+                payer: args.payer,
+                user: args.authority,
+                delegateAuthority: args.delegateAuthority,
+                mint: args.mint,
+                mintTokenAccount: getAtaAddress(args.mint, args.authority),
+                manager: this.getManagerAccountPda(),
+                tokenProgram: TOKEN_2022_PROGRAM_ID,
+            })
+            .instruction();
+    };
+
+    async getFreezeNftIx(args: FreezeNftArgs) {
+        return await this.metadataProgram.methods
+            .freezeMintAccount()
+            .accountsStrict({
+                payer: args.payer,
+                user: args.authority,
+                delegateAuthority: args.delegateAuthority,
+                mint: args.mint,
+                mintTokenAccount: getAtaAddress(args.mint, args.authority),
+                manager: this.getManagerAccountPda(),
+                tokenProgram: TOKEN_2022_PROGRAM_ID,
+            })
+            .instruction();
+    };
 
     getManagerAccountPda(): PublicKey {
         return getManagerAccount(this.metadataProgram.programId);

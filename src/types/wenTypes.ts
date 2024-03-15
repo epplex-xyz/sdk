@@ -49,3 +49,14 @@ export type AddGroupArgs = {
     mint: string;
     group: string;
 } & CommonArgs;
+
+
+export type ThawNftArgs = {
+    mint: string;
+    delegateAuthority: string;
+} & CommonArgs;
+
+export type FreezeNftArgs = {
+    mint: string;
+    delegateAuthority: string;
+} & CommonArgs;
