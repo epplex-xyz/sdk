@@ -24,10 +24,9 @@ export interface CreateWhitelistMintTxParams {
     mint: PublicKey;
     globalCollectionConfig?: PublicKey;
     computeBudget?: number;
-    coreProgramId?: PublicKey;
 }
 
-export interface WnsMintParams {
+export interface WnsMemberMintParams {
     groupMint: PublicKey,
     mint: PublicKey;
     expiryDate: string;
@@ -35,8 +34,16 @@ export interface WnsMintParams {
     symbol: string;
     uri: string;
     computeBudget?: number;
-    coreProgramId?: PublicKey;
-    wnsProgramId?: PublicKey;
+}
+
+export interface WnsGroupMintParams {
+    groupMint: PublicKey,
+    name: string;
+    symbol: string;
+    uri: string;
+    maxSize: number;
+    paymentMint?: PublicKey;
+    computeBudget?: number;
 }
 
 export interface CreateCollectionMintTxTxParams {
@@ -47,7 +54,6 @@ export interface CreateCollectionMintTxTxParams {
     symbol: string;
     uri: string;
     computeBudget?: number;
-    coreProgramId?: PublicKey;
 }
 
 export interface TokenGameVoteTxParams {
@@ -59,8 +65,6 @@ export interface TokenGameVoteTxParams {
 export interface TokenGameBurnTxParams {
     mint: PublicKey;
     owner?: PublicKey;
-    wnsProgramId?: PublicKey;
-    epplexCoreProgramId?: PublicKey;
 }
 export interface BurnTxParams {
     mint: PublicKey;
@@ -80,13 +84,14 @@ export interface GameStartParams {
     gameName: string;
     isEncrypted: boolean;
     publicEncryptKey: string;
+    ruleSeed: number,
+    tokenGroup: PublicKey,
 }
 
 export interface GameUpdateParams {
     phaseStartTimestamp?: number;
     phaseEndTimestamp?: number;
     voteType?: IdlVoteType;
-
 }
 
 export type IdlVoteType = IdlTypes<EpplexBurger>["VoteType"];

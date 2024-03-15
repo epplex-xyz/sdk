@@ -94,100 +94,6 @@ export type EpplexBurger = {
       ]
     },
     {
-      "name": "wnsMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "group",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "member",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "extraMetasAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WnsMintParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "collectionMint",
       "accounts": [
         {
@@ -260,6 +166,268 @@ export type EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "CollectionMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "wnsGroupMint",
+      "accounts": [
+        {
+          "name": "groupMint",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "group",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "extraMetasAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "distributionAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "royaltyProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WnsGroupMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "wnsMemberMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "group",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "member",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "extraMetasAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WnsMemberMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "wnsMemberProcess",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "group",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "member",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "extraMetasAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WnsMemberProcessParams"
           }
         }
       ]
@@ -954,9 +1122,16 @@ export type EpplexBurger = {
             "type": "u16"
           },
           {
-            "name": "groupPda",
+            "name": "ruleSeed",
             "docs": [
               "Seed for ephemeral rule"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "tokenGroup",
+            "docs": [
+              "The pubkey of the token group pda for collection verification"
             ],
             "type": "publicKey"
           }
@@ -1058,6 +1233,14 @@ export type EpplexBurger = {
           {
             "name": "publicEncryptKey",
             "type": "string"
+          },
+          {
+            "name": "ruleSeed",
+            "type": "u64"
+          },
+          {
+            "name": "tokenGroup",
+            "type": "publicKey"
           }
         ]
       }
@@ -1183,7 +1366,35 @@ export type EpplexBurger = {
       }
     },
     {
-      "name": "WnsMintParams",
+      "name": "WnsGroupMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "maxSize",
+            "type": "u32"
+          },
+          {
+            "name": "paymentMint",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WnsMemberMintParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1204,6 +1415,13 @@ export type EpplexBurger = {
             "type": "string"
           }
         ]
+      }
+    },
+    {
+      "name": "WnsMemberProcessParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     },
     {
@@ -1421,6 +1639,65 @@ export type EpplexBurger = {
           "index": false
         }
       ]
+    },
+    {
+      "name": "EvGameStart",
+      "fields": [
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "gameStartTimestamp",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "gameEndTimestamp",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "gamePrompt",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "gameName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "voteType",
+          "type": {
+            "defined": "VoteType"
+          },
+          "index": false
+        },
+        {
+          "name": "inputType",
+          "type": {
+            "defined": "InputType"
+          },
+          "index": false
+        },
+        {
+          "name": "publicEncryptKey",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "burnAmount",
+          "type": "u16",
+          "index": false
+        },
+        {
+          "name": "submissionAmount",
+          "type": "u16",
+          "index": false
+        }
+      ]
     }
   ],
   "errors": [
@@ -1551,16 +1828,21 @@ export type EpplexBurger = {
     },
     {
       "code": 6025,
+      "name": "CollectionInvalid",
+      "msg": "Collection group is not valid for the game"
+    },
+    {
+      "code": 6026,
       "name": "IncorrectInputType",
       "msg": "Incorrect input type"
     },
     {
-      "code": 6026,
+      "code": 6027,
       "name": "InputIsEmpty",
       "msg": "Input cannot be empty"
     },
     {
-      "code": 6027,
+      "code": 6028,
       "name": "EvaluationImpossible",
       "msg": "Unable to evaluate game"
     }
@@ -1663,100 +1945,6 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
-      "name": "wnsMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "group",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "member",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "extraMetasAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WnsMintParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "collectionMint",
       "accounts": [
         {
@@ -1829,6 +2017,268 @@ export const IDL: EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "CollectionMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "wnsGroupMint",
+      "accounts": [
+        {
+          "name": "groupMint",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "group",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "extraMetasAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "distributionAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "royaltyProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WnsGroupMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "wnsMemberMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "group",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "member",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "extraMetasAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WnsMemberMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "wnsMemberProcess",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "group",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "member",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "extraMetasAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WnsMemberProcessParams"
           }
         }
       ]
@@ -2523,9 +2973,16 @@ export const IDL: EpplexBurger = {
             "type": "u16"
           },
           {
-            "name": "groupPda",
+            "name": "ruleSeed",
             "docs": [
               "Seed for ephemeral rule"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "tokenGroup",
+            "docs": [
+              "The pubkey of the token group pda for collection verification"
             ],
             "type": "publicKey"
           }
@@ -2627,6 +3084,14 @@ export const IDL: EpplexBurger = {
           {
             "name": "publicEncryptKey",
             "type": "string"
+          },
+          {
+            "name": "ruleSeed",
+            "type": "u64"
+          },
+          {
+            "name": "tokenGroup",
+            "type": "publicKey"
           }
         ]
       }
@@ -2752,7 +3217,35 @@ export const IDL: EpplexBurger = {
       }
     },
     {
-      "name": "WnsMintParams",
+      "name": "WnsGroupMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "maxSize",
+            "type": "u32"
+          },
+          {
+            "name": "paymentMint",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WnsMemberMintParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2773,6 +3266,13 @@ export const IDL: EpplexBurger = {
             "type": "string"
           }
         ]
+      }
+    },
+    {
+      "name": "WnsMemberProcessParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     },
     {
@@ -2990,6 +3490,65 @@ export const IDL: EpplexBurger = {
           "index": false
         }
       ]
+    },
+    {
+      "name": "EvGameStart",
+      "fields": [
+        {
+          "name": "gameRoundId",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "gameStartTimestamp",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "gameEndTimestamp",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "gamePrompt",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "gameName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "voteType",
+          "type": {
+            "defined": "VoteType"
+          },
+          "index": false
+        },
+        {
+          "name": "inputType",
+          "type": {
+            "defined": "InputType"
+          },
+          "index": false
+        },
+        {
+          "name": "publicEncryptKey",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "burnAmount",
+          "type": "u16",
+          "index": false
+        },
+        {
+          "name": "submissionAmount",
+          "type": "u16",
+          "index": false
+        }
+      ]
     }
   ],
   "errors": [
@@ -3120,16 +3679,21 @@ export const IDL: EpplexBurger = {
     },
     {
       "code": 6025,
+      "name": "CollectionInvalid",
+      "msg": "Collection group is not valid for the game"
+    },
+    {
+      "code": 6026,
       "name": "IncorrectInputType",
       "msg": "Incorrect input type"
     },
     {
-      "code": 6026,
+      "code": 6027,
       "name": "InputIsEmpty",
       "msg": "Input cannot be empty"
     },
     {
-      "code": 6027,
+      "code": 6028,
       "name": "EvaluationImpossible",
       "msg": "Unable to evaluate game"
     }
