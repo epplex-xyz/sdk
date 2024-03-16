@@ -16,6 +16,14 @@ export type EpNFT = RawAccount &
     Partial<TokenMetadataField> &
     Partial<TokenAccount>;
 
+// Todo need to extend this with the below
+export interface EpMintParams {
+    expiryDate: string;
+    name: string;
+    symbol: string;
+    uri: string;
+}
+
 export interface CreateWhitelistMintTxParams {
     expiryDate: string;
     name: string;

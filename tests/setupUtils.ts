@@ -1,16 +1,17 @@
-import {CONNECTION} from "./utils/setup";
 import {
     CoreProvider,
-    EpplexProvider,
-    sendAndConfirmRawTransaction
+    EpplexProvider, getWnsNftTransferIxs,
+    sendAndConfirmRawTransaction, sendAndConfirmRawVersionedTransaction
 } from "../src";
 import WenProvider from "../src/WenProvider";
 import {expect} from "chai";
+import {Keypair, PublicKey, TransactionInstruction} from "@solana/web3.js";
+import {WnsGroupMintParams} from "../lib/types/EpplexProviderTypes";
+import {EpMintParams} from "../src/types/EpplexProviderTypes";
 
 export function trySetupGlobalCollectionConfig(
     provider: CoreProvider,
     wallet,
-    connection = CONNECTION,
 ) {
     it('Try create global collection config', async () => {
         try {
@@ -19,11 +20,10 @@ export function trySetupGlobalCollectionConfig(
                 .account
                 .globalCollectionConfig
                 .fetch(provider.getGlobalCollectionConfig());
-
             // console.log("Global collection config data", globalCollectionData)
         } catch (e) {
             const tx = await provider.createGlobalCollectionConfigTx();
-            const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            const id = await sendAndConfirmRawTransaction(provider.provider.connection, tx, wallet.publicKey, wallet, []);
             expect(id).to.be.not.empty;
         }
     });
@@ -32,7 +32,6 @@ export function trySetupGlobalCollectionConfig(
 export function trySetupBurgerProgramDelegate(
     provider: EpplexProvider,
     wallet,
-    connection = CONNECTION,
 ) {
     it("Try create burger delegate ", async() => {
         try {
@@ -44,7 +43,7 @@ export function trySetupBurgerProgramDelegate(
             // console.log("Program Delegate Data", burgerDelegateData)
         } catch (e) {
             const tx = await provider.createProgramDelegateTx();
-            const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            const id = await sendAndConfirmRawTransaction(provider.provider.connection, tx, wallet.publicKey, wallet, []);
             expect(id).to.be.not.empty;
         }
     })
@@ -54,7 +53,6 @@ export function trySetupBurgerProgramDelegate(
 export function trySetupGameConfig(
     provider: EpplexProvider,
     wallet,
-    connection = CONNECTION,
 ) {
     it("Try create game config ", async() => {
         try {
@@ -65,7 +63,7 @@ export function trySetupGameConfig(
                 .fetch(provider.getGameConfig());
         } catch (e) {
             const tx = await provider.gameCreateTx();
-            const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+            const id = await sendAndConfirmRawTransaction(provider.provider.connection, tx, wallet.publicKey, wallet, []);
             expect(id).to.be.not.empty;
         }
     })
@@ -74,7 +72,6 @@ export function trySetupGameConfig(
 export function trySetupManagerAccount(
     provider: WenProvider,
     wallet,
-    connection = CONNECTION,
 ) {
     it("Try init manager account ", async() => {
         const acc = await provider.getManagerAccount();
@@ -84,8 +81,56 @@ export function trySetupManagerAccount(
         }
 
         const tx = await provider.initManagerAccountTx();
-        const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+        const id = await sendAndConfirmRawTransaction(provider.provider.connection, tx, wallet.publicKey, wallet, []);
         expect(id).to.be.not.empty;
     })
+}
+
+export function setupCollection(
+    provider: EpplexProvider,
+    collectionMint: Keypair,
+    collectionArgs: WnsGroupMintParams,
+    epMintArgs: EpMintParams,
+    wallet,
+    receiver?: PublicKey
+) {
+    it("Create a collection", async () => {
+        const tx = await provider.wnsGroupMintTx(collectionArgs)
+        await sendAndConfirmRawVersionedTransaction(provider.provider.connection, tx.instructions, wallet.publicKey, wallet, [collectionMint]);
+    });
+
+    it("Max mint nfts into collection", async () => {
+        for(let i = 0; i < collectionArgs.maxSize; i++){
+            const mint = Keypair.generate();
+            const mintArgs = {
+                ...epMintArgs,
+                groupMint: collectionMint.publicKey,
+                mint: mint.publicKey,
+                computeBudget: 500_000
+            }
+            console.log(`mint ${i + 1}`, mint.publicKey.toString());
+            // Mint
+            const tx = await provider.wnsMemberMintTx(mintArgs);
+
+            // Transfer
+            let transferIxs: TransactionInstruction[] = []
+            if (receiver === undefined) {
+                transferIxs = getWnsNftTransferIxs({
+                    mint: mint.publicKey,
+                    sender: wallet.publicKey,
+                    payer: wallet.publicKey,
+                    receiver
+                })
+            }
+
+            await sendAndConfirmRawVersionedTransaction(
+                provider.provider.connection, [
+                    ...tx.instructions,
+                    ...transferIxs
+                ], wallet.publicKey, wallet, [mint]
+            );
+        }
+    });
+
 }
 
