@@ -94,6 +94,8 @@ export function setupCollection(
     wallet,
     receiver?: PublicKey
 ) {
+    let mints: PublicKey[] = []
+
     it("Create a collection", async () => {
         const tx = await provider.wnsGroupMintTx(collectionArgs)
         await sendAndConfirmRawVersionedTransaction(provider.provider.connection, tx.instructions, wallet.publicKey, wallet, [collectionMint]);
@@ -102,13 +104,15 @@ export function setupCollection(
     it("Max mint nfts into collection", async () => {
         for(let i = 0; i < collectionArgs.maxSize; i++){
             const mint = Keypair.generate();
+            console.log(`mint ${i + 1}`, mint.publicKey.toString());
+
             const mintArgs = {
                 ...epMintArgs,
                 groupMint: collectionMint.publicKey,
                 mint: mint.publicKey,
                 computeBudget: 500_000
             }
-            console.log(`mint ${i + 1}`, mint.publicKey.toString());
+
             // Mint
             const tx = await provider.wnsMemberMintTx(mintArgs);
 
@@ -129,8 +133,11 @@ export function setupCollection(
                     ...transferIxs
                 ], wallet.publicKey, wallet, [mint]
             );
+            mints.push(mint.publicKey)
         }
     });
 
+
+    return mints
 }
 

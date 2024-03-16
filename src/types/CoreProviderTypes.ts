@@ -18,7 +18,7 @@ export interface RuleTxParams {
     seed: number;
     ruleCreator: PublicKey;
     renewalPrice: number;
-    treasury?: PublicKey;
+    treasury: PublicKey;
 }
 export interface TimeTxParams {
     time: number;
