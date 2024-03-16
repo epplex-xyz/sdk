@@ -5,6 +5,8 @@ import {
     createTransferCheckedInstruction, createTransferCheckedWithTransferHookInstruction, getAssociatedTokenAddressSync,
     TOKEN_2022_PROGRAM_ID
 } from "@solana/spl-token";
+import {getAtaAddress, getAtaAddressPubkey} from "./generic";
+import {getApproveAccountPda, getExtraMetasAccount, WNS_PROGRAM_ID} from "../constants/wenCore";
 
 export type NftTransferTxInputs = {
     connection: Connection;
@@ -83,17 +85,15 @@ export type NftTransferHookInputs = {
 export async function buildTransferHookTransferIx(inputs: NftTransferHookInputs) {
     const tokenProgramId = inputs.tokenProgramId ?? TOKEN_2022_PROGRAM_ID
 
-    const sourceAta = getAssociatedTokenAddressSync(
+    const sourceAta = getAtaAddressPubkey(
         inputs.mint, // mint
         inputs.source, // source wllaet
-        undefined,
         tokenProgramId
     );
 
-    const destinationAta = getAssociatedTokenAddressSync(
+    const destinationAta = getAtaAddressPubkey(
         inputs.mint, // mint
         inputs.destination, // destination wallet
-        undefined,
         tokenProgramId
     );
 
@@ -113,3 +113,36 @@ export async function buildTransferHookTransferIx(inputs: NftTransferHookInputs)
 
     return transferIx;
 }
+
+export type TransferNftArgs = {
+    mint: PublicKey;
+    sender: PublicKey;
+    receiver: PublicKey;
+    groupMint: PublicKey;
+    paymentMint: PublicKey;
+    buyAmount: number;
+    tokenProgramId?: PublicKey;
+    wnsProgramId?: PublicKey;
+};
+
+export function getWnsNftTransferIx(args: TransferNftArgs) {
+    const transferIx = createTransferCheckedInstruction(
+        getAtaAddressPubkey(args.mint, args.sender),
+        args.mint,
+        getAtaAddressPubkey(args.mint, args.receiver),
+        args.sender,
+        1,
+        0,
+        [],
+        args.tokenProgramId ?? TOKEN_2022_PROGRAM_ID,
+    );
+    // Add token hook extra keys
+    transferIx.keys = transferIx.keys.concat([
+        // System program
+        {pubkey: getApproveAccountPda(args.mint), isSigner: false, isWritable: true},
+        {pubkey: args.wnsProgramId ?? WNS_PROGRAM_ID, isSigner: false, isWritable: false},
+        // Extra metas list account
+        {pubkey: getExtraMetasAccount(args.mint), isSigner: false, isWritable: false},
+    ]);
+    return transferIx;
+};

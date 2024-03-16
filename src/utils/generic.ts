@@ -29,6 +29,23 @@ export function getAtaAddress(mint: string, owner: string, tokenProgramId: Publi
     )
 };
 
+export function getAtaAddressPubkey(mint: PublicKey, owner: PublicKey, tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID): PublicKey {
+    return getProgramAddress(
+        [owner.toBuffer(), tokenProgramId.toBuffer(), mint.toBuffer()],
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+    )
+};
+
+// export function getAtaAddress(mint: PublicKey | string, owner: PublicKey | string, tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID): PublicKey {
+//     const mintKey = typeof mint === 'string' ? new PublicKey(mint) : mint;
+//     const ownerKey = typeof owner === 'string' ? new PublicKey(owner) : owner;
+//
+//     return getProgramAddress(
+//         [ownerKey.toBuffer(), tokenProgramId.toBuffer(), mintKey.toBuffer()],
+//         ASSOCIATED_TOKEN_PROGRAM_ID,
+//     );
+// }
+
 export async function getMintOwner(connection: Connection, mint: PublicKey): Promise<PublicKey> {
     const largestAccounts = await connection.getTokenLargestAccounts(mint);
     const largestAccountInfo = await connection.getParsedAccountInfo(

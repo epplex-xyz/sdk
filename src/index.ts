@@ -1,4 +1,5 @@
 import EpplexProvider from "./EpplexProvider";
+import WenProvider from "./WenProvider";
 import CoreProvider from "./CoreProvider";
 import DecodeTypesService, { InputType, VoteType, GameStatus} from "./DecodeTypesService";
 import EpNFTService, { epNFTOptions, defaultEpNFTOptions} from "./EpNFTService";
@@ -23,7 +24,9 @@ import {
 
 import {
     nftTransferIxs,
-} from "./utils/token2022";
+    buildTransferHookTransferIx,
+    getWnsNftTransferIx,
+} from "./utils/transfer";
 
 import {
     sendAndConfirmRawTransaction,
@@ -50,6 +53,8 @@ import {
 } from "./constants";
 
 export {
+    WenProvider,
+
     EpplexBurger,
     EpplexCore,
 
@@ -94,5 +99,8 @@ export {
     decrypt,
 
     nftTransferIxs,
+    buildTransferHookTransferIx,
+    getWnsNftTransferIx,
+
     sendAndConfirmRawTransaction
 };

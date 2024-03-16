@@ -46,14 +46,17 @@ export const getMemberAccount = (mint: string, programId: PublicKey = WNS_PROGRA
     return groupAccount;
 }
 
-export const getApprovalAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
-    const [approvalAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("approve-account"), new PublicKey(mint).toBuffer()], programId);
+export const getApproveAccountPda = (mint: PublicKey, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const [approvalAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("approve-account"), mint.toBuffer()], programId);
 
     return approvalAccount;
 }
 
-export const getExtraMetasAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
-    const [extraMetasAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("extra-account-metas"), new PublicKey(mint).toBuffer()], programId);
+
+export const getExtraMetasAccount = (mint: string | PublicKey, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const mintKey = typeof mint === 'string' ? new PublicKey(mint) : mint;
+
+    const [extraMetasAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("extra-account-metas"), mintKey.toBuffer()], programId);
 
     return extraMetasAccount;
 }
