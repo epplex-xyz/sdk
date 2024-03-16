@@ -5,7 +5,7 @@ import {
     createTransferCheckedInstruction, createTransferCheckedWithTransferHookInstruction, getAssociatedTokenAddressSync,
     TOKEN_2022_PROGRAM_ID
 } from "@solana/spl-token";
-import {getAtaAddress, getAtaAddressPubkey} from "./generic";
+import {getAtaAddressPubkey} from "./generic";
 import {getApproveAccountPda, getExtraMetasAccount, WNS_PROGRAM_ID} from "../constants/wenCore";
 
 export type NftTransferTxInputs = {
@@ -69,6 +69,24 @@ export function nftTransferIxs(
     ]
 }
 
+export type CreateAtaInputs = {
+    mint: PublicKey;
+    receiver: PublicKey;
+    payer: PublicKey;
+    tokenProgramId?: PublicKey;
+};
+
+
+export function myCreateAssociatedTokenAccountInstruction(inputs: CreateAtaInputs) {
+    const tokenProgramId = inputs.tokenProgramId ?? TOKEN_2022_PROGRAM_ID
+    return createAssociatedTokenAccountInstruction(
+        inputs.payer,
+        getAtaAddressPubkey(inputs.mint, inputs.receiver, tokenProgramId),
+        inputs.receiver,
+        inputs.mint,
+        tokenProgramId
+    );
+}
 
 export type NftTransferHookInputs = {
     connection: Connection;
@@ -80,8 +98,6 @@ export type NftTransferHookInputs = {
     allowOwnerOffCurveDestination?: boolean;
     tokenProgramId?: PublicKey;
 };
-
-
 export async function buildTransferHookTransferIx(inputs: NftTransferHookInputs) {
     const tokenProgramId = inputs.tokenProgramId ?? TOKEN_2022_PROGRAM_ID
 
@@ -118,13 +134,13 @@ export type TransferNftArgs = {
     mint: PublicKey;
     sender: PublicKey;
     receiver: PublicKey;
-    groupMint: PublicKey;
-    paymentMint: PublicKey;
-    buyAmount: number;
     tokenProgramId?: PublicKey;
     wnsProgramId?: PublicKey;
 };
 
+/*
+    * Get the transfer instruction for a WNS NFT, we should use this since this is non-async
+ */
 export function getWnsNftTransferIx(args: TransferNftArgs) {
     const transferIx = createTransferCheckedInstruction(
         getAtaAddressPubkey(args.mint, args.sender),
@@ -145,4 +161,25 @@ export function getWnsNftTransferIx(args: TransferNftArgs) {
         {pubkey: getExtraMetasAccount(args.mint), isSigner: false, isWritable: false},
     ]);
     return transferIx;
+};
+
+export type TransferNftIxsArgs = {
+    mint: PublicKey;
+    sender: PublicKey;
+    receiver: PublicKey;
+    payer: PublicKey;
+    tokenProgramId?: PublicKey;
+    wnsProgramId?: PublicKey;
+};
+
+export function getWnsNftTransferIxs(args: TransferNftIxsArgs): TransactionInstruction[] {
+    return [
+        myCreateAssociatedTokenAccountInstruction({
+            mint: args.mint,
+            payer: args.payer,
+            receiver: args.receiver,
+            tokenProgramId: args.tokenProgramId
+        }),
+        getWnsNftTransferIx(args)
+    ];
 };

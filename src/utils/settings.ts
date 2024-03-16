@@ -1,3 +1,3 @@
-export const CONFIRM_OPTIONS = {skipPreflight: false}
+export const CONFIRM_OPTIONS = {skipPreflight: true}
 
 export const COMMITMENT = "confirmed";

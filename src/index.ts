@@ -26,6 +26,8 @@ import {
     nftTransferIxs,
     buildTransferHookTransferIx,
     getWnsNftTransferIx,
+    getWnsNftTransferIxs,
+    myCreateAssociatedTokenAccountInstruction
 } from "./utils/transfer";
 
 import {
@@ -101,6 +103,8 @@ export {
     nftTransferIxs,
     buildTransferHookTransferIx,
     getWnsNftTransferIx,
+    getWnsNftTransferIxs,
+    myCreateAssociatedTokenAccountInstruction,
 
     sendAndConfirmRawTransaction
 };
