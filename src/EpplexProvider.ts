@@ -88,6 +88,9 @@ class EpplexProvider {
         }
     }
 
+    /*
+        * Providers
+     */
     static fromAnchorProvider(provider: anchor.AnchorProvider, programs: Programs = DEFAULT_PROGRAMS): EpplexProvider {
         const epplexProvider = new EpplexProvider(
             provider.wallet,
@@ -106,6 +109,9 @@ class EpplexProvider {
         return new EpplexProvider(getReadonlyWallet(), connection, opts, programs);
     }
 
+    /*
+        * Collection and mints
+     */
     async createCollectionMintTx({
         expiryDate,
         collectionId,
@@ -391,6 +397,9 @@ class EpplexProvider {
         };
     }
 
+    /*
+        * States
+     */
     async createProgramDelegateTx() {
         return await this.program.methods
             .programDelegateCreate({})
@@ -499,6 +508,10 @@ class EpplexProvider {
         return getTokenBurgerMetadata(mint, this.program.programId);
     }
 
+
+    /*
+        * Game stuff
+     */
     getGameConfig(): PublicKey {
         return getGameConfig(this.program.programId);
     }
@@ -541,6 +554,7 @@ class EpplexProvider {
             .transaction();
     }
 
+
     async gameEndTx(): Promise<Transaction> {
         return await this.program.methods
             .gameEnd({})
@@ -582,6 +596,10 @@ class EpplexProvider {
                 payer: this.provider.publicKey,
             })
             .transaction();
+    }
+
+    getGroupAccountPda(groupMint: string): PublicKey {
+        return getGroupAccount(groupMint, this.programIds.wns)
     }
 }
 
