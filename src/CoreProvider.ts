@@ -241,42 +241,32 @@ class CoreProvider {
             .transaction();
     }
 
-    async ruleCreateTx({
-        seed,
-        ruleCreator,
-        renewalPrice,
-        treasury
-    }: RuleTxParams): Promise<Transaction> {
+    async ruleCreateTx(args: RuleTxParams): Promise<Transaction> {
         return await this.program.methods
             .ruleCreate({
-                seed: new BN(seed),
-                ruleCreator: ruleCreator,
-                renewalPrice: new BN(renewalPrice),
-                treasury: treasury
+                seed: new BN(args.seed),
+                ruleCreator: args.ruleCreator,
+                renewalPrice: new BN(args.renewalPrice),
+                treasury: args.treasury
             })
             .accounts({
-                rule: this.getEphemeralRule(seed),
+                rule: this.getEphemeralRule(args.seed),
                 signer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })
             .transaction();
     }
 
-    async ruleModifyTx({
-        seed,
-        ruleCreator,
-        renewalPrice,
-        treasury
-    }: RuleTxParams): Promise<Transaction> {
+    async ruleModifyTx(args: RuleTxParams): Promise<Transaction> {
         return await this.program.methods
             .ruleModify({
-                seed: new BN(seed),
-                ruleCreator: ruleCreator,
-                renewalPrice: new BN(renewalPrice),
-                treasury: treasury
+                seed: new BN(args.seed),
+                ruleCreator: args.ruleCreator,
+                renewalPrice: new BN(args.renewalPrice),
+                treasury: args.treasury
             })
             .accounts({
-                rule: this.getEphemeralRule(seed),
+                rule: this.getEphemeralRule(args.seed),
                 signer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })
