@@ -17,12 +17,9 @@ import {COMMITMENT, CONFIRM_OPTIONS} from "../../src/utils/settings";
     1. .local_keys/epplex_PAYER_ADMIN.json needs to exist
     2. yarn test-collection or another test in package.json
  */
-
-
-
 export const CONNECTION = new Connection(
-    "http://127.0.0.1:8899",
-    // clusterApiUrl("devnet"),
+    // "http://127.0.0.1:8899",
+    clusterApiUrl("devnet"),
     COMMITMENT
 );
 console.log("CONNECTION", CONNECTION.rpcEndpoint)
@@ -68,14 +65,18 @@ export function getSetup(): GetSetupReturn {
 
 
 export function setupGlobals(executeTests: boolean = true): GetSetupReturn {
-    const {wallet, burgerProvider, coreProvider, wenProvider} = getSetup();
-    const connection = burgerProvider.provider.connection
+    const {
+        wallet,
+        burgerProvider,
+        coreProvider,
+        wenProvider
+    } = getSetup();
 
     if (executeTests) {
-        trySetupGlobalCollectionConfig(coreProvider, wallet, connection);
-        trySetupBurgerProgramDelegate(burgerProvider, wallet, connection);
-        trySetupGameConfig(burgerProvider, wallet, connection);
-        trySetupManagerAccount(wenProvider, wallet, connection);
+        trySetupGlobalCollectionConfig(coreProvider, wallet);
+        trySetupBurgerProgramDelegate(burgerProvider, wallet);
+        trySetupGameConfig(burgerProvider, wallet);
+        trySetupManagerAccount(wenProvider, wallet);
     }
 
     return {
