@@ -32,6 +32,8 @@ import {
 
 import {
     sendAndConfirmRawTransaction,
+    sendAndConfirmRawVersionedTransaction,
+    getMintOwner,
 } from "./utils/generic";
 
 import {
@@ -106,5 +108,7 @@ export {
     getWnsNftTransferIxs,
     myCreateAssociatedTokenAccountInstruction,
 
-    sendAndConfirmRawTransaction
+    sendAndConfirmRawTransaction,
+    sendAndConfirmRawVersionedTransaction,
+    getMintOwner
 };

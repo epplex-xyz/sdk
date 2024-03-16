@@ -11,7 +11,7 @@ describe("WNS", () => {
     const receiver = new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj");
 
     const metadata = getDefaultMetadata({})
-    const maxSize = 1;
+    const maxSize = 3;
     const collectionArgs ={
         groupMint: collectionMint.publicKey,
         name: metadata.name,
