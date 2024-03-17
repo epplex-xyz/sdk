@@ -467,11 +467,11 @@ class EpplexProvider {
                 payer: this.provider.wallet.publicKey,
                 token22Program: TOKEN_2022_PROGRAM_ID,
 
-                epplexCore: this.programIds.core,
+                epplexTreasury: PAYER_ADMIN,
+                data: this.getEphemeralData(args.mint),
                 rule: this.getEphemeralRule(seed),
                 epplexAuthority: this.getEphemeralAuth(),
-                epplexTreasury: PAYER_ADMIN,
-                data: this.getEphemeralData(args.mint)
+                epplexCore: this.programIds.core,
             })
             .transaction();
     }
@@ -633,7 +633,7 @@ class EpplexProvider {
     }
 
     getEphemeralData(membership: PublicKey): PublicKey {
-        return getEphemeralData(membership, this.program.programId);
+        return getEphemeralData(membership, this.programIds.core);
     }
 }
 

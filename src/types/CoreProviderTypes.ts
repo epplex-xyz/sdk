@@ -26,5 +26,14 @@ export interface TimeTxParams {
     membership: PublicKey;
     treasury?: PublicKey;
 }
+
+export interface MemberShipAppendTxParams {
+    time: number;
+    seed: number;
+    membership: PublicKey;
+    ruleCreator: PublicKey;
+    payer?: PublicKey;
+}
+
 export type EphemeralRule = IdlAccounts<EpplexCore>["ephemeralRule"];
 export type EphemeralData = IdlAccounts<EpplexCore>["ephemeralData"];
