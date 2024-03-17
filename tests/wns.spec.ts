@@ -5,9 +5,10 @@ import {setupCollection} from "./setupUtils";
 import {PAYER_ADMIN} from "../src/constants/keys";
 import {sendAndConfirmRawTransaction} from "../src";
 import {expect} from "chai";
+import {getGroupMemberPointerState, getMint, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 
 describe("WNS", () => {
-    const {wallet, burgerProvider, coreProvider} = setupGlobals()
+    const {wallet, burgerProvider, coreProvider, wenProvider} = setupGlobals()
     const collectionMint = Keypair.generate();
     const receiver = new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj");
 
@@ -33,5 +34,18 @@ describe("WNS", () => {
         expect(id).to.not.be.empty;
     });
 
-    setupCollection(burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed)
+    const mints = setupCollection(burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed)
+
+    it("Test collection membership", async () => {
+        const mintData = await getMint(burgerProvider.provider.connection, mints[0], undefined, TOKEN_2022_PROGRAM_ID)
+        const memberPointer = getGroupMemberPointerState(mintData)
+        const memberData = await wenProvider.metadataProgram.account.tokenGroupMember.fetch(memberPointer.memberAddress)
+        const ourgGroupId = wenProvider.getGroupAccountPda(collectionMint.publicKey.toString()).toString()
+        const checkGroup = memberData.group.toString() === ourgGroupId
+        console.log("memberData", memberData)
+        const checkMint = mints[0].toString() === memberData.mint.toString();
+
+        expect(checkMint).to.be.true;
+        expect(checkGroup).to.be.true;
+    });
 });
