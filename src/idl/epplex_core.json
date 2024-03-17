@@ -522,7 +522,7 @@
         },
         {
           "name": "burner",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -549,6 +549,18 @@
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
         }
       ],
       "args": []

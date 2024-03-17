@@ -522,7 +522,7 @@ export type EpplexCore = {
         },
         {
           "name": "burner",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -549,6 +549,18 @@ export type EpplexCore = {
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
         }
       ],
       "args": []
@@ -1483,7 +1495,7 @@ export const IDL: EpplexCore = {
         },
         {
           "name": "burner",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -1510,6 +1522,18 @@ export const IDL: EpplexCore = {
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
         }
       ],
       "args": []

@@ -650,6 +650,16 @@ export type EpplexBurger = {
           "name": "epplexCore",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
@@ -2499,6 +2509,16 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "epplexCore",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
           "isMut": false,
           "isSigner": false
         }

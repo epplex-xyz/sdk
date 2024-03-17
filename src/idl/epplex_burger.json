@@ -650,6 +650,16 @@
           "name": "epplexCore",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "manager",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wns",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
