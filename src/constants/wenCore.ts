@@ -34,14 +34,16 @@ export const getDistributionProgram = (provider: Provider, programId: PublicKey 
         provider
     ) as DistributionProgram;
 }
-export const getGroupAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
-    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("group"), new PublicKey(mint).toBuffer()], programId);
+export const getGroupAccount = (mint: string | PublicKey, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const mintKey = typeof mint === 'string' ? new PublicKey(mint) : mint;
+    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("group"), new PublicKey(mintKey).toBuffer()], programId);
 
     return groupAccount;
 }
 
-export const getMemberAccount = (mint: string, programId: PublicKey = WNS_PROGRAM_ID) => {
-    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("member"), new PublicKey(mint).toBuffer()], programId);
+export const getMemberAccount = (mint: string | PublicKey, programId: PublicKey = WNS_PROGRAM_ID) => {
+    const mintKey = typeof mint === 'string' ? new PublicKey(mint) : mint;
+    const [groupAccount] = PublicKey.findProgramAddressSync([utils.bytes.utf8.encode("member"), new PublicKey(mintKey).toBuffer()], programId);
 
     return groupAccount;
 }
