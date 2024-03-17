@@ -87,18 +87,22 @@ export function trySetupManagerAccount(
 }
 
 export function setupCollection(
-    provider: EpplexProvider,
+    burger: EpplexProvider,
+    core: CoreProvider,
     collectionMint: Keypair,
     collectionArgs: WnsGroupMintParams,
     epMintArgs: EpMintParams,
     wallet,
-    receiver?: PublicKey
+    receiver?: PublicKey,
+    seed?: number,
+    time?: number,
 ) {
     let mints: PublicKey[] = []
 
     it("Create a collection", async () => {
-        const tx = await provider.wnsGroupMintTx(collectionArgs)
-        await sendAndConfirmRawVersionedTransaction(provider.provider.connection, tx.instructions, wallet.publicKey, wallet, [collectionMint]);
+        const tx = await burger.wnsGroupMintTx(collectionArgs)
+        const id = await sendAndConfirmRawVersionedTransaction(burger.provider.connection, tx.instructions, wallet.publicKey, wallet, [collectionMint]);
+        expect(id).to.not.be.empty;
     });
 
     it("Max mint nfts into collection", async () => {
@@ -113,26 +117,47 @@ export function setupCollection(
                 computeBudget: 500_000
             }
 
+            let ixs: TransactionInstruction[] = []
+
             // Mint
-            const tx = await provider.wnsMemberMintTx(mintArgs);
+            const mintTx = await burger.wnsMemberMintTx(mintArgs);
+
+            console.log("here2")
+            // Membership
+            const membershipTx = await core.membershipAppendTx({
+                membership: mint.publicKey,
+                time: time ?? Math.floor(Number.MAX_SAFE_INTEGER / 1000),
+                seed: seed ?? Math.floor(Math.random() * 100000),
+                payer: wallet.publicKey,
+                ruleCreator: wallet.publicKey
+            });
+            ixs.push(...mintTx.instructions)
+            ixs.push(...membershipTx.instructions)
+            console.log("here3")
 
             // Transfer
             let transferIxs: TransactionInstruction[] = []
-            if (receiver === undefined) {
+            if (receiver !== undefined) {
                 transferIxs = getWnsNftTransferIxs({
                     mint: mint.publicKey,
                     sender: wallet.publicKey,
                     payer: wallet.publicKey,
                     receiver
                 })
+                // ixs.push(...transferIxs)
             }
-
-            await sendAndConfirmRawVersionedTransaction(
-                provider.provider.connection, [
-                    ...tx.instructions,
+            // const id = await sendAndConfirmRawVersionedTransaction(
+            //     burger.provider.connection, ixs, wallet.publicKey, wallet, [mint]
+            // );
+            const id = await sendAndConfirmRawVersionedTransaction(
+                burger.provider.connection, [
+                    ...mintTx.instructions,
+                    ...membershipTx.instructions,
                     ...transferIxs
                 ], wallet.publicKey, wallet, [mint]
             );
+            console.log("here1")
+            expect(id).to.not.be.empty;
             mints.push(mint.publicKey)
         }
     });
