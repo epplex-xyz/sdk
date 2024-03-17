@@ -24,7 +24,8 @@ import {
 } from "./types/CoreProviderTypes";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 import {PAYER_ADMIN} from "./constants/keys";
-import {getMintOwner} from "./utils/generic";
+import {getAtaAddressPubkey, getMintOwner} from "./utils/generic";
+import {getReadonlyWallet} from "./utils/wallet";
 
 class CoreProvider {
     provider: anchor.AnchorProvider;
@@ -46,6 +47,14 @@ class CoreProvider {
     static fromAnchorProvider(provider: anchor.AnchorProvider) : CoreProvider {
         const epplexProvider = new CoreProvider(provider.wallet, provider.connection, provider.opts);
         return epplexProvider;
+    }
+
+    static getReadOnlyProvider(
+        connection: Connection,
+        opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
+        coreProgramId: PublicKey = CORE_PROGRAM_ID,
+    ): CoreProvider {
+        return new CoreProvider(getReadonlyWallet(), connection, opts, coreProgramId);
     }
 
     /**
@@ -216,13 +225,31 @@ class CoreProvider {
         time: number, name: string, symbol: string, uri: string,
         membership: PublicKey, ruleCreator: PublicKey, seed: number
     ): Promise<Transaction> {
-        const membershipAta = getAssociatedTokenAddressSync(
-            membership,
-            this.provider.wallet.publicKey,
-            false,
-            TOKEN_2022_PROGRAM_ID
-        );
+        const membershipAta = getAtaAddressPubkey(membership, this.provider.wallet.publicKey);
 
+        return await this.program.methods
+            .membershipCreate(new BN(time), name, symbol, uri)
+            .accounts({
+                ruleCreator,
+                payer: this.provider.wallet.publicKey,
+                membership,
+                membershipAta,
+                rule: this.getEphemeralRule(seed),
+                data: this.getEphemeralData(membership),
+                epplexAuthority: this.getEphemeralAuth(),
+                rent: SYSVAR_RENT_PUBKEY,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                systemProgram: SystemProgram.programId,
+            })
+            .transaction();
+    }
+
+    async membershipAppendTx(
+        time: number, name: string, symbol: string, uri: string,
+        membership: PublicKey, ruleCreator: PublicKey, seed: number
+    ): Promise<Transaction> {
+        const membershipAta = getAtaAddressPubkey(membership, this.provider.wallet.publicKey);
         return await this.program.methods
             .membershipCreate(new BN(time), name, symbol, uri)
             .accounts({
@@ -319,30 +346,22 @@ class CoreProvider {
         return getEphemeralRule(new BN(seed), this.program.programId);
     }
 
-    async getRuleData(seed: number): Promise<EphemeralRule | null> {
-        try {
-            return await this.program
-                .account
-                .ephemeralRule
-                .fetch(
-                    this.getEphemeralRule(seed)
-                );
-        } catch (err) {
-            return null
-        }
+    async getRuleData(seed: number): Promise<EphemeralRule | undefined> {
+        return await this.program
+            .account
+            .ephemeralRule
+            .fetch(this.getEphemeralRule(seed))
+            .then(account => account)
+            .catch(() => undefined);
     }
 
-    async getEphemeralDataAccount(membership: PublicKey): Promise<EphemeralData | null> {
-        try {
-            return await this.program
-                .account
-                .ephemeralData
-                .fetch(
-                    this.getEphemeralData(membership)
-                );
-        } catch (err) {
-            return null
-        }
+    async getEphemeralDataAccount(membership: PublicKey): Promise<EphemeralData | undefined> {
+        return await this.program
+            .account
+            .ephemeralData
+            .fetch(this.getEphemeralData(membership))
+            .then(account => account)
+            .catch(() => undefined)
     }
 
 }
