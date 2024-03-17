@@ -446,32 +446,32 @@ class EpplexProvider {
         this.ephemeralRuleSeed = seed;
     }
 
-    async tokenGameBurnTx({ mint, owner }: TokenGameBurnTxParams) {
-        if (this.ephemeralRuleSeed === undefined) {
-            throw new Error("Ephemeral rule seed not set");
+    async tokenGameBurnTx(args: TokenGameBurnTxParams) {
+        const seed: number | undefined = args.seed ?? this.ephemeralRuleSeed;
+        if (seed === undefined) {
+            throw new Error("No ephemeral seed");
         }
 
         const mintOwner =
-            owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAtaAddressPubkey(mint, mintOwner);
-
+            args.owner ?? (await getMintOwner(this.provider.connection, args.mint));
+        const tokenAccount = getAtaAddressPubkey(args.mint, mintOwner);
 
         return await this.program.methods
             .tokenGameBurn({})
             .accountsStrict({
-                mint,
+                mint: args.mint,
                 tokenAccount,
                 gameConfig: this.getGameConfig(),
                 permanentDelegate: this.getProgramDelegate(),
-                groupMember: this.getMemberAccountPda(mint),
+                groupMember: this.getMemberAccountPda(args.mint),
                 payer: this.provider.wallet.publicKey,
                 token22Program: TOKEN_2022_PROGRAM_ID,
 
                 epplexCore: this.programIds.core,
-                rule: this.getEphemeralRule(this.ephemeralRuleSeed),
+                rule: this.getEphemeralRule(seed),
                 epplexAuthority: this.getEphemeralAuth(),
                 epplexTreasury: PAYER_ADMIN,
-                data: this.getEphemeralData(mint)
+                data: this.getEphemeralData(args.mint)
             })
             .transaction();
     }
