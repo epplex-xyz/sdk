@@ -20,7 +20,7 @@ import {
     CreateCollectionTxParams,
     EphemeralData,
     EphemeralRule,
-    GlobalCollectionConfig, RuleTxParams, TimeTxParams
+    GlobalCollectionConfig, MemberShipAppendTxParams, RuleTxParams, TimeTxParams
 } from "./types/CoreProviderTypes";
 import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 import {PAYER_ADMIN} from "./constants/keys";
@@ -223,7 +223,7 @@ class CoreProvider {
      */
     async membershipCreateTx(
         time: number, name: string, symbol: string, uri: string,
-        membership: PublicKey, ruleCreator: PublicKey, seed: number
+        membership: PublicKey, ruleCreator: PublicKey, seed: number, payer?: PublicKey
     ): Promise<Transaction> {
         const membershipAta = getAtaAddressPubkey(membership, this.provider.wallet.publicKey);
 
@@ -231,7 +231,7 @@ class CoreProvider {
             .membershipCreate(new BN(time), name, symbol, uri)
             .accounts({
                 ruleCreator,
-                payer: this.provider.wallet.publicKey,
+                payer: payer ?? this.provider.wallet.publicKey,
                 membership,
                 membershipAta,
                 rule: this.getEphemeralRule(seed),
@@ -245,24 +245,15 @@ class CoreProvider {
             .transaction();
     }
 
-    async membershipAppendTx(
-        time: number, name: string, symbol: string, uri: string,
-        membership: PublicKey, ruleCreator: PublicKey, seed: number
-    ): Promise<Transaction> {
-        const membershipAta = getAtaAddressPubkey(membership, this.provider.wallet.publicKey);
+    async membershipAppendTx(args: MemberShipAppendTxParams): Promise<Transaction> {
         return await this.program.methods
-            .membershipCreate(new BN(time), name, symbol, uri)
+            .membershipAppend(new BN(args.time))
             .accounts({
-                ruleCreator,
-                payer: this.provider.wallet.publicKey,
-                membership,
-                membershipAta,
-                rule: this.getEphemeralRule(seed),
-                data: this.getEphemeralData(membership),
-                epplexAuthority: this.getEphemeralAuth(),
-                rent: SYSVAR_RENT_PUBKEY,
-                token22Program: TOKEN_2022_PROGRAM_ID,
-                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                membership: args.membership,
+                ruleCreator: args.ruleCreator,
+                rule: this.getEphemeralRule(args.seed),
+                data: this.getEphemeralData(args.membership),
+                payer: args.payer ?? this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
             })
             .transaction();

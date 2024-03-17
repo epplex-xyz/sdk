@@ -8,7 +8,7 @@ import {
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
-    Connection, Keypair,
+    Connection,
     PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,

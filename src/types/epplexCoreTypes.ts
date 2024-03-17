@@ -472,11 +472,6 @@ export type EpplexCore = {
           ]
         },
         {
-          "name": "burner",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
           "name": "rule",
           "isMut": false,
           "isSigner": false
@@ -1436,11 +1431,6 @@ export const IDL: EpplexCore = {
           "docs": [
             "CHECK"
           ]
-        },
-        {
-          "name": "burner",
-          "isMut": false,
-          "isSigner": true
         },
         {
           "name": "rule",
