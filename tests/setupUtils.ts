@@ -117,12 +117,9 @@ export function setupCollection(
                 computeBudget: 500_000
             }
 
-            let ixs: TransactionInstruction[] = []
-
             // Mint
             const mintTx = await burger.wnsMemberMintTx(mintArgs);
 
-            console.log("here2")
             // Membership
             const membershipTx = await core.membershipAppendTx({
                 membership: mint.publicKey,
@@ -131,9 +128,6 @@ export function setupCollection(
                 payer: wallet.publicKey,
                 ruleCreator: wallet.publicKey
             });
-            ixs.push(...mintTx.instructions)
-            ixs.push(...membershipTx.instructions)
-            console.log("here3")
 
             // Transfer
             let transferIxs: TransactionInstruction[] = []
@@ -144,11 +138,8 @@ export function setupCollection(
                     payer: wallet.publicKey,
                     receiver
                 })
-                // ixs.push(...transferIxs)
             }
-            // const id = await sendAndConfirmRawVersionedTransaction(
-            //     burger.provider.connection, ixs, wallet.publicKey, wallet, [mint]
-            // );
+
             const id = await sendAndConfirmRawVersionedTransaction(
                 burger.provider.connection, [
                     ...mintTx.instructions,
@@ -156,7 +147,6 @@ export function setupCollection(
                     ...transferIxs
                 ], wallet.publicKey, wallet, [mint]
             );
-            console.log("here1")
             expect(id).to.not.be.empty;
             mints.push(mint.publicKey)
         }
