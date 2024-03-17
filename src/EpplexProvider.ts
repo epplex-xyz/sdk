@@ -472,24 +472,26 @@ class EpplexProvider {
                 rule: this.getEphemeralRule(seed),
                 epplexAuthority: this.getEphemeralAuth(),
                 epplexCore: this.programIds.core,
+                manager: getManagerAccount(this.programIds.wns),
+                wns: this.programIds.wns,
             })
             .transaction();
     }
 
-    async tokenGameVoteTx({ mint, message, owner }: TokenGameVoteTxParams) {
+    async tokenGameVoteTx(args: TokenGameVoteTxParams) {
         // Could just do this.provider.wallet.publicKey
         const mintOwner =
-            owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAtaAddressPubkey(mint, mintOwner);
+            args.owner ?? (await getMintOwner(this.provider.connection, args.mint));
+        const tokenAccount = getAtaAddressPubkey(args.mint, mintOwner);
 
         return await this.program.methods
             .tokenGameVote({
-                message: message,
+                message: args.message,
             })
             .accountsStrict({
-                mint: mint,
+                mint: args.mint,
                 tokenAccount,
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                tokenMetadata: this.getTokenBurgerMetadata(args.mint),
                 gameConfig: this.getGameConfig(),
                 payer: mintOwner,
                 updateAuthority: this.getProgramDelegate(),
