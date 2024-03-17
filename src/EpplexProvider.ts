@@ -23,7 +23,7 @@ import {
     getTokenBurgerMetadata,
 } from "./constants/burgerSeeds";
 import {
-    getCollectionConfig,
+    getCollectionConfig, getEphemeralAuth,
     getGlobalCollectionConfig,
 } from "./constants/coreSeeds";
 import { BURGER_PROGRAM_ID, CORE_PROGRAM_ID } from "./constants/ids";
@@ -39,7 +39,7 @@ import {
     TokenGameVoteTxParams, WnsGroupMintParams, WnsMemberMintParams,
 } from "./types/EpplexProviderTypes";
 import { EpplexProviderWallet } from "./types/WalletProvider";
-import {getAtaAddress, getMintOwner, tryCreateATAIx} from "./utils/generic";
+import {getAtaAddress, getAtaAddressPubkey, getMintOwner, tryCreateATAIx} from "./utils/generic";
 import {
     DISTRIBUTION_PROGRAM_ID,
     getDistributionAccount,
@@ -50,7 +50,11 @@ import {
     WNS_PROGRAM_ID
 } from "./constants/wenCore";
 import {getReadonlyWallet} from "./utils/wallet";
-
+import {BN} from "@coral-xyz/anchor";
+import {
+    getEphemeralRule,
+    getEphemeralData,
+} from "./constants/coreSeeds";
 interface Programs {
     burger: PublicKey;
     core?: PublicKey;
@@ -70,12 +74,14 @@ class EpplexProvider {
     program: BurgerProgram;
     eventParser: anchor.EventParser;
     programIds: Programs;
+    ephemeralRuleSeed?: number;
 
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
         programIds: Programs = DEFAULT_PROGRAMS,
+        ephemeralRuleSeed?: number
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
         this.program = getEpplexBurgerProgram(this.provider, programIds.burger);
@@ -86,6 +92,7 @@ class EpplexProvider {
             wns: programIds.wns ?? DEFAULT_PROGRAMS.wns,
             royalty: programIds.royalty ?? DEFAULT_PROGRAMS.royalty
         }
+        this.ephemeralRuleSeed = ephemeralRuleSeed;
     }
 
     /*
@@ -435,40 +442,45 @@ class EpplexProvider {
             .transaction();
     }
 
-    // async tokenGameBurnTx({ mint, owner, wnsProgramId = WNS_PROGRAM_ID }: TokenGameBurnTxParams) {
-    //     const mintOwner =
-    //         owner ?? (await getMintOwner(this.provider.connection, mint));
-    //     const tokenAccount = getAssociatedTokenAddressSync(
-    //         mint,
-    //         mintOwner,
-    //         undefined,
-    //         TOKEN_2022_PROGRAM_ID
-    //     );
-    //
-    //     return await this.program.methods
-    //         .tokenGameBurn({})
-    //         .accountsStrict({
-    //             mint: mint,
-    //             tokenAccount,
-    //             gameConfig: this.getGameConfig(),
-    //             permanentDelegate: this.getProgramDelegate(),
-    //             groupMember: getMemberAccount(mint.toString(), wnsProgramId)
-    //             payer: this.provider.wallet.publicKey,
-    //             token22Program: TOKEN_2022_PROGRAM_ID,
-    //         })
-    //         .transaction();
-    // }
+    setEphemeralRuleSeed(seed: number) {
+        this.ephemeralRuleSeed = seed;
+    }
+
+    async tokenGameBurnTx({ mint, owner }: TokenGameBurnTxParams) {
+        if (this.ephemeralRuleSeed === undefined) {
+            throw new Error("Ephemeral rule seed not set");
+        }
+
+        const mintOwner =
+            owner ?? (await getMintOwner(this.provider.connection, mint));
+        const tokenAccount = getAtaAddressPubkey(mint, mintOwner);
+
+
+        return await this.program.methods
+            .tokenGameBurn({})
+            .accountsStrict({
+                mint,
+                tokenAccount,
+                gameConfig: this.getGameConfig(),
+                permanentDelegate: this.getProgramDelegate(),
+                groupMember: this.getMemberAccountPda(mint),
+                payer: this.provider.wallet.publicKey,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+
+                epplexCore: this.programIds.core,
+                rule: this.getEphemeralRule(this.ephemeralRuleSeed),
+                epplexAuthority: this.getEphemeralAuth(),
+                epplexTreasury: PAYER_ADMIN,
+                data: this.getEphemeralData(mint)
+            })
+            .transaction();
+    }
 
     async tokenGameVoteTx({ mint, message, owner }: TokenGameVoteTxParams) {
         // Could just do this.provider.wallet.publicKey
         const mintOwner =
             owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAssociatedTokenAddressSync(
-            mint,
-            mintOwner,
-            undefined,
-            TOKEN_2022_PROGRAM_ID
-        );
+        const tokenAccount = getAtaAddressPubkey(mint, mintOwner);
 
         return await this.program.methods
             .tokenGameVote({
@@ -598,8 +610,30 @@ class EpplexProvider {
             .transaction();
     }
 
-    getGroupAccountPda(groupMint: string): PublicKey {
+    /*
+        * WNS
+     */
+    getGroupAccountPda(groupMint: PublicKey): PublicKey {
         return getGroupAccount(groupMint, this.programIds.wns)
+    }
+
+    getMemberAccountPda(groupMint: PublicKey): PublicKey {
+        return getMemberAccount(groupMint, this.programIds.wns)
+    }
+
+    /*
+        * Ephemeral Core
+     */
+    getEphemeralAuth(): PublicKey {
+        return getEphemeralAuth(this.programIds.core)
+    }
+
+    getEphemeralRule(seed: number): PublicKey {
+        return getEphemeralRule(new BN(seed), this.programIds.core);
+    }
+
+    getEphemeralData(membership: PublicKey): PublicKey {
+        return getEphemeralData(membership, this.program.programId);
     }
 }
 
