@@ -6,3 +6,6 @@ lib
 .output
 .vscode
 /test-ledger
+
+
+.env
