@@ -74,6 +74,8 @@ describe("Testing Burger Program", () => {
             gameName: "Game1",
             isEncrypted: false,
             publicEncryptKey: "",
+            ruleSeed: 0,
+            tokenGroup: PublicKey.default
         });
 
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, []);
