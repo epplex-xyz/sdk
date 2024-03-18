@@ -685,7 +685,7 @@
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
+          "name": "groupMember",
           "isMut": false,
           "isSigner": false
         },
@@ -791,7 +791,7 @@
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
+          "name": "groupMember",
           "isMut": false,
           "isSigner": false
         },

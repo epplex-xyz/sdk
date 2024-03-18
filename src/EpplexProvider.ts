@@ -491,7 +491,8 @@ class EpplexProvider {
             .accountsStrict({
                 mint: args.mint,
                 tokenAccount,
-                tokenMetadata: this.getTokenBurgerMetadata(args.mint),
+                // tokenMetadata: this.getTokenBurgerMetadata(args.mint),
+                groupMember: this.getMemberAccountPda(args.mint),
                 gameConfig: this.getGameConfig(),
                 payer: mintOwner,
                 updateAuthority: this.getProgramDelegate(),
@@ -505,7 +506,8 @@ class EpplexProvider {
             .tokenGameReset({})
             .accountsStrict({
                 mint,
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                // tokenMetadata: this.getTokenBurgerMetadata(mint),
+                groupMember: this.getMemberAccountPda(mint),
                 payer: this.provider.publicKey,
                 gameConfig: this.getGameConfig(),
                 updateAuthority: this.getProgramDelegate(),

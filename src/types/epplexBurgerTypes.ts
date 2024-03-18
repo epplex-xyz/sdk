@@ -685,7 +685,7 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
+          "name": "groupMember",
           "isMut": false,
           "isSigner": false
         },
@@ -791,7 +791,7 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
+          "name": "groupMember",
           "isMut": false,
           "isSigner": false
         },
@@ -2551,7 +2551,7 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
+          "name": "groupMember",
           "isMut": false,
           "isSigner": false
         },
@@ -2657,7 +2657,7 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
+          "name": "groupMember",
           "isMut": false,
           "isSigner": false
         },
