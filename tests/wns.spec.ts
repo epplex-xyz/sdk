@@ -42,7 +42,6 @@ describe("WNS", () => {
         const memberData = await wenProvider.metadataProgram.account.tokenGroupMember.fetch(memberPointer.memberAddress)
         const ourgGroupId = wenProvider.getGroupAccountPda(collectionMint.publicKey.toString()).toString()
         const checkGroup = memberData.group.toString() === ourgGroupId
-        console.log("memberData", memberData)
         const checkMint = mints[0].toString() === memberData.mint.toString();
 
         expect(checkMint).to.be.true;

@@ -152,7 +152,6 @@ export function setupCollection(
         }
     });
 
-
     return mints
 }
 
