@@ -122,8 +122,6 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     // });
 
     it('Token Game Burn', async () => {
-        await sleep(1_000);
-
         const tx = await burgerProvider.tokenGameBurnTx({
             mint: mints[0],
             owner: wallet.publicKey,

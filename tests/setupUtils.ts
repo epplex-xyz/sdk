@@ -114,7 +114,7 @@ export function setupCollection(
                 ...epMintArgs,
                 groupMint: collectionMint.publicKey,
                 mint: mint.publicKey,
-                computeBudget: 500_000
+                computeBudget: 600_000
             }
 
             // Mint

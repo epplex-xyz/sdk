@@ -25,7 +25,7 @@ export const CONNECTION = new Connection(
     process.env.RPC,
     COMMITMENT
 );
-console.log("CONNECTION", CONNECTION.rpcEndpoint)
+console.log("CONNECTION", CONNECTION.rpcEndpoint, CONFIRM_OPTIONS)
 
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 
