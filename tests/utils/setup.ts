@@ -17,9 +17,12 @@ import {COMMITMENT, CONFIRM_OPTIONS} from "../../src/utils/settings";
     1. .local_keys/epplex_PAYER_ADMIN.json needs to exist
     2. yarn test-collection or another test in package.json
  */
+if (!process.env.RPC) {
+    throw new Error("RPC is not defined in .env file");
+}
+
 export const CONNECTION = new Connection(
-    // "http://127.0.0.1:8899",
-    clusterApiUrl("devnet"),
+    process.env.RPC,
     COMMITMENT
 );
 console.log("CONNECTION", CONNECTION.rpcEndpoint)
