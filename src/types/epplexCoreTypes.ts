@@ -549,18 +549,110 @@ export type EpplexCore = {
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "membershipWnsBurn",
+      "accounts": [
+        {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "membershipAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sourceAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "burner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "epplexTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rule",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "data",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "epplexAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metasAccountList",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "manager",
           "isMut": false,
-          "isSigner": false,
-          "isOptional": true
+          "isSigner": false
+        },
+        {
+          "name": "approveAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "paymentMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wrd",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "wns",
           "isMut": false,
-          "isSigner": false,
-          "isOptional": true
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []
@@ -1522,18 +1614,110 @@ export const IDL: EpplexCore = {
           "name": "token22Program",
           "isMut": false,
           "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "membershipWnsBurn",
+      "accounts": [
+        {
+          "name": "membership",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "membershipAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sourceAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "burner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "epplexTreasury",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rule",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "data",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "epplexAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metasAccountList",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "manager",
           "isMut": false,
-          "isSigner": false,
-          "isOptional": true
+          "isSigner": false
+        },
+        {
+          "name": "approveAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "paymentMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wrd",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "wns",
           "isMut": false,
-          "isSigner": false,
-          "isOptional": true
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []

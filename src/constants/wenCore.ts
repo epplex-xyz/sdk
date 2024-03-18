@@ -63,8 +63,11 @@ export const getExtraMetasAccount = (mint: string | PublicKey, programId: Public
     return extraMetasAccount;
 }
 
-export const getDistributionAccount = (groupMint: string, paymentMint: string, programId: PublicKey = DISTRIBUTION_PROGRAM_ID) => {
-    const [distributionAccount] = PublicKey.findProgramAddressSync([new PublicKey(groupMint).toBuffer(), new PublicKey(paymentMint).toBuffer()], programId);
+export const getDistributionAccount = (groupMint: string | PublicKey, paymentMint: string | PublicKey, programId: PublicKey = DISTRIBUTION_PROGRAM_ID) => {
+    const groupMintKey = typeof groupMint === 'string' ? new PublicKey(groupMint) : groupMint;
+    const paymentMintKey = typeof paymentMint === 'string' ? new PublicKey(paymentMint) : paymentMint;
+
+    const [distributionAccount] = PublicKey.findProgramAddressSync([groupMintKey.toBuffer(), paymentMintKey.toBuffer()], programId);
 
     return distributionAccount;
 };

@@ -41,7 +41,7 @@ import {
 import { EpplexProviderWallet } from "./types/WalletProvider";
 import {getAtaAddress, getAtaAddressPubkey, getMintOwner, tryCreateATAIx} from "./utils/generic";
 import {
-    DISTRIBUTION_PROGRAM_ID,
+    DISTRIBUTION_PROGRAM_ID, getApproveAccountPda,
     getDistributionAccount,
     getExtraMetasAccount,
     getGroupAccount,
@@ -456,25 +456,44 @@ class EpplexProvider {
             args.owner ?? (await getMintOwner(this.provider.connection, args.mint));
         const tokenAccount = getAtaAddressPubkey(args.mint, mintOwner);
 
+        const epplexAuthority = this.getEphemeralAuth()
+        const destinationTokenAccount = getAtaAddressPubkey(args.mint, epplexAuthority);
+
+        const paymentMint = PublicKey.default;
+        const distribution = getDistributionAccount(args.groupMint, paymentMint, this.programIds.royalty);
         return await this.program.methods
             .tokenGameBurn({})
             .accountsStrict({
                 mint: args.mint,
-                tokenAccount,
+                sourceTokenAccount: tokenAccount,
+                tokenAccount: destinationTokenAccount,
                 gameConfig: this.getGameConfig(),
                 permanentDelegate: this.getProgramDelegate(),
                 groupMember: this.getMemberAccountPda(args.mint),
                 payer: this.provider.wallet.publicKey,
                 token22Program: TOKEN_2022_PROGRAM_ID,
-
                 epplexTreasury: PAYER_ADMIN,
                 data: this.getEphemeralData(args.mint),
                 rule: this.getEphemeralRule(seed),
-                epplexAuthority: this.getEphemeralAuth(),
+
+                epplexAuthority,
                 epplexCore: this.programIds.core,
                 manager: getManagerAccount(this.programIds.wns),
+                wrd: this.programIds.royalty,
                 wns: this.programIds.wns,
+                distributionTokenAccount: getAtaAddressPubkey(paymentMint, distribution),
+                distributionAccount: distribution,
+                paymentMint,
+                metasAccountList: getExtraMetasAccount(args.mint, this.programIds.wns),
+                approveAccount: getApproveAccountPda(args.mint, this.programIds.wns),
+                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                systemProgram: SystemProgram.programId,
             })
+            .preInstructions([
+                ComputeBudgetProgram.setComputeUnitLimit({
+                    units:  300_000, //
+                }),
+            ])
             .transaction();
     }
 

@@ -599,6 +599,11 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "sourceTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "gameConfig",
           "isMut": false,
           "isSigner": false
@@ -638,7 +643,7 @@ export type EpplexBurger = {
         },
         {
           "name": "epplexAuthority",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -652,12 +657,52 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "metasAccountList",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "manager",
           "isMut": false,
           "isSigner": false
         },
         {
+          "name": "approveAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "paymentMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wrd",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -2465,6 +2510,11 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "sourceTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "gameConfig",
           "isMut": false,
           "isSigner": false
@@ -2504,7 +2554,7 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "epplexAuthority",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -2518,12 +2568,52 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
+          "name": "metasAccountList",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "manager",
           "isMut": false,
           "isSigner": false
         },
         {
+          "name": "approveAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "distributionAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "paymentMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wrd",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "wns",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
