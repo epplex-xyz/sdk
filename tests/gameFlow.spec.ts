@@ -1,20 +1,14 @@
 import {sendAndConfirmRawTransaction} from "../src";
 import {setupGlobals} from "./utils/setup";
-import {sleep} from "./utils/testUtils";
 import {expect} from "chai";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 import {Keypair} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
-import {PAYER_ADMIN} from "../src/constants/keys";
+import {sleep} from "./utils/testUtils";
 
 const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
 const now = (Math.floor((new Date()).getTime() / 1000)).toString()
 
-// gm ser! Here is what we're doing:
-// - Look up the mint address on the RPC and find the memberAddress listed under groupMemberPointer
-// - Fetch up the data stored at the memberAddress account
-// - Decode it for the stored mint and group fields
-// - If the mint address and the mint value match, then use the group as the new group identifier
 /*
     Ephemerality:
     0. Create rule
@@ -27,6 +21,7 @@ const now = (Math.floor((new Date()).getTime() / 1000)).toString()
         - add pda from collectionMint
         - add rule seed
  */
+
 describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
     const {wallet, burgerProvider, coreProvider} = setupGlobals()
     const collectionMint = Keypair.generate();
@@ -43,33 +38,19 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     }
     const seed = Math.floor(Math.random() * 100000)
 
-    it("Creates a new Rule", async () => {
-        const tx = await coreProvider.ruleCreateTx({
-            seed,
-            ruleCreator: wallet.publicKey,
-            renewalPrice: 1000,
-            treasury: PAYER_ADMIN
-        })
-        const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
-        expect(id).to.not.be.empty;
-    });
-
     const mints = setupCollection(
         burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
     )
     // const mint = mints[0]; For some reason this is not possible
 
-    it("Reset All Tokens (None gamestate)", async() => {
-        // const myNFts = await EpNFTService.getEpNFTs(
-        //     epplexProvider.provider.connection,
-        //     owner
-        // );
-        // nfts = myNFts.slice(1,2);
-        // console.log("Number of NFTs", nfts.length);
-        const tx = await burgerProvider.tokenGameResetTx({mint: mints[0] })
-        const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
-        expect(id).to.not.be.empty;
-    })
+    /*
+        Note game state has been default reset in setup collection
+     */
+    // it("Reset All Tokens (None gamestate)", async() => {
+    //     const tx = await burgerProvider.tokenGameResetTx({mint: mints[0] })
+    //     const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
+    //     expect(id).to.not.be.empty;
+    // })
 
     it("Start Game", async () => {
         const tx = await burgerProvider.gameStartTx({
@@ -104,22 +85,11 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     });
 
     it("Evaluate Game", async () => {
+        await sleep(500);
         const tx = await burgerProvider.gameEvaluateTx();
         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
         expect(id).to.not.be.empty;
     });
-
-    // it('Token Burn', async () => {
-    //     await sleep(1_000);
-    //
-    //     const tx = await burgerProvider.tokenBurnTx({
-    //         mint: mints[0],
-    //         owner: wallet.publicKey,
-    //         useGameConfig: true
-    //     });
-    //     const res = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
-    //     expect(res).to.not.be.empty;
-    // });
 
     it('Token Game Burn', async () => {
         const tx = await burgerProvider.tokenGameBurnTx({
@@ -132,7 +102,6 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         expect(id).to.not.be.empty;
     });
 
-
     it("End game", async () => {
         const tx = await burgerProvider.gameEndTx();
         await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
@@ -143,4 +112,3 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
     });
 });
-
