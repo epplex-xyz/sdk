@@ -2,8 +2,6 @@ import {Keypair, PublicKey,} from "@solana/web3.js";
 import {setupGlobals} from "./utils/setup";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 import {setupCollection} from "./setupUtils";
-import {PAYER_ADMIN} from "../src/constants/keys";
-import {sendAndConfirmRawTransaction} from "../src";
 import {expect} from "chai";
 import {getGroupMemberPointerState, getMint, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 
@@ -22,19 +20,7 @@ describe("WNS", () => {
         maxSize: maxSize
     }
 
-    const seed = Math.floor(Math.random() * 100000)
-    it("Creates a new Rule", async () => {
-        const tx = await coreProvider.ruleCreateTx({
-            seed,
-            ruleCreator: wallet.publicKey,
-            renewalPrice: 1000,
-            treasury: PAYER_ADMIN
-        })
-        const id = await sendAndConfirmRawTransaction(burgerProvider.provider.connection, tx, wallet.publicKey, wallet, [])
-        expect(id).to.not.be.empty;
-    });
-
-    const mints = setupCollection(burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed)
+    const mints = setupCollection(burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver)
 
     it("Test collection membership", async () => {
         const mintData = await getMint(burgerProvider.provider.connection, mints[0], undefined, TOKEN_2022_PROGRAM_ID)

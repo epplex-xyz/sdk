@@ -6,8 +6,9 @@ import {
 import WenProvider from "../src/WenProvider";
 import {expect} from "chai";
 import {Keypair, PublicKey, TransactionInstruction} from "@solana/web3.js";
-import {WnsGroupMintParams} from "../lib/types/EpplexProviderTypes";
+import {WnsGroupMintParams} from "../src/types/EpplexProviderTypes";
 import {EpMintParams} from "../src/types/EpplexProviderTypes";
+import {PAYER_ADMIN} from "../src/constants/keys";
 
 export function trySetupGlobalCollectionConfig(
     provider: CoreProvider,
@@ -99,6 +100,17 @@ export function setupCollection(
 ) {
     let mints: PublicKey[] = []
 
+    it("Creates a new Rule", async () => {
+        const tx = await core.ruleCreateTx({
+            seed: seed ?? Math.floor(Math.random() * 100000),
+            ruleCreator: wallet.publicKey,
+            renewalPrice: 1000,
+            treasury: PAYER_ADMIN
+        })
+        const id = await sendAndConfirmRawTransaction(burger.provider.connection, tx, wallet.publicKey, wallet, [])
+        expect(id).to.not.be.empty;
+    });
+
     it("Create a collection", async () => {
         const tx = await burger.wnsGroupMintTx(collectionArgs)
         const id = await sendAndConfirmRawVersionedTransaction(burger.provider.connection, tx.instructions, wallet.publicKey, wallet, [collectionMint]);
@@ -114,7 +126,8 @@ export function setupCollection(
                 ...epMintArgs,
                 groupMint: collectionMint.publicKey,
                 mint: mint.publicKey,
-                computeBudget: 600_000
+                computeBudget: 600_000,
+                addGameReset: true,
             }
 
             // Mint
