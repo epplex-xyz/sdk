@@ -1,6 +1,5 @@
-import {clusterApiUrl, Connection} from "@solana/web3.js";
+import {Connection, PublicKey} from "@solana/web3.js";
 import {loadOrGenerateKeypair} from "./keyUtils";
-import * as anchor from "@coral-xyz/anchor";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import {CoreProvider, EpplexProvider} from "../../src";
 import {
@@ -10,22 +9,42 @@ import {
     trySetupManagerAccount
 } from "../setupUtils";
 import WenProvider from "../../src/WenProvider";
-import {COMMITMENT, CONFIRM_OPTIONS} from "../../src/utils/settings";
+import {COMMITMENT, CONFIRM_OPTIONS, getClusterByEndpoint} from "../../src/utils/settings";
 
 /*
     How to use:
     1. .local_keys/epplex_PAYER_ADMIN.json needs to exist
     2. yarn test-collection or another test in package.json
  */
-if (!process.env.RPC) {
+const RPC = process.env.RPC;
+if (!RPC) {
     throw new Error("RPC is not defined in .env file");
 }
 
+const cluster = getClusterByEndpoint(RPC);
+let PROGRAM_IDS;
+if (cluster === "local") {
+    PROGRAM_IDS = {
+        wns: new PublicKey("WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"),
+        royalty: new PublicKey("WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"),
+        burger: undefined ,
+        core: undefined,
+    }
+} else {
+    PROGRAM_IDS = {
+        wns: new PublicKey("wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM"),
+        royalty: new PublicKey("diste3nXmK7ddDTs1zb6uday6j4etCa9RChD8fJ1xay"),
+        burger: undefined,
+        core: undefined,
+    }
+}
+
 export const CONNECTION = new Connection(
-    process.env.RPC,
+    RPC,
     COMMITMENT
 );
 console.log("CONNECTION", CONNECTION.rpcEndpoint, CONFIRM_OPTIONS)
+console.log("PROGRAM_IDS", PROGRAM_IDS)
 
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 
@@ -35,27 +54,29 @@ interface GetSetupReturn {
     coreProvider: CoreProvider,
     wenProvider: WenProvider
 }
+
 export function getSetup(): GetSetupReturn {
     const wallet = new NodeWallet(PAYER_ADMIN);
 
-    const provider = new anchor.AnchorProvider(
-        CONNECTION,
+    const burgerProvider = new EpplexProvider(
         wallet,
-        CONFIRM_OPTIONS
-    )
-    // Another way of doing it
-    const burgerProvider = EpplexProvider.fromAnchorProvider(provider)
+        CONNECTION,
+        CONFIRM_OPTIONS,
+        PROGRAM_IDS,
+    );
 
     const coreProvider = new CoreProvider(
         wallet,
         CONNECTION,
-        CONFIRM_OPTIONS
+        CONFIRM_OPTIONS,
+        PROGRAM_IDS.core,
     );
 
     const wenProvider = new WenProvider(
         wallet,
         CONNECTION,
-        CONFIRM_OPTIONS
+        CONFIRM_OPTIONS,
+        {metadata: PROGRAM_IDS.wns, royalty: PROGRAM_IDS.royalty}
     );
 
     return {
