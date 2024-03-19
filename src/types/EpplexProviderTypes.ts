@@ -42,6 +42,7 @@ export interface WnsMemberMintParams {
     symbol: string;
     uri: string;
     computeBudget?: number;
+    addGameReset?: boolean;
 }
 
 export interface WnsGroupMintParams {
