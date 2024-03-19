@@ -11,6 +11,8 @@ import {
 import WenProvider from "../../src/WenProvider";
 import {COMMITMENT, CONFIRM_OPTIONS, getClusterByEndpoint} from "../../src/utils/settings";
 
+export const SDK_TEST_VERSION = "4.0";
+
 /*
     How to use:
     1. .local_keys/epplex_PAYER_ADMIN.json needs to exist
@@ -27,15 +29,15 @@ if (cluster === "local") {
     PROGRAM_IDS = {
         wns: new PublicKey("WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"),
         royalty: new PublicKey("WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"),
-        burger: undefined ,
-        core: undefined,
+        burger: undefined, //new PublicKey(process.env.BURGER_PROGRAM_ID),
+        core: undefined //new PublicKey(process.env.CORE_PROGRAM_ID),
     }
 } else {
     PROGRAM_IDS = {
         wns: new PublicKey("wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM"),
         royalty: new PublicKey("diste3nXmK7ddDTs1zb6uday6j4etCa9RChD8fJ1xay"),
-        burger: undefined,
-        core: undefined,
+        burger: new PublicKey("epBuJysRKuFMMWTWoX6ZKPz5WTZWb98mDqn1emVj84n"),
+        core: new PublicKey("epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"),
     }
 }
 
