@@ -1,5 +1,5 @@
 import {Connection, PublicKey,} from "@solana/web3.js";
-import {AccountLayout, getTokenMetadata} from "@solana/spl-token";
+import {AccountLayout, getTokenMetadata, RawAccount} from "@solana/spl-token";
 import {getTokenAccounts} from "./utils/generic";
 import {getTokenBurgerMetadata} from "./constants/burgerSeeds";
 import {EpNFT} from "./types/EpplexProviderTypes";
@@ -58,6 +58,22 @@ class EpNFTService {
         }
 
         return epNFTs;
+    }
+
+    static async getT22NFTs(
+        connection: Connection,
+        owner: PublicKey,
+    ): Promise<RawAccount[]> {
+        const allTokenAccounts = await getTokenAccounts(connection, owner);
+
+        const nfts: RawAccount[] = [];
+        for (const [_, e] of allTokenAccounts.value.entries()) {
+            // Get raw data
+            const data = AccountLayout.decode(e.account.data);
+            nfts.push(data);
+        }
+
+        return nfts;
     }
 
     static async isBurgerNFT(connection: Connection, mint: PublicKey, burgerProgramId?: PublicKey) : Promise <boolean> {
