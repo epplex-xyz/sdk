@@ -20,157 +20,6 @@ export type EpplexBurger = {
   ],
   "instructions": [
     {
-      "name": "whitelistMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WhitelistMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "TODO: set the seeds constraint"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "CollectionMintParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "wnsGroupMint",
       "accounts": [
         {
@@ -344,243 +193,6 @@ export type EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "WnsMemberMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "wnsMemberProcess",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "group",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "member",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "extraMetasAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WnsMemberProcessParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenRenew",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "Technically anyone could pay to renew but why would they?"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mintPayment",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "proceedsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payerTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenRenewParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenBurn",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenBurnParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenThaw",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenThawParams"
           }
         }
       ]
@@ -765,69 +377,6 @@ export type EpplexBurger = {
       ]
     },
     {
-      "name": "tokenGameImmunity",
-      "accounts": [
-        {
-          "name": "mintImmunity",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccountImmunity",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataImmunity",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenGameImmunityParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "tokenGameReset",
       "accounts": [
         {
@@ -961,22 +510,6 @@ export type EpplexBurger = {
       ]
     },
     {
-      "name": "gameClose",
-      "accounts": [
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "gameUpdate",
       "accounts": [
         {
@@ -998,6 +531,22 @@ export type EpplexBurger = {
           }
         }
       ]
+    },
+    {
+      "name": "gameClose",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
     },
     {
       "name": "programDelegateCreate",
@@ -1046,6 +595,330 @@ export type EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "ProgramDelegateCloseParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenRenew",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Technically anyone could pay to renew but why would they?"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintPayment",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "proceedsTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenRenewParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenBurn",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenBurnParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "whitelistMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "globalCollectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "epplexCore",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WhitelistMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "collectionMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionConfig",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "TODO: set the seeds constraint"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "epplexCore",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "CollectionMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenGameImmunity",
+      "accounts": [
+        {
+          "name": "mintImmunity",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccountImmunity",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataImmunity",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenGameImmunityParams"
           }
         }
       ]
@@ -1390,13 +1263,6 @@ export type EpplexBurger = {
       }
     },
     {
-      "name": "TokenThawParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
       "name": "WhitelistMintParams",
       "type": {
         "kind": "struct",
@@ -1470,13 +1336,6 @@ export type EpplexBurger = {
             "type": "string"
           }
         ]
-      }
-    },
-    {
-      "name": "WnsMemberProcessParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
       }
     },
     {
@@ -1931,157 +1790,6 @@ export const IDL: EpplexBurger = {
   ],
   "instructions": [
     {
-      "name": "whitelistMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WhitelistMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "TODO: set the seeds constraint"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "CollectionMintParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "wnsGroupMint",
       "accounts": [
         {
@@ -2255,243 +1963,6 @@ export const IDL: EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "WnsMemberMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "wnsMemberProcess",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "group",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "member",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "extraMetasAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WnsMemberProcessParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenRenew",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "Technically anyone could pay to renew but why would they?"
-          ]
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mintPayment",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "proceedsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payerTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenRenewParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenBurn",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenBurnParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenThaw",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenThawParams"
           }
         }
       ]
@@ -2676,69 +2147,6 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
-      "name": "tokenGameImmunity",
-      "accounts": [
-        {
-          "name": "mintImmunity",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccountImmunity",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataImmunity",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenGameImmunityParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "tokenGameReset",
       "accounts": [
         {
@@ -2872,22 +2280,6 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
-      "name": "gameClose",
-      "accounts": [
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "gameUpdate",
       "accounts": [
         {
@@ -2909,6 +2301,22 @@ export const IDL: EpplexBurger = {
           }
         }
       ]
+    },
+    {
+      "name": "gameClose",
+      "accounts": [
+        {
+          "name": "gameConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
     },
     {
       "name": "programDelegateCreate",
@@ -2957,6 +2365,330 @@ export const IDL: EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "ProgramDelegateCloseParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenRenew",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Technically anyone could pay to renew but why would they?"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintPayment",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "proceedsTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenRenewParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenBurn",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenBurnParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "whitelistMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "globalCollectionConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "epplexCore",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WhitelistMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "collectionMint",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collectionConfig",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "TODO: set the seeds constraint"
+          ]
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "epplexCore",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "CollectionMintParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenGameImmunity",
+      "accounts": [
+        {
+          "name": "mintImmunity",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccountImmunity",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataImmunity",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "permanentDelegate",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenGameImmunityParams"
           }
         }
       ]
@@ -3301,13 +3033,6 @@ export const IDL: EpplexBurger = {
       }
     },
     {
-      "name": "TokenThawParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
       "name": "WhitelistMintParams",
       "type": {
         "kind": "struct",
@@ -3381,13 +3106,6 @@ export const IDL: EpplexBurger = {
             "type": "string"
           }
         ]
-      }
-    },
-    {
-      "name": "WnsMemberProcessParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
       }
     },
     {
