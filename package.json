@@ -1,7 +1,7 @@
 {
 	"name": "@epplex-xyz/sdk",
 	"author": "epPlex",
-	"version": "0.1.56",
+	"version": "0.1.57",
 	"description": "epPlex Typescript SDK",
 	"license": "MIT",
 	"homepage": "https://github.com/epplex-xyz/sdk",
@@ -49,7 +49,10 @@
 		"test-ephemeral": "dotenv   -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/ephemeralMembership.spec.ts",
 		"test-wns": "dotenv        -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/wns.spec.ts",
 		"test-blockchain": "dotenv -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/blockchain.spec.ts",
-		"test-freeze": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freeze.spec.ts"
+		"test-freeze": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freeze.spec.ts",
+
+		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts",
+		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.4",

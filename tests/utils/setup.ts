@@ -11,7 +11,7 @@ import {
 import WenProvider from "../../src/WenProvider";
 import {COMMITMENT, CONFIRM_OPTIONS, getClusterByEndpoint} from "../../src/utils/settings";
 
-export const SDK_TEST_VERSION = "4.0";
+export const SDK_TEST_VERSION = "5.0";
 
 /*
     How to use:
