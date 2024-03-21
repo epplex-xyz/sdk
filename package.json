@@ -52,7 +52,7 @@
 		"test-freeze": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freeze.spec.ts",
 
 		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts",
-		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts"
+		"devnet": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/devnet.ts"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.4",

@@ -1,4 +1,4 @@
-import {PAYER_ADMIN, setupGlobals} from "./utils/setup";
+import {setupGlobals} from "./utils/setup";
 import {
     createBurnInstruction,
     createCloseAccountInstruction,
@@ -13,6 +13,7 @@ import {Transaction} from "@solana/web3.js";
 
 describe('Burn All NFTs in PAYER_ADMIN', () => {
     const {wallet, burgerProvider} = setupGlobals()
+    const owner = wallet.publicKey;
 
     const connection = burgerProvider.provider.connection;
     let myNFts: any[] = [];
@@ -20,7 +21,7 @@ describe('Burn All NFTs in PAYER_ADMIN', () => {
     it('Get all NFTs', async () => {
         myNFts = await EpNFTService.getT22NFTs(
             connection,
-            PAYER_ADMIN.publicKey,
+            owner,
         );
         console.log("Number of NFTs", myNFts.length);
         expect(myNFts).to.not.be.empty;
@@ -30,10 +31,10 @@ describe('Burn All NFTs in PAYER_ADMIN', () => {
         for (let i = 0; i < myNFts.length; i++) {
             const mint = myNFts[i].mint;
             console.log(`Burn ${i}:`, mint.toString())
-            const ata = getAtaAddressPubkey(mint, wallet.publicKey);
+            const ata = getAtaAddressPubkey(mint, owner);
             const {amount} = await getAccount(
                 connection,
-                getAtaAddressPubkey(mint, wallet.publicKey),
+                getAtaAddressPubkey(mint, owner),
                 undefined,
                 TOKEN_2022_PROGRAM_ID
             );
@@ -45,7 +46,7 @@ describe('Burn All NFTs in PAYER_ADMIN', () => {
                     createBurnInstruction(
                         ata,
                         mint,
-                        wallet.publicKey,
+                        owner,
                         1,
                         undefined,
                         TOKEN_2022_PROGRAM_ID
@@ -57,8 +58,8 @@ describe('Burn All NFTs in PAYER_ADMIN', () => {
             ixs.push(
                 createCloseAccountInstruction(
                     ata,
-                    wallet.publicKey,
-                    wallet.publicKey,
+                    owner,
+                    owner,
                     undefined,
                     TOKEN_2022_PROGRAM_ID
                 )
