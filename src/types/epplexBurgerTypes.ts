@@ -1197,6 +1197,12 @@ export type EpplexBurger = {
                 "defined": "VoteType"
               }
             }
+          },
+          {
+            "name": "tokenGroup",
+            "type": {
+              "option": "publicKey"
+            }
           }
         ]
       }
@@ -2966,6 +2972,12 @@ export const IDL: EpplexBurger = {
               "option": {
                 "defined": "VoteType"
               }
+            }
+          },
+          {
+            "name": "tokenGroup",
+            "type": {
+              "option": "publicKey"
             }
           }
         ]

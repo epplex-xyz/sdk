@@ -1197,6 +1197,12 @@
                 "defined": "VoteType"
               }
             }
+          },
+          {
+            "name": "tokenGroup",
+            "type": {
+              "option": "publicKey"
+            }
           }
         ]
       }
