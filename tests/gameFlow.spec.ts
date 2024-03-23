@@ -61,7 +61,7 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
             isEncrypted: false,
             publicEncryptKey: "",
             ruleSeed: seed,
-            tokenGroup: burgerProvider.getGroupAccountPda(collectionMint.publicKey)
+            tokenGroup: collectionMint.publicKey
         });
         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
         expect(id).to.not.be.empty;

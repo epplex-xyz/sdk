@@ -551,6 +551,8 @@ class EpplexProvider {
         return await this.program.methods
             .gameStart({
                 ...params,
+                // Default to just pass in collectionMint pubkey
+                tokenGroup: this.getGroupAccountPda(params.tokenGroup),
                 endTimestamp: new anchor.BN(params.endTimestamp),
                 ruleSeed: new anchor.BN(params.ruleSeed),
             })
