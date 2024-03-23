@@ -1,6 +1,6 @@
 import {setupGlobals} from "./utils/setup";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
-import {Keypair, PublicKey} from "@solana/web3.js";
+import {Keypair} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 
 /*
@@ -23,8 +23,8 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     }
     const seed = Math.floor(Math.random() * 100000)
 
-    console.log("seed", seed);
-    console.log("collection", burgerProvider.getGroupAccountPda(collectionMint.publicKey).toString());
+    console.log("ruleSeed", seed);
+    console.log("collectionMint", collectionMint.publicKey.toString());
     const receiver = undefined
     // const receiver = new PublicKey("")
 
