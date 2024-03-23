@@ -1,6 +1,6 @@
 import {setupGlobals} from "./utils/setup";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
-import {Keypair} from "@solana/web3.js";
+import {Keypair, PublicKey} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 
 /*
@@ -9,11 +9,8 @@ import {setupCollection} from "./setupUtils";
  */
 
 describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
-    const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
-    const now = (Math.floor((new Date()).getTime() / 1000)).toString()
     const {wallet, burgerProvider, coreProvider} = setupGlobals()
     const collectionMint = Keypair.generate();
-    const connection = burgerProvider.provider.connection;
 
     const metadata = getDefaultMetadata({})
     const maxSize = 5;
@@ -28,8 +25,10 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
 
     console.log("seed", seed);
     console.log("collection", burgerProvider.getGroupAccountPda(collectionMint.publicKey).toString());
+    const receiver = undefined
+    // const receiver = new PublicKey("")
 
     const mints = setupCollection(
-        burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
+        burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed
     )
 });

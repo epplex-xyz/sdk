@@ -1,7 +1,7 @@
 import {getTokenMetadata} from "@solana/spl-token";
 import {expect} from "chai";
-import {CONNECTION, setupGlobals} from "./utils/setup";
-import {EpNFTService, getProgramDelegate, sendAndConfirmRawTransaction} from "../src";
+import {CONNECTION, setupGlobals} from "../utils/setup";
+import {EpNFTService, getProgramDelegate, sendAndConfirmRawTransaction} from "../../src";
 import {PublicKey} from "@solana/web3.js";
 
 /*

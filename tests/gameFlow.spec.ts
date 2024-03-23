@@ -4,7 +4,6 @@ import {expect} from "chai";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 import {Keypair} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
-import {sleep} from "./utils/testUtils";
 
 const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
 const now = (Math.floor((new Date()).getTime() / 1000)).toString()
@@ -85,7 +84,6 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     });
 
     it("Evaluate Game", async () => {
-        await sleep(500);
         const tx = await burgerProvider.gameEvaluateTx();
         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
         expect(id).to.not.be.empty;
