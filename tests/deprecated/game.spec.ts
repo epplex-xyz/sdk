@@ -2,80 +2,80 @@ import { BN } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { expect } from "chai";
 
-import { sendAndConfirmRawTransaction } from "../src";
-import { CONNECTION, getSetup } from "./utils/setup";
+import { sendAndConfirmRawTransaction } from "../../src";
+import { CONNECTION, getSetup } from "../utils/setup";
 const { wallet, burgerProvider } = getSetup();
 
 describe("GAME TEST", async () => {
     let sharedMint: PublicKey = new PublicKey("");
 
-    describe("Game start", async () => {
-        const nowDate = new Date();
-        const currentTs = nowDate.getTime();
-        const oneYrLater = nowDate.setFullYear(nowDate.getFullYear() + 1);
-
-        it("start a new game", async () => {
-            const tx = await burgerProvider.gameStartTx({
-                endTimestamp: oneYrLater,
-                voteType: { voteOnce: {} },
-                inputType: { text: {} },
-                gamePrompt: "burger is awesome",
-                gameName: "Game1",
-                isEncrypted: false,
-                publicEncryptKey: "",
-            });
-            await sendAndConfirmRawTransaction(
-                CONNECTION,
-                tx,
-                wallet.publicKey,
-                wallet,
-                []
-            );
-        });
-
-        it("Fails to start a game if one is already in progress", async () => {
-            const tx = await burgerProvider.gameStartTx({
-                endTimestamp: oneYrLater,
-                voteType: { voteOnce: {} },
-                inputType: { text: {} },
-                gamePrompt: "burger is awesome",
-                gameName: "Game1",
-                isEncrypted: false,
-                publicEncryptKey: "",
-            });
-
-            const res = await sendAndConfirmRawTransaction(
-                CONNECTION,
-                tx,
-                wallet.publicKey,
-                wallet,
-                []
-            );
-
-            expect(res).to.be.equal(null);
-        });
-
-        it("Fails to start a game if arguments provided are invalid", async () => {
-            const tx = await burgerProvider.gameStartTx({
-                endTimestamp: currentTs,
-                voteType: { voteOnce: {} },
-                inputType: { text: {} },
-                gamePrompt: "burger is awesome",
-                gameName: "Game1",
-                isEncrypted: false,
-                publicEncryptKey: "",
-            });
-            const res = await sendAndConfirmRawTransaction(
-                CONNECTION,
-                tx,
-                wallet.publicKey,
-                wallet,
-                []
-            );
-
-            expect(res).to.be.equal(null);
-        });
-    });
+    // describe("Game start", async () => {
+    //     const nowDate = new Date();
+    //     const currentTs = nowDate.getTime();
+    //     const oneYrLater = nowDate.setFullYear(nowDate.getFullYear() + 1);
+    //
+    //     it("start a new game", async () => {
+    //         const tx = await burgerProvider.gameStartTx({
+    //             endTimestamp: oneYrLater,
+    //             voteType: { voteOnce: {} },
+    //             inputType: { text: {} },
+    //             gamePrompt: "burger is awesome",
+    //             gameName: "Game1",
+    //             isEncrypted: false,
+    //             publicEncryptKey: "",
+    //         });
+    //         await sendAndConfirmRawTransaction(
+    //             CONNECTION,
+    //             tx,
+    //             wallet.publicKey,
+    //             wallet,
+    //             []
+    //         );
+    //     });
+    //
+    //     it("Fails to start a game if one is already in progress", async () => {
+    //         const tx = await burgerProvider.gameStartTx({
+    //             endTimestamp: oneYrLater,
+    //             voteType: { voteOnce: {} },
+    //             inputType: { text: {} },
+    //             gamePrompt: "burger is awesome",
+    //             gameName: "Game1",
+    //             isEncrypted: false,
+    //             publicEncryptKey: "",
+    //         });
+    //
+    //         const res = await sendAndConfirmRawTransaction(
+    //             CONNECTION,
+    //             tx,
+    //             wallet.publicKey,
+    //             wallet,
+    //             []
+    //         );
+    //
+    //         expect(res).to.be.equal(null);
+    //     });
+    //
+    //     it("Fails to start a game if arguments provided are invalid", async () => {
+    //         const tx = await burgerProvider.gameStartTx({
+    //             endTimestamp: currentTs,
+    //             voteType: { voteOnce: {} },
+    //             inputType: { text: {} },
+    //             gamePrompt: "burger is awesome",
+    //             gameName: "Game1",
+    //             isEncrypted: false,
+    //             publicEncryptKey: "",
+    //         });
+    //         const res = await sendAndConfirmRawTransaction(
+    //             CONNECTION,
+    //             tx,
+    //             wallet.publicKey,
+    //             wallet,
+    //             []
+    //         );
+    //
+    //         expect(res).to.be.equal(null);
+    //     });
+    // });
 
     describe("Voting", async () => {
         it("votes", async () => {

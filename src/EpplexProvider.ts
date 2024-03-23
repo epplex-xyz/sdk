@@ -563,7 +563,6 @@ class EpplexProvider {
             .transaction();
     }
 
-
     async gameEndTx(): Promise<Transaction> {
         return await this.program.methods
             .gameEnd({})
