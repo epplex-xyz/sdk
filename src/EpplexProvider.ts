@@ -587,6 +587,7 @@ class EpplexProvider {
                 phaseStartTimestamp: params.phaseStartTimestamp ? new anchor.BN(params.phaseStartTimestamp) : null,
                 phaseEndTimestamp: params.phaseEndTimestamp ? new anchor.BN(params.phaseEndTimestamp) : null,
                 voteType: params.voteType ?? null,
+                tokenGroup: params.tokenGroup ?? null
             })
             .accountsStrict({
                 gameConfig: this.getGameConfig(),

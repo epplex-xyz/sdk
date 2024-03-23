@@ -103,6 +103,7 @@ export interface GameUpdateParams {
     phaseStartTimestamp?: number;
     phaseEndTimestamp?: number;
     voteType?: IdlVoteType;
+    tokenGroup?: PublicKey;
 }
 
 export type IdlVoteType = IdlTypes<EpplexBurger>["VoteType"];
