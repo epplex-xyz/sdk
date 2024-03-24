@@ -9,6 +9,7 @@ import {Keypair, PublicKey, TransactionInstruction} from "@solana/web3.js";
 import {WnsGroupMintParams} from "../src/types/EpplexProviderTypes";
 import {EpMintParams} from "../src/types/EpplexProviderTypes";
 import {PAYER_ADMIN} from "../src/constants/keys";
+import fs from "fs";
 
 export function trySetupGlobalCollectionConfig(
     provider: CoreProvider,
@@ -98,11 +99,12 @@ export function setupCollection(
     seed?: number,
     time?: number,
 ) {
-    let mints: PublicKey[] = []
+    const mints: PublicKey[] = [];
+    const baseSeed = seed ?? Math.floor(Math.random() * 100000);
 
     it("Creates a new Rule", async () => {
         const tx = await core.ruleCreateTx({
-            seed: seed ?? Math.floor(Math.random() * 100000),
+            seed: baseSeed,
             ruleCreator: wallet.publicKey,
             renewalPrice: 1000,
             treasury: PAYER_ADMIN
@@ -137,7 +139,7 @@ export function setupCollection(
             const membershipTx = await core.membershipAppendTx({
                 membership: mint.publicKey,
                 time: time ?? Math.floor(Number.MAX_SAFE_INTEGER / 1000),
-                seed: seed ?? Math.floor(Math.random() * 100000),
+                seed: baseSeed,
                 payer: wallet.publicKey,
                 ruleCreator: wallet.publicKey
             });
@@ -163,8 +165,21 @@ export function setupCollection(
             expect(id).to.not.be.empty;
             mints.push(mint.publicKey)
         }
+
+        // Create collection config file
+        const collectionJSON = {
+            key: collectionMint.publicKey.toString(),
+            mints: mints.map((m) => m.toString()),
+            seed: baseSeed,
+        };
+        fs.mkdirSync("tests/.output", { recursive: true });
+        fs.writeFileSync(
+            "tests/.output/collection_config.json",
+            JSON.stringify(collectionJSON, null, 2)
+        );
+
+        expect(mints.length).to.be.equal(collectionArgs.maxSize);
     });
 
     return mints
 }
-
