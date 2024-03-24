@@ -316,11 +316,6 @@ export type EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "metasAccountList",
           "isMut": false,
           "isSigner": false
@@ -367,6 +362,11 @@ export type EpplexCore = {
         },
         {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         }
@@ -1381,11 +1381,6 @@ export const IDL: EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "metasAccountList",
           "isMut": false,
           "isSigner": false
@@ -1432,6 +1427,11 @@ export const IDL: EpplexCore = {
         },
         {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
           "isMut": false,
           "isSigner": false
         }

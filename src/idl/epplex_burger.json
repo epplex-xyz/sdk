@@ -632,7 +632,7 @@
         },
         {
           "name": "payer",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -810,10 +810,7 @@
         {
           "name": "collectionConfig",
           "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "TODO: set the seeds constraint"
-          ]
+          "isSigner": false
         },
         {
           "name": "permanentDelegate",
@@ -864,21 +861,6 @@
       "name": "tokenGameImmunity",
       "accounts": [
         {
-          "name": "mintImmunity",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccountImmunity",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadataImmunity",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "mint",
           "isMut": true,
           "isSigner": false
@@ -889,7 +871,7 @@
           "isSigner": false
         },
         {
-          "name": "tokenMetadata",
+          "name": "groupMember",
           "isMut": false,
           "isSigner": false
         },
@@ -1678,96 +1660,101 @@
     },
     {
       "code": 6011,
+      "name": "CannotBurnImmune",
+      "msg": "Cannot burn NFT that is immune"
+    },
+    {
+      "code": 6012,
       "name": "IncorrectMint",
       "msg": "Incorrect mint for group"
     },
     {
-      "code": 6012,
+      "code": 6013,
       "name": "IncorrectEndtime",
       "msg": "Endtime must be in the future"
     },
     {
-      "code": 6013,
+      "code": 6014,
       "name": "EndtimeNotPassed",
       "msg": "Game phase end timestamp not surpassed"
     },
     {
-      "code": 6014,
+      "code": 6015,
       "name": "InvalidVoteMany",
       "msg": "Only VoteOnce is allowed"
     },
     {
-      "code": 6015,
+      "code": 6016,
       "name": "InvalidExpiryTS",
       "msg": "Empty expiry timestamp on metadata account"
     },
     {
-      "code": 6016,
+      "code": 6017,
       "name": "InvalidGameState",
       "msg": "Empty game state field on metadata account"
     },
     {
-      "code": 6017,
+      "code": 6018,
       "name": "ExpectedEmptyField",
       "msg": "Expected additional metadata field to be empty"
     },
     {
-      "code": 6018,
+      "code": 6019,
       "name": "RequiresEncryption",
       "msg": "Message was not encrypted"
     },
     {
-      "code": 6019,
+      "code": 6020,
       "name": "GameNotFinished",
       "msg": "Game must be finished"
     },
     {
-      "code": 6020,
+      "code": 6021,
       "name": "GameNotInProgress",
       "msg": "Game must be in progress"
     },
     {
-      "code": 6021,
+      "code": 6022,
       "name": "GameNotEvaluate",
       "msg": "Game must be evaluating"
     },
     {
-      "code": 6022,
+      "code": 6023,
       "name": "IncorrectGameStatus",
       "msg": "Invalid game status assertion"
     },
     {
-      "code": 6023,
+      "code": 6024,
       "name": "GameCannotStart",
       "msg": "Game is not Finished nor None"
     },
     {
-      "code": 6024,
+      "code": 6025,
       "name": "AlreadySubmitted",
       "msg": "Mint already submitted an answer"
     },
     {
-      "code": 6025,
+      "code": 6026,
       "name": "InvalidStartParams",
       "msg": "Invalid parameters supplied to game start instruction"
     },
     {
-      "code": 6026,
+      "code": 6027,
       "name": "CollectionInvalid",
       "msg": "Collection group is not valid for the game"
     },
     {
-      "code": 6027,
+      "code": 6028,
       "name": "IncorrectInputType",
       "msg": "Incorrect input type"
     },
     {
-      "code": 6028,
+      "code": 6029,
       "name": "InputIsEmpty",
       "msg": "Input cannot be empty"
     },
     {
-      "code": 6029,
+      "code": 6030,
       "name": "EvaluationImpossible",
       "msg": "Unable to evaluate game"
     }

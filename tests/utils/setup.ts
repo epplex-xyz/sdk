@@ -29,8 +29,10 @@ if (cluster === "local") {
     PROGRAM_IDS = {
         wns: new PublicKey("WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"),
         royalty: new PublicKey("WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"),
-        burger: undefined, //new PublicKey(process.env.BURGER_PROGRAM_ID),
-        core: undefined //new PublicKey(process.env.CORE_PROGRAM_ID),
+        burger: undefined,
+        core: undefined
+        // burger: new PublicKey("LepByYNXCXLAQicahdRvvxBD45SMNHJgoNsAUDLyG1N"),
+        // core: new PublicKey("LepCn3tW66Fh7CGsJ7qjQaontU7SvEoURnxkEY78j1j")
     }
 } else {
     PROGRAM_IDS = {
