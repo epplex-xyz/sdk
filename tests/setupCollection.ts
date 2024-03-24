@@ -3,13 +3,8 @@ import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 import {Keypair} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 
-/*
-    Test guide:
-    1. Load the local test admin keypair into
- */
-
-describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
-    const {wallet, burgerProvider, coreProvider} = setupGlobals()
+describe("Testing Setup Colleciton -> Generate Mints", () => {
+    const { wallet, burgerProvider, coreProvider } = setupGlobals();
     const collectionMint = Keypair.generate();
 
     const metadata = getDefaultMetadata({})
