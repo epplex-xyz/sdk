@@ -55,7 +55,8 @@
 		"test-blockchain": "dotenv -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/blockchain.spec.ts",
 		"test-freeze": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freeze.spec.ts",
 		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts",
-		"setup-collection": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupCollection.ts"
+		"setup-collection": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupCollection.ts",
+		"close-game-should-not-be-ran-in-prod": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/close.ts"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.4",
