@@ -155,10 +155,10 @@ export function getWnsNftTransferIx(args: TransferNftArgs) {
     // Add token hook extra keys
     transferIx.keys = transferIx.keys.concat([
         // System program
-        {pubkey: getApproveAccountPda(args.mint, WNS_PROGRAM_ID), isSigner: false, isWritable: true},
+        {pubkey: getApproveAccountPda(args.mint, args.wnsProgramId), isSigner: false, isWritable: true},
         {pubkey: args.wnsProgramId ?? WNS_PROGRAM_ID, isSigner: false, isWritable: false},
         // Extra metas list account
-        {pubkey: getExtraMetasAccount(args.mint, WNS_PROGRAM_ID), isSigner: false, isWritable: false},
+        {pubkey: getExtraMetasAccount(args.mint, args.wnsProgramId), isSigner: false, isWritable: false},
     ]);
     return transferIx;
 };
