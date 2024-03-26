@@ -194,7 +194,7 @@ export type EpplexCore = {
         },
         {
           "name": "ruleCreator",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         },
         {
@@ -1259,7 +1259,7 @@ export const IDL: EpplexCore = {
         },
         {
           "name": "ruleCreator",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         },
         {

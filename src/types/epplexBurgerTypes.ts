@@ -250,7 +250,7 @@ export type EpplexBurger = {
         },
         {
           "name": "ruleCreator",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -2165,7 +2165,7 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "ruleCreator",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {

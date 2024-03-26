@@ -250,7 +250,7 @@
         },
         {
           "name": "ruleCreator",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {
