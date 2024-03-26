@@ -22,7 +22,7 @@ const now = (Math.floor((new Date()).getTime() / 1000)).toString()
  */
 
 describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
-    const {wallet, burgerProvider, coreProvider} = setupGlobals()
+    const {wallet, burgerProvider} = setupGlobals()
     const collectionMint = Keypair.generate();
     const connection = burgerProvider.provider.connection;
 
@@ -38,7 +38,7 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     const seed = Math.floor(Math.random() * 100000)
 
     const mints = setupCollection(
-        burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
+        burgerProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
     )
     // const mint = mints[0]; For some reason this is not possible
 

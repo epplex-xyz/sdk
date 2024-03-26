@@ -6,7 +6,7 @@ import {expect} from "chai";
 import {getGroupMemberPointerState, getMint, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 
 describe("WNS", () => {
-    const {wallet, burgerProvider, coreProvider, wenProvider} = setupGlobals()
+    const {wallet, burgerProvider, wenProvider} = setupGlobals()
     const collectionMint = Keypair.generate();
     const receiver = new PublicKey("G4QhBg3fF2U7RSwC734ViwL3DeZVrR2TyHMNWHSLwMj");
 
@@ -20,7 +20,7 @@ describe("WNS", () => {
         maxSize: maxSize
     }
 
-    const mints = setupCollection(burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver)
+    const mints = setupCollection(burgerProvider, collectionMint, collectionArgs, metadata, wallet, receiver)
 
     it("Test collection membership", async () => {
         const mintData = await getMint(burgerProvider.provider.connection, mints[0], undefined, TOKEN_2022_PROGRAM_ID)
