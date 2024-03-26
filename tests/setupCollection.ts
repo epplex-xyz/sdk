@@ -4,7 +4,7 @@ import {Keypair} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 
 describe("Testing Setup Colleciton -> Generate Mints", () => {
-    const { wallet, burgerProvider, coreProvider } = setupGlobals();
+    const { wallet, burgerProvider } = setupGlobals();
     const collectionMint = Keypair.generate();
 
     const metadata = getDefaultMetadata({})
@@ -24,6 +24,6 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
     // const receiver = new PublicKey("")
 
     const mints = setupCollection(
-        burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed
+        burgerProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed
     )
 });

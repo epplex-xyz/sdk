@@ -9,6 +9,7 @@ import {Keypair, PublicKey, TransactionInstruction} from "@solana/web3.js";
 import {WnsGroupMintParams} from "../src/types/EpplexProviderTypes";
 import {EpMintParams} from "../src/types/EpplexProviderTypes";
 import {PAYER_ADMIN} from "../src/constants/keys";
+// @ts-ignore
 import fs from "fs";
 
 export function trySetupGlobalCollectionConfig(
@@ -90,7 +91,6 @@ export function trySetupManagerAccount(
 
 export function setupCollection(
     burger: EpplexProvider,
-    core: CoreProvider,
     collectionMint: Keypair,
     collectionArgs: WnsGroupMintParams,
     epMintArgs: EpMintParams,
@@ -103,9 +103,8 @@ export function setupCollection(
     const baseSeed = seed ?? Math.floor(Math.random() * 100000);
 
     it("Creates a new Rule", async () => {
-        const tx = await core.ruleCreateTx({
+        const tx = await burger.ephemeralRuleCreateTx({
             seed: baseSeed,
-            ruleCreator: wallet.publicKey,
             renewalPrice: 1000,
             treasury: PAYER_ADMIN
         })
@@ -136,12 +135,11 @@ export function setupCollection(
             const mintTx = await burger.wnsMemberMintTx(mintArgs);
 
             // Membership
-            const membershipTx = await core.membershipAppendTx({
+            const membershipTx = await burger.ephemeralDataAddTx({
                 membership: mint.publicKey,
                 time: time ?? Math.floor(Number.MAX_SAFE_INTEGER / 1000),
                 seed: baseSeed,
                 payer: wallet.publicKey,
-                ruleCreator: wallet.publicKey
             });
 
             // Transfer
