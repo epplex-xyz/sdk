@@ -110,6 +110,19 @@ export interface GameUpdateParams {
     tokenGroup?: PublicKey;
 }
 
+export interface EphemeralDataAppendTxParams {
+    time: number;
+    seed: number;
+    membership: PublicKey;
+    payer?: PublicKey;
+}
+
+export interface EphemeralRuleCreateTxParams {
+    seed: number;
+    renewalPrice: number;
+    treasury: PublicKey;
+}
+
 export type IdlVoteType = IdlTypes<EpplexBurger>["VoteType"];
 export type IdlInputType = IdlTypes<EpplexBurger>["InputType"];
 export type GameConfig = IdlAccounts<EpplexBurger>["gameConfig"];

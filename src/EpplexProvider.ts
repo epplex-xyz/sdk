@@ -32,7 +32,7 @@ import { DEFAULT_COMPUTE_BUDGET } from "./constants/transaction";
 import {
     BurnTxParams,
     CreateCollectionMintTxTxParams,
-    CreateWhitelistMintTxParams,
+    CreateWhitelistMintTxParams, EphemeralDataAppendTxParams, EphemeralRuleCreateTxParams,
     GameConfig,
     GameStartParams, GameUpdateParams, TokenGameBurnTxParams, TokenGameImmunityParams,
     TokenGameResetParams,
@@ -55,6 +55,7 @@ import {
     getEphemeralRule,
     getEphemeralData,
 } from "./constants/coreSeeds";
+import {MemberShipAppendTxParams, RuleTxParams} from "./types/CoreProviderTypes";
 interface Programs {
     burger?: PublicKey;
     core?: PublicKey;
@@ -118,95 +119,40 @@ class EpplexProvider {
     }
 
     /*
-        * Collection and mints
+        EPHEMERALITY
      */
-    async createCollectionMintTx({
-        expiryDate,
-        collectionId,
-        mint,
-        name,
-        symbol,
-        uri,
-        computeBudget = DEFAULT_COMPUTE_BUDGET,
-    }: CreateCollectionMintTxTxParams) {
-        const bigCollectionId = new anchor.BN(collectionId);
-        const payer = this.provider.wallet.publicKey;
-        const tokenCreateIx = await this.program.methods
-            .collectionMint({
-                name: name,
-                symbol: symbol,
-                uri: uri,
-                expiryDate: expiryDate,
-                collectionCounter: bigCollectionId,
-            })
+    // Equivalent to membershipAppend in Core
+    async ephemeralDataAddTx(args: EphemeralDataAppendTxParams): Promise<Transaction> {
+        return await this.program.methods
+            .ephemeralDataAdd(new BN(args.time))
             .accountsStrict({
-                mint: mint,
-                tokenAccount: getAtaAddress(mint.toString(), payer.toString()),
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                permanentDelegate: this.getProgramDelegate(),
-                payer: payer,
-                collectionConfig: getCollectionConfig(
-                    bigCollectionId,
-                    this.programIds.core
-                ),
-                rent: SYSVAR_RENT_PUBKEY,
+                nft: args.membership,
+                ruleCreator: this.getProgramDelegate(),
+                rule: this.getEphemeralRule(args.seed),
+                data: this.getEphemeralData(args.membership),
+                payer: args.payer ?? this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
-                token22Program: TOKEN_2022_PROGRAM_ID,
-                associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                epplexCore: this.programIds.core,
+                epplexCore: this.programIds.core
             })
-            .instruction();
-
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget,
-            }),
-            tokenCreateIx,
-        ];
-
-        return new Transaction().add(...ixs);
+            .transaction();
     }
 
-    async createWhitelistMintTx({
-        expiryDate,
-        name,
-        symbol,
-        uri,
-        mint,
-        computeBudget = DEFAULT_COMPUTE_BUDGET,
-    }: CreateWhitelistMintTxParams) {
-        const payer = this.provider.wallet.publicKey;
-        const tokenCreateIx = await this.program.methods
-            .whitelistMint({
-                name: name,
-                symbol: symbol,
-                uri: uri,
-                expiryDate: expiryDate,
+    // Equivalent to ruleCreate in Core
+    async ephemeralRuleCreateTx(args: EphemeralRuleCreateTxParams): Promise<Transaction> {
+        return await this.program.methods
+            .ephemeralRuleCreate({
+                seed: new BN(args.seed),
+                ruleCreator: this.getProgramDelegate(),
+                renewalPrice: new BN(args.renewalPrice),
+                treasury: args.treasury
             })
             .accountsStrict({
-                mint,
-                tokenAccount: getAtaAddress(mint.toString(), payer.toString()),
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                permanentDelegate: this.getProgramDelegate(),
-                globalCollectionConfig:
-                    getGlobalCollectionConfig(this.programIds.core),
-                payer: payer,
-                rent: SYSVAR_RENT_PUBKEY,
+                rule: this.getEphemeralRule(args.seed),
+                signer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
-                token22Program: TOKEN_2022_PROGRAM_ID,
-                associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                epplexCore: this.programIds.core,
+                epplexCore: this.programIds.core
             })
-            .instruction();
-
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget,
-            }),
-            tokenCreateIx,
-        ];
-
-        return new Transaction().add(...ixs);
+            .transaction();
     }
 
     async wnsGroupMintTx(params: WnsGroupMintParams) {
@@ -296,88 +242,6 @@ class EpplexProvider {
         return new Transaction().add(...ixs);
     }
 
-    async renewTokenTx(
-        mint: PublicKey,
-        fundUpTo: number = 0.1
-    ): Promise<{
-        tx: Transaction;
-        // signers: Keypair[]}
-    }> {
-        // const ata = getAssociatedTokenAddressSync(
-        //     mint, this.wallet.publicKey, undefined, TOKEN_2022_PROGRAM_ID
-        // );
-        const ixs: TransactionInstruction[] = [];
-
-        // const switchboardMint: NativeMint = await
-        // NativeMint.load(this.program.provider as AnchorProvider); const
-        // [payerAta, wrapSolTxn] = await
-        // switchboardMint.getOrCreateWrappedUserInstructions(
-        //     this.provider.wallet.publicKey,
-        //     { fundUpTo: fundUpTo }
-        // );
-        // if (wrapSolTxn === undefined) {
-        //     throw new Error("Wrap SOL failed");
-        // }
-        // ixs.push(...wrapSolTxn.ixns);
-
-        const WSOL_NATIVE_ADDRESS = new PublicKey(
-            "So11111111111111111111111111111111111111112"
-        );
-
-        // VAULT Ata
-        const proceedsAta = getAssociatedTokenAddressSync(
-            WSOL_NATIVE_ADDRESS,
-            PAYER_ADMIN,
-            undefined,
-            TOKEN_PROGRAM_ID
-        );
-
-        // Payer Ata - already created with switchboard stuff
-        const payerAta = getAssociatedTokenAddressSync(
-            WSOL_NATIVE_ADDRESS,
-            this.provider.wallet.publicKey,
-            undefined,
-            TOKEN_PROGRAM_ID
-        );
-
-        // const payerIx = await tryCreateATAIx(
-        //     this.connection, this.wallet.publicKey, payerAta,
-        //     this.wallet.publicKey, NativeMint.address
-        // );
-        const proceedsIx = await tryCreateATAIx(
-            this.provider.connection,
-            this.provider.wallet.publicKey,
-            proceedsAta,
-            PAYER_ADMIN,
-            WSOL_NATIVE_ADDRESS,
-            TOKEN_2022_PROGRAM_ID
-        );
-
-        ixs.push(...proceedsIx);
-
-        const renewIx = await this.program.methods
-            .tokenRenew({
-                renewTerms: 1,
-            })
-            .accountsStrict({
-                mint,
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                mintPayment: WSOL_NATIVE_ADDRESS,
-                proceedsTokenAccount: proceedsAta,
-                payerTokenAccount: payerAta,
-                payer: this.provider.wallet.publicKey,
-                updateAuthority: this.getProgramDelegate(),
-                token22Program: TOKEN_2022_PROGRAM_ID,
-                tokenProgram: TOKEN_PROGRAM_ID,
-            })
-            .instruction();
-        ixs.push(renewIx);
-
-        return {
-            tx: new Transaction().add(...ixs),
-            // signers: wrapSolTxn.signers
-        };
-    }
 
     /*
         * States
@@ -645,6 +509,188 @@ class EpplexProvider {
 
     getEphemeralData(membership: PublicKey): PublicKey {
         return getEphemeralData(membership, this.programIds.core);
+    }
+
+
+    /*
+        DEPRECATED
+     */
+    async renewTokenTx(
+        mint: PublicKey,
+        fundUpTo: number = 0.1
+    ): Promise<{
+        tx: Transaction;
+        // signers: Keypair[]}
+    }> {
+        // const ata = getAssociatedTokenAddressSync(
+        //     mint, this.wallet.publicKey, undefined, TOKEN_2022_PROGRAM_ID
+        // );
+        const ixs: TransactionInstruction[] = [];
+
+        // const switchboardMint: NativeMint = await
+        // NativeMint.load(this.program.provider as AnchorProvider); const
+        // [payerAta, wrapSolTxn] = await
+        // switchboardMint.getOrCreateWrappedUserInstructions(
+        //     this.provider.wallet.publicKey,
+        //     { fundUpTo: fundUpTo }
+        // );
+        // if (wrapSolTxn === undefined) {
+        //     throw new Error("Wrap SOL failed");
+        // }
+        // ixs.push(...wrapSolTxn.ixns);
+
+        const WSOL_NATIVE_ADDRESS = new PublicKey(
+            "So11111111111111111111111111111111111111112"
+        );
+
+        // VAULT Ata
+        const proceedsAta = getAssociatedTokenAddressSync(
+            WSOL_NATIVE_ADDRESS,
+            PAYER_ADMIN,
+            undefined,
+            TOKEN_PROGRAM_ID
+        );
+
+        // Payer Ata - already created with switchboard stuff
+        const payerAta = getAssociatedTokenAddressSync(
+            WSOL_NATIVE_ADDRESS,
+            this.provider.wallet.publicKey,
+            undefined,
+            TOKEN_PROGRAM_ID
+        );
+
+        // const payerIx = await tryCreateATAIx(
+        //     this.connection, this.wallet.publicKey, payerAta,
+        //     this.wallet.publicKey, NativeMint.address
+        // );
+        const proceedsIx = await tryCreateATAIx(
+            this.provider.connection,
+            this.provider.wallet.publicKey,
+            proceedsAta,
+            PAYER_ADMIN,
+            WSOL_NATIVE_ADDRESS,
+            TOKEN_2022_PROGRAM_ID
+        );
+
+        ixs.push(...proceedsIx);
+
+        const renewIx = await this.program.methods
+            .tokenRenew({
+                renewTerms: 1,
+            })
+            .accountsStrict({
+                mint,
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                mintPayment: WSOL_NATIVE_ADDRESS,
+                proceedsTokenAccount: proceedsAta,
+                payerTokenAccount: payerAta,
+                payer: this.provider.wallet.publicKey,
+                updateAuthority: this.getProgramDelegate(),
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                tokenProgram: TOKEN_PROGRAM_ID,
+            })
+            .instruction();
+        ixs.push(renewIx);
+
+        return {
+            tx: new Transaction().add(...ixs),
+            // signers: wrapSolTxn.signers
+        };
+    }
+
+    /*
+        * DEPRECATED Collection and mints
+     */
+    async createCollectionMintTx({
+         expiryDate,
+         collectionId,
+         mint,
+         name,
+         symbol,
+         uri,
+         computeBudget = DEFAULT_COMPUTE_BUDGET,
+     }: CreateCollectionMintTxTxParams) {
+        const bigCollectionId = new anchor.BN(collectionId);
+        const payer = this.provider.wallet.publicKey;
+        const tokenCreateIx = await this.program.methods
+            .collectionMint({
+                name: name,
+                symbol: symbol,
+                uri: uri,
+                expiryDate: expiryDate,
+                collectionCounter: bigCollectionId,
+            })
+            .accountsStrict({
+                mint: mint,
+                tokenAccount: getAtaAddress(mint.toString(), payer.toString()),
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                permanentDelegate: this.getProgramDelegate(),
+                payer: payer,
+                collectionConfig: getCollectionConfig(
+                    bigCollectionId,
+                    this.programIds.core
+                ),
+                rent: SYSVAR_RENT_PUBKEY,
+                systemProgram: SystemProgram.programId,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
+                epplexCore: this.programIds.core,
+            })
+            .instruction();
+
+        const ixs = [
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: computeBudget,
+            }),
+            tokenCreateIx,
+        ];
+
+        return new Transaction().add(...ixs);
+    }
+
+    /*
+        DEPRECATED
+     */
+    async createWhitelistMintTx({
+        expiryDate,
+        name,
+        symbol,
+        uri,
+        mint,
+        computeBudget = DEFAULT_COMPUTE_BUDGET,
+    }: CreateWhitelistMintTxParams) {
+        const payer = this.provider.wallet.publicKey;
+        const tokenCreateIx = await this.program.methods
+            .whitelistMint({
+                name: name,
+                symbol: symbol,
+                uri: uri,
+                expiryDate: expiryDate,
+            })
+            .accountsStrict({
+                mint,
+                tokenAccount: getAtaAddress(mint.toString(), payer.toString()),
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                permanentDelegate: this.getProgramDelegate(),
+                globalCollectionConfig:
+                    getGlobalCollectionConfig(this.programIds.core),
+                payer: payer,
+                rent: SYSVAR_RENT_PUBKEY,
+                systemProgram: SystemProgram.programId,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
+                epplexCore: this.programIds.core,
+            })
+            .instruction();
+
+        const ixs = [
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: computeBudget,
+            }),
+            tokenCreateIx,
+        ];
+
+        return new Transaction().add(...ixs);
     }
 }
 

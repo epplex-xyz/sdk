@@ -201,7 +201,7 @@ export type EpplexBurger = {
       "name": "ephemeralRuleCreate",
       "accounts": [
         {
-          "name": "payer",
+          "name": "signer",
           "isMut": true,
           "isSigner": true
         },
@@ -2116,7 +2116,7 @@ export const IDL: EpplexBurger = {
       "name": "ephemeralRuleCreate",
       "accounts": [
         {
-          "name": "payer",
+          "name": "signer",
           "isMut": true,
           "isSigner": true
         },

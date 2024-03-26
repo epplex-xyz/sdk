@@ -20,6 +20,7 @@ export interface RuleTxParams {
     renewalPrice: number;
     treasury: PublicKey;
 }
+
 export interface TimeTxParams {
     time: number;
     seed: number;

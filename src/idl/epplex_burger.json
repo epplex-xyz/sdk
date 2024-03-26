@@ -201,7 +201,7 @@
       "name": "ephemeralRuleCreate",
       "accounts": [
         {
-          "name": "payer",
+          "name": "signer",
           "isMut": true,
           "isSigner": true
         },
