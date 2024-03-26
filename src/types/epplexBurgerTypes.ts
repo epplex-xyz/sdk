@@ -866,11 +866,6 @@ export type EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "tokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "groupMember",
           "isMut": false,
           "isSigner": false
@@ -886,7 +881,7 @@ export type EpplexBurger = {
           "isSigner": true
         },
         {
-          "name": "permanentDelegate",
+          "name": "updateAuthority",
           "isMut": false,
           "isSigner": false
         },
@@ -1473,11 +1468,6 @@ export type EpplexBurger = {
         },
         {
           "name": "nft",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "participant",
           "type": "publicKey",
           "index": false
         },
@@ -2629,11 +2619,6 @@ export const IDL: EpplexBurger = {
           "isSigner": false
         },
         {
-          "name": "tokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "groupMember",
           "isMut": false,
           "isSigner": false
@@ -2649,7 +2634,7 @@ export const IDL: EpplexBurger = {
           "isSigner": true
         },
         {
-          "name": "permanentDelegate",
+          "name": "updateAuthority",
           "isMut": false,
           "isSigner": false
         },
@@ -3236,11 +3221,6 @@ export const IDL: EpplexBurger = {
         },
         {
           "name": "nft",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "participant",
           "type": "publicKey",
           "index": false
         },

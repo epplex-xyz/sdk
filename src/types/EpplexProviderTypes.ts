@@ -87,6 +87,10 @@ export interface TokenGameResetParams {
     mint: PublicKey;
 }
 
+export interface TokenGameImmunityParams {
+    mint: PublicKey;
+}
+
 export interface GameStartParams {
     endTimestamp: number;
     voteType: IdlVoteType;

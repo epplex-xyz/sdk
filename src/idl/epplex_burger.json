@@ -866,11 +866,6 @@
           "isSigner": false
         },
         {
-          "name": "tokenAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "groupMember",
           "isMut": false,
           "isSigner": false
@@ -886,7 +881,7 @@
           "isSigner": true
         },
         {
-          "name": "permanentDelegate",
+          "name": "updateAuthority",
           "isMut": false,
           "isSigner": false
         },
@@ -1473,11 +1468,6 @@
         },
         {
           "name": "nft",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "participant",
           "type": "publicKey",
           "index": false
         },

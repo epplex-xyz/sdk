@@ -34,7 +34,7 @@ import {
     CreateCollectionMintTxTxParams,
     CreateWhitelistMintTxParams,
     GameConfig,
-    GameStartParams, GameUpdateParams, TokenGameBurnTxParams,
+    GameStartParams, GameUpdateParams, TokenGameBurnTxParams, TokenGameImmunityParams,
     TokenGameResetParams,
     TokenGameVoteTxParams, WnsGroupMintParams, WnsMemberMintParams,
 } from "./types/EpplexProviderTypes";
@@ -319,6 +319,7 @@ class EpplexProvider {
         //     throw new Error("Wrap SOL failed");
         // }
         // ixs.push(...wrapSolTxn.ixns);
+
         const WSOL_NATIVE_ADDRESS = new PublicKey(
             "So11111111111111111111111111111111111111112"
         );
@@ -475,7 +476,6 @@ class EpplexProvider {
         // Could just do this.provider.wallet.publicKey
         const mintOwner =
             args.owner ?? (await getMintOwner(this.provider.connection, args.mint));
-        const tokenAccount = getAtaAddressPubkey(args.mint, mintOwner);
 
         return await this.program.methods
             .tokenGameVote({
@@ -483,7 +483,7 @@ class EpplexProvider {
             })
             .accountsStrict({
                 mint: args.mint,
-                tokenAccount,
+                tokenAccount: getAtaAddressPubkey(args.mint, mintOwner),
                 groupMember: this.getMemberAccountPda(args.mint),
                 gameConfig: this.getGameConfig(),
                 payer: mintOwner,
@@ -501,6 +501,20 @@ class EpplexProvider {
                 groupMember: this.getMemberAccountPda(mint),
                 payer: this.provider.publicKey,
                 gameConfig: this.getGameConfig(),
+                updateAuthority: this.getProgramDelegate(),
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+    }
+
+    async tokenGameImmunityTx({mint}: TokenGameImmunityParams) {
+        return await this.program.methods
+            .tokenGameImmunity({})
+            .accountsStrict({
+                mint,
+                groupMember: this.getMemberAccountPda(mint),
+                gameConfig: this.getGameConfig(),
+                payer: this.provider.publicKey,
                 updateAuthority: this.getProgramDelegate(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
             })
