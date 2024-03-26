@@ -105,7 +105,7 @@ export function setupCollection(
     it("Creates a new Rule", async () => {
         const tx = await burger.ephemeralRuleCreateTx({
             seed: baseSeed,
-            renewalPrice: 1000,
+            renewalPrice: 1000_000_000_000, // 1000 SOL
             treasury: PAYER_ADMIN
         })
         const id = await sendAndConfirmRawTransaction(burger.provider.connection, tx, wallet.publicKey, wallet, [])
