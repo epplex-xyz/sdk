@@ -7,10 +7,10 @@ import {expect} from "chai";
 describe("Testing Setup Colleciton -> Generate Mints", () => {
     const { wallet, burgerProvider } = setupGlobals();
     const collectionMint = Keypair.generate();
-    const maxSize = 3;
+    const maxSize = 2;
     const collectionArgs = {
         groupMint: collectionMint.publicKey,
-        name: "Collection Name",
+        name: "Name \uD83C\uDF54",
         symbol: "Collection Symbol",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo",
         maxSize: maxSize
@@ -18,9 +18,7 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
     const seed = Math.floor(Math.random() * 100000)
     // const seed = 69420
     const renewalPrice = 1000_000_000_000
-    const expiryDate = 3133634400 // 2069 4 20
-    // const expiryDate = Math.floor(Number.MAX_SAFE_INTEGER / 1000)
-    console.log("expirydate", Math.floor(Number.MAX_SAFE_INTEGER / 1000), 3133634400)
+    const expiryDate = 3133677600 // 2069 4 20
     const addGameReset = true;
 
     console.log("ruleSeed", seed);
