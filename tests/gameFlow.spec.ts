@@ -4,9 +4,8 @@ import {expect} from "chai";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
 import {Keypair} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
-
-const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
-const now = (Math.floor((new Date()).getTime() / 1000)).toString()
+import {readJson} from "./utils/keyUtils";
+import {importKey, generateNonce, encrypt} from "../src";
 
 /*
     Ephemerality:
@@ -23,9 +22,13 @@ const now = (Math.floor((new Date()).getTime() / 1000)).toString()
 
 describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
     const {wallet, burgerProvider} = setupGlobals()
-    const collectionMint = Keypair.generate();
     const connection = burgerProvider.provider.connection;
 
+    const seed = Math.floor(Math.random() * 100000)
+    const collectionMint = Keypair.generate();
+
+    const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
+    const now = (Math.floor((new Date()).getTime() / 1000)).toString()
     const metadata = getDefaultMetadata({})
     const maxSize = 1;
     const collectionArgs = {
@@ -35,21 +38,14 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         uri: metadata.uri,
         maxSize: maxSize
     }
-    const seed = Math.floor(Math.random() * 100000)
 
+    const encryptKeypair: {public: string, private: string} = readJson("/Users/Mac/Documents/Crypto/epPlex-xyz/burger-game/encryptKeypair.json")
+    const useEncrypt = true
+
+    // Setup
     const mints = setupCollection(
         burgerProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
     )
-    // const mint = mints[0]; For some reason this is not possible
-
-    /*
-        Note game state has been default reset in setup collection
-     */
-    // it("Reset All Tokens (None gamestate)", async() => {
-    //     const tx = await burgerProvider.tokenGameResetTx({mint: mints[0] })
-    //     const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
-    //     expect(id).to.not.be.empty;
-    // })
 
     it("Start Game", async () => {
         const tx = await burgerProvider.gameStartTx({
@@ -58,8 +54,8 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
             inputType: { text: {} },
             gamePrompt: "What is your favorite burger?",
             gameName: "Game1",
-            isEncrypted: false,
-            publicEncryptKey: "",
+            isEncrypted: useEncrypt,
+            publicEncryptKey: useEncrypt ? encryptKeypair.public : "",
             ruleSeed: seed,
             tokenGroup: collectionMint.publicKey
         });
@@ -67,8 +63,30 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         expect(id).to.not.be.empty;
     });
 
+
+    // it("Token Game vote fail due to encryption", async() => {
+    //     if (useEncrypt) {
+    //         const tx = await burgerProvider.tokenGameVoteTx({mint: mints[0], message: "randomNonEncryptedMsg"})
+    //         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
+    //         expect(id).to.be.empty;
+    //     }
+    // })
+
     it("Token Game vote", async() => {
-        const tx = await burgerProvider.tokenGameVoteTx({mint: mints[0], message: "hello"})
+        let message: string;
+        if (useEncrypt) {
+            const context = "node"
+            const key = await importKey(encryptKeypair.public, "public", context);
+            const data = {
+                answer: "hello",
+                nonce: generateNonce(undefined, context),
+            };
+            message = await encrypt(JSON.stringify(data), key, context);
+        } else {
+            message = "hello"
+        }
+
+        const tx = await burgerProvider.tokenGameVoteTx({mint: mints[0], message})
         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
         expect(id).to.not.be.empty;
     })
@@ -109,4 +127,5 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         const tx = await burgerProvider.gameCloseTx();
         await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
     });
+
 });
