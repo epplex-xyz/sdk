@@ -291,8 +291,13 @@
           "isSigner": false
         },
         {
-          "name": "burner",
+          "name": "payer",
           "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "burner",
+          "isMut": false,
           "isSigner": true
         },
         {

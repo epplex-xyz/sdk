@@ -67,7 +67,7 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     // it("Token Game vote fail due to encryption", async() => {
     //     if (useEncrypt) {
     //         const tx = await burgerProvider.tokenGameVoteTx({mint: mints[0], message: "randomNonEncryptedMsg"})
-    //         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
+    //         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [], undefined, undefined, {skipPreflight: true})
     //         expect(id).to.be.empty;
     //     }
     // })

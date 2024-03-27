@@ -291,8 +291,13 @@ export type EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "burner",
+          "name": "payer",
           "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "burner",
+          "isMut": false,
           "isSigner": true
         },
         {
@@ -1356,8 +1361,13 @@ export const IDL: EpplexCore = {
           "isSigner": false
         },
         {
-          "name": "burner",
+          "name": "payer",
           "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "burner",
+          "isMut": false,
           "isSigner": true
         },
         {
