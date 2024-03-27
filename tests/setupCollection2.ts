@@ -3,8 +3,6 @@ import {Keypair, PublicKey} from "@solana/web3.js";
 import {PAYER_ADMIN} from "../src/constants/keys";
 import {sendAndConfirmRawTransaction, sendAndConfirmRawVersionedTransaction} from "../src";
 import {expect} from "chai";
-// import fs from "fs";
-// import {explorerUrl} from "../src/utils/generic";
 
 describe("Testing Setup Colleciton -> Generate Mints", () => {
     const { wallet, burgerProvider } = setupGlobals();
@@ -29,8 +27,6 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
     console.log("collectionMint", collectionMint.publicKey.toString());
 
     const mints: PublicKey[] = [];
-    // const output: {id: string, mint: string, appendResetTx: string}[] = []
-
     it("Creates a new Rule", async () => {
         const tx = await burgerProvider.ephemeralRuleCreateTx({
             seed: seed,
@@ -76,44 +72,5 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
         }
         expect(mints.length).to.be.equal(collectionArgs.maxSize);
     });
-
-
-    // it("Resets token and adds rule", async () => {
-    //     for(let i = 0; i < collectionArgs.maxSize; i++){
-    //         const mint = mints[i]
-    //
-    //         // Membership
-    //         const membershipTx = await burgerProvider.ephemeralDataAddTx({
-    //             membership: mint,
-    //             time: expiryDate,
-    //             seed: seed,
-    //             payer: wallet.publicKey,
-    //         });
-    //
-    //         const resetTx = await burgerProvider.tokenGameResetTx({mint})
-    //         const id = await sendAndConfirmRawVersionedTransaction(
-    //             burgerProvider.provider.connection, [
-    //                 ...membershipTx.instructions,
-    //                 ...resetTx.instructions
-    //             ], wallet.publicKey, wallet, []
-    //         );
-    //         expect(id).to.not.be.empty;
-    //         output.push({id: `${i + 1}`, mint: mint.toString(), appendResetTx: explorerUrl(burgerProvider.provider.connection, id)})
-    //     }
-    //
-    //     expect(output.length).to.be.equal(collectionArgs.maxSize);
-    //
-    //     // Create collection config file
-    //     const collectionJSON = {
-    //         key: collectionMint.publicKey.toString(),
-    //         mints: output,
-    //         seed: seed,
-    //     };
-    //     fs.mkdirSync("tests/.output", { recursive: true });
-    //     fs.writeFileSync(
-    //         "tests/.output/append.json",
-    //         JSON.stringify(collectionJSON, null, 2)
-    //     );
-    // });
 
 });
