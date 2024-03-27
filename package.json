@@ -57,6 +57,7 @@
 		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts",
 		"setup-collection": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupCollection.ts",
 		"setup-collection2": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupCollection2.ts",
+		"setup-mainnet": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupMainnet.ts",
 		"close-game-should-not-be-ran-in-prod": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/close.ts"
 	},
 	"devDependencies": {
