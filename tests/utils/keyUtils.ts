@@ -54,3 +54,7 @@ export function saveKeypairToFile(
 
     return fileName;
 }
+
+export function readJson(absPath) {
+    return JSON.parse(fs.readFileSync(absPath, { encoding: "utf-8" }));
+}
