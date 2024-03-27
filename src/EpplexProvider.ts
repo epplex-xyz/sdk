@@ -239,6 +239,16 @@ class EpplexProvider {
             ixs.push(...tx.instructions)
         }
 
+        if (params.ephemeralDataSeed) {
+            const tx = await this.ephemeralDataAddTx({
+                membership: params.mint,
+                time: Number.parseInt(params.expiryDate),
+                seed: params.ephemeralDataSeed,
+                payer: payer,
+            });
+            ixs.push(...tx.instructions)
+        }
+
         return new Transaction().add(...ixs);
     }
 

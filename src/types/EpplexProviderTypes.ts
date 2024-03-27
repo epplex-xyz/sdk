@@ -43,6 +43,7 @@ export interface WnsMemberMintParams {
     uri: string;
     computeBudget?: number;
     addGameReset?: boolean;
+    ephemeralDataSeed?: number;
 }
 
 export interface WnsGroupMintParams {
