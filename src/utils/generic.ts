@@ -95,10 +95,12 @@ export function explorerUrl(connection: Connection, tx: string): string {
     if (connection.rpcEndpoint.includes("devnet")) {
         cluster = "devnet-solana"
     } else if (connection.rpcEndpoint.includes("mainnet")) {
-        cluster = "mainnet-qn1"
+        // cluster = "mainnet-qn1"
+        cluster = ""
     }
 
-    return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
+    return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`
+    // return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
 }
 
 export async function sendAndConfirmRawTransaction(
