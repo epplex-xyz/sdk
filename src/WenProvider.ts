@@ -17,7 +17,7 @@ import {ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID} from "@solana/spl-to
 import {
     AddDistributionArgs,
     AddGroupArgs,
-    AdditionalAccountArgs,
+    AdditionalAccountArgs, BurnNftArgs,
     CreateCollectionArgs,
     CreateGroupArgs, FreezeNftArgs,
     GroupAccount,
@@ -219,6 +219,22 @@ class WenProvider {
                 group: this.getGroupAccountPda(args.group) ,
                 member: this.getMemberAccountPda(args.mint),
                 manager: this.getManagerAccountPda(),
+            })
+            .instruction();
+
+        return ix;
+    };
+
+    async getBurnNftIx(args: BurnNftArgs) {
+        const ix = await this.metadataProgram.methods
+            .burnMintAccount()
+            .accountsStrict({
+                payer: args.payer,
+                user: args.authority,
+                mint: args.mint,
+                mintTokenAccount: getAtaAddress(args.mint, args.authority),
+                manager: this.getManagerAccountPda(),
+                tokenProgram: TOKEN_2022_PROGRAM_ID,
             })
             .instruction();
 

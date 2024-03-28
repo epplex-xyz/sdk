@@ -60,3 +60,7 @@ export type FreezeNftArgs = {
     mint: string;
     delegateAuthority: string;
 } & CommonArgs;
+
+export type BurnNftArgs = {
+    mint: string;
+} & CommonArgs;
