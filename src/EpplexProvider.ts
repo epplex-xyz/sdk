@@ -28,7 +28,7 @@ import {
 } from "./constants/coreSeeds";
 import { BURGER_PROGRAM_ID, CORE_PROGRAM_ID } from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
-import { DEFAULT_COMPUTE_BUDGET } from "./constants/transaction";
+import {DEFAULT_COMPUTE_BUDGET, DEFAULT_COMPUTE_UNIT} from "./constants/transaction";
 import {
     BurnTxParams,
     CreateCollectionMintTxTxParams,
@@ -186,7 +186,10 @@ class EpplexProvider {
 
         const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
-                units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET, //
+                units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET,
+            }),
+            ComputeBudgetProgram.setComputeUnitPrice({
+                microLamports: params.computeUnit ?? DEFAULT_COMPUTE_UNIT,
             }),
             mintIx,
         ];
@@ -229,7 +232,10 @@ class EpplexProvider {
 
         const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
-                units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET, //
+                units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET,
+            }),
+            ComputeBudgetProgram.setComputeUnitPrice({
+                microLamports: params.computeUnit ?? DEFAULT_COMPUTE_UNIT,
             }),
             mintIx,
         ];

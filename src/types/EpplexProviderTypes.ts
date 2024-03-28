@@ -42,6 +42,7 @@ export interface WnsMemberMintParams {
     symbol: string;
     uri: string;
     computeBudget?: number;
+    computeUnit?: number;
     addGameReset?: boolean;
     ephemeralDataSeed?: number;
 }
@@ -54,6 +55,7 @@ export interface WnsGroupMintParams {
     maxSize: number;
     paymentMint?: PublicKey;
     computeBudget?: number;
+    computeUnit?: number;
 }
 
 export interface CreateCollectionMintTxTxParams {
