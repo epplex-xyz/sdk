@@ -52,7 +52,7 @@ export const CONNECTION = new Connection(
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 console.log("CONNECTION", CONNECTION.rpcEndpoint, CONFIRM_OPTIONS)
 console.log("PROGRAM_IDS", PROGRAM_IDS)
-console.log("Pubkey", PAYER_ADMIN.publicKey.toString())
+console.log("Payer Admin: ", PAYER_ADMIN.publicKey.toString())
 
 interface GetSetupReturn {
     wallet: NodeWallet,

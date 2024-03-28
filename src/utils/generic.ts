@@ -166,7 +166,7 @@ export async function sendAndConfirmRawVersionedTransaction(
     confirmOptions: SendOptions = CONFIRM_OPTIONS,
 ): Promise<TransactionSignature | null> {
     const latestBlockhash = await connection
-        .getLatestBlockhash()
+        .getLatestBlockhash(commitment)
     const messageV0 = new TransactionMessage({
         payerKey: feePayer,
         recentBlockhash: latestBlockhash.blockhash,
