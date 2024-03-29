@@ -9,5 +9,4 @@ describe("Close game", () => {
         const tx = await burgerProvider.gameCloseTx()
         await sendAndConfirmRawTransaction(CONNECTION, tx, wallet.publicKey, wallet, [])
     })
-
 });

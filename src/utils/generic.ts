@@ -99,8 +99,8 @@ export function explorerUrl(connection: Connection, tx: string): string {
         cluster = ""
     }
 
-    return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`
-    // return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
+    // return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`
+    return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
 }
 
 export async function sendAndConfirmRawTransaction(

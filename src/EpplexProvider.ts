@@ -184,6 +184,7 @@ class EpplexProvider {
             })
             .instruction();
 
+        // TODO This should be moved out on the caller responsibility
         const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
                 units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET,
@@ -230,6 +231,7 @@ class EpplexProvider {
             })
             .instruction();
 
+        // TODO This should be moved out on the caller responsibility
         const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
                 units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET,
