@@ -419,17 +419,13 @@ class EpplexProvider {
         return getGameConfig(this.program.programId);
     }
 
-    async getGameData(): Promise<GameConfig | null> {
-        try {
-            return await this.program
-                .account
-                .gameConfig
-                .fetch(
-                    this.getGameConfig()
-                );
-        } catch (err) {
-            return null
-        }
+    async getGameData(): Promise<GameConfig | undefined> {
+        return await this.program
+            .account
+            .gameConfig
+            .fetch(this.getGameConfig())
+            .then(account => account)
+            .catch(() => undefined);
     }
 
     async gameCreateTx(): Promise<Transaction> {

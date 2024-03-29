@@ -1,52 +1,8 @@
 import {setupGlobals} from "./utils/setup";
 import {expect} from "chai";
-import {EpNFTService, sendAndConfirmRawTransaction} from "../src";
-import {PublicKey, Transaction, TransactionInstruction} from "@solana/web3.js";
-function getTransactionSize(payer: PublicKey, ixns: TransactionInstruction[]){
-    const encodeLength = (len: number) => {
-        const bytes = new Array<number>();
-        let remLen = len;
-        for (;;) {
-            let elem = remLen & 0x7f;
-            remLen >>= 7;
-            if (remLen === 0) {
-                bytes.push(elem);
-                break;
-            } else {
-                elem |= 0x80;
-                bytes.push(elem);
-            }
-        }
-        return bytes;
-    };
-
-    const reqSigners = ixns.reduce((signers, ixn) => {
-        ixn.keys.map((a) => {
-            if (a.isSigner) {
-                signers.add(a.pubkey.toBase58());
-            }
-        });
-        return signers;
-    }, new Set<string>());
-
-    // need to include the payer as a signer
-    if (!reqSigners.has(payer.toBase58())) {
-        reqSigners.add(payer.toBase58());
-    }
-
-    const txn = new Transaction({
-        feePayer: PublicKey.default,
-        blockhash: "1".repeat(32),
-        lastValidBlockHeight: 200000000,
-    }).add(...ixns);
-
-    const txnSize =
-        txn.serializeMessage().length +
-        reqSigners.size * 64 +
-        encodeLength(reqSigners.size).length;
-
-    return txnSize;
-}
+import {EpNFTService, getTransactionSize, sendAndConfirmRawTransaction} from "../src";
+import {PublicKey, Transaction} from "@solana/web3.js";
+import {DecodeTypesService} from "../src";
 
 
 describe('Reset all tokens in PAYER_ADMIN', () => {
@@ -63,6 +19,14 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
         );
         console.log("Number of NFTs", myNFts.length);
         expect(myNFts).to.not.be.empty;
+    });
+
+    it('Get Game data', async () => {
+        const data = await burgerProvider.getGameData()
+        if (data === undefined)
+            return
+        const res = DecodeTypesService.convertGameData(data)
+        console.log("Data result", res)
     });
 
     it('Reset all tokens', async () => {
@@ -95,5 +59,4 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
         }
     });
 
-    // make a function that prints game state
 });
