@@ -91,6 +91,7 @@ export function trySetupManagerAccount(
 
 export function setupCollection(
     burger: EpplexProvider,
+    core: CoreProvider,
     collectionMint: Keypair,
     collectionArgs: WnsGroupMintParams,
     epMintArgs: EpMintParams,
@@ -102,7 +103,11 @@ export function setupCollection(
     const mints: PublicKey[] = [];
     const baseSeed = seed ?? Math.floor(Math.random() * 100000);
 
-    it("Creates a new Rule", async () => {
+    it("Creates a new rule if not created already", async () => {
+        const res = await core.getRuleData(baseSeed)
+        if (res !== undefined)
+            return
+
         const tx = await burger.ephemeralRuleCreateTx({
             seed: baseSeed,
             renewalPrice: 1000_000_000_000, // 1000 SOL
