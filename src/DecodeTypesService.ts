@@ -107,5 +107,26 @@ class DecodeTypesService {
                 return { text: {} }
         }
     }
+
+    // Frontend should probably use this funciton instead
+    static convertGameData(data: any): object {
+        return {
+            burnAmount: data.burnAmount,
+            gamePrompt: data.gamePrompt,
+            gameRound: data.gameRound,
+            gameName: data.gameName,
+            gameStatus: DecodeTypesService.decodeGameStatus(data.gameStatus),
+            phaseStartTimestamp: Number(data.phaseStartTimestamp),
+            phaseEndTimestamp: Number(data.phaseEndTimestamp),
+            // gameMaster: PublicKey
+            isEncrypted: data.isEncrypted,
+            publicEncryptKey: data.publicEncryptKey,
+            submissionAmount: data.submissionAmount,
+            voteType: DecodeTypesService.decodeVoteType(data.voteType),
+            inputType: DecodeTypesService.decodeInputType(data.inputType),
+            tokenGroup: data.tokenGroup.toString(),
+            ruleSeed: Number(data.ruleSeed),
+        };
+    }
 }
 export default DecodeTypesService;
