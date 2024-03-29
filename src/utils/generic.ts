@@ -207,3 +207,51 @@ export async function sendAndConfirmRawVersionedTransaction(
         return null;
     }
 }
+
+// Taken from switchboard
+// https://github.com/switchboard-xyz/solana-sdk/blob/d049b53fe70769493bb8195685a1bcf737bdee9b/javascript/solana.js/src/TransactionObject.ts#L353
+export function getTransactionSize(payer: PublicKey, ixns: TransactionInstruction[]){
+    const encodeLength = (len: number) => {
+        const bytes = new Array<number>();
+        let remLen = len;
+        for (;;) {
+            let elem = remLen & 0x7f;
+            remLen >>= 7;
+            if (remLen === 0) {
+                bytes.push(elem);
+                break;
+            } else {
+                elem |= 0x80;
+                bytes.push(elem);
+            }
+        }
+        return bytes;
+    };
+
+    const reqSigners = ixns.reduce((signers, ixn) => {
+        ixn.keys.map((a) => {
+            if (a.isSigner) {
+                signers.add(a.pubkey.toBase58());
+            }
+        });
+        return signers;
+    }, new Set<string>());
+
+    // need to include the payer as a signer
+    if (!reqSigners.has(payer.toBase58())) {
+        reqSigners.add(payer.toBase58());
+    }
+
+    const txn = new Transaction({
+        feePayer: PublicKey.default,
+        blockhash: "1".repeat(32),
+        lastValidBlockHeight: 200000000,
+    }).add(...ixns);
+
+    const txnSize =
+        txn.serializeMessage().length +
+        reqSigners.size * 64 +
+        encodeLength(reqSigners.size).length;
+
+    return txnSize;
+}

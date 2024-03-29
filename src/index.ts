@@ -36,6 +36,7 @@ import {
     sendAndConfirmRawTransaction,
     sendAndConfirmRawVersionedTransaction,
     getMintOwner,
+    getTransactionSize
 } from "./utils/generic";
 
 import {
@@ -114,5 +115,6 @@ export {
 
     sendAndConfirmRawTransaction,
     sendAndConfirmRawVersionedTransaction,
-    getMintOwner
+    getMintOwner,
+    getTransactionSize,
 };
