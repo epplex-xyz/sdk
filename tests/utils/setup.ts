@@ -12,7 +12,7 @@ import WenProvider from "../../src/WenProvider";
 import {COMMITMENT, CONFIRM_OPTIONS, getClusterByEndpoint} from "../../src/utils/settings";
 
 export const SDK_TEST_VERSION = "6.0";
-export const NFT_NAME = "DEV";
+export const DEFAULT_NFT_NAME = "DEFAULT_DEV";
 
 /*
     How to use:

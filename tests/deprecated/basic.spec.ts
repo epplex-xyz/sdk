@@ -1,8 +1,8 @@
 import {Keypair, PublicKey} from "@solana/web3.js";
-import {EpNFTService, getMint, sendAndConfirmRawTransaction} from "../src";
-import {CONNECTION, setupGlobals} from "./utils/setup";
+import {EpNFTService, getMint, sendAndConfirmRawTransaction} from "../../src";
+import {CONNECTION, setupGlobals} from "../utils/setup";
 import {assert} from "chai";
-import {getDefaultMetadata} from "./utils/getDefaultMetadata";
+import {getDefaultMetadata} from "../utils/getDefaultMetadata";
 import {BN} from "@coral-xyz/anchor";
 
 

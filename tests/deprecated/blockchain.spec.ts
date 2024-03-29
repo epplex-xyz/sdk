@@ -1,5 +1,5 @@
-import {setupGlobals} from "./utils/setup";
-import {sleep} from "./utils/testUtils";
+import {setupGlobals} from "../utils/setup";
+import {sleep} from "../utils/testUtils";
 import {expect} from "chai";
 
 
