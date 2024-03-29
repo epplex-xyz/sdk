@@ -11,7 +11,8 @@ import {
 import WenProvider from "../../src/WenProvider";
 import {COMMITMENT, CONFIRM_OPTIONS, getClusterByEndpoint} from "../../src/utils/settings";
 
-export const SDK_TEST_VERSION = "5.0";
+export const SDK_TEST_VERSION = "6.0";
+export const NFT_NAME = "DEV";
 
 /*
     How to use:
@@ -51,7 +52,7 @@ export const CONNECTION = new Connection(
 
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 console.log("CONNECTION", CONNECTION.rpcEndpoint, CONFIRM_OPTIONS)
-console.log("PROGRAM_IDS", PROGRAM_IDS)
+console.log("PROGRAM_IDS", Object.values(PROGRAM_IDS).map((obj) => obj.toString()))
 console.log("Payer Admin: ", PAYER_ADMIN.publicKey.toString())
 
 interface GetSetupReturn {

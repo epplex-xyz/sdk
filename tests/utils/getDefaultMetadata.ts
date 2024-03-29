@@ -1,4 +1,4 @@
-import {SDK_TEST_VERSION} from "./setup";
+import {NFT_NAME, SDK_TEST_VERSION} from "./setup";
 
 
 interface MetadataPropsReturn {
@@ -19,7 +19,7 @@ export function getDefaultMetadata({
 
     return {
         expiryDate: expiryDate,
-        name: `(SDK tests ${SDK_TEST_VERSION}) epBurger`,
+        name: `SDK ${SDK_TEST_VERSION} ${NFT_NAME}`,
         symbol: "EP",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo"
     }
