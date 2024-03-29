@@ -52,6 +52,7 @@
 		"test-blockchain": "dotenv -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/blockchain.spec.ts",
 		"test-freeze": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freeze.spec.ts",
 		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts",
+		"reset-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/resetAll.ts",
 		"setup-collection": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupCollection.ts",
 		"setup-collection2": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupCollection2.ts",
 		"setup-mainnet": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/setupMainnet.ts",
