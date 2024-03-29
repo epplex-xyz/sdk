@@ -21,7 +21,7 @@ import {importKey, generateNonce, encrypt} from "../src";
  */
 
 describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
-    const {wallet, burgerProvider} = setupGlobals()
+    const {wallet, burgerProvider, coreProvider} = setupGlobals()
     const connection = burgerProvider.provider.connection;
 
     const seed = Math.floor(Math.random() * 100000)
@@ -44,7 +44,7 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
 
     // Setup
     const mints = setupCollection(
-        burgerProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
+        burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
     )
 
     it("Start Game", async () => {
