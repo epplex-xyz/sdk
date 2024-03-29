@@ -105,8 +105,10 @@ export function setupCollection(
 
     it("Creates a new rule if not created already", async () => {
         const res = await core.getRuleData(baseSeed)
-        if (res !== undefined)
+        if (res !== undefined) {
+            console.log("Rule already created")
             return
+        }
 
         const tx = await burger.ephemeralRuleCreateTx({
             seed: baseSeed,

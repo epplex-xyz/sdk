@@ -4,11 +4,15 @@ import {Keypair} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 
 describe("Testing Setup Colleciton -> Generate Mints", () => {
-    const { wallet, burgerProvider } = setupGlobals();
+    const { wallet, burgerProvider , coreProvider} = setupGlobals();
     const collectionMint = Keypair.generate();
 
-    const metadata = getDefaultMetadata({})
+    // TEST PARAMS
+    const seed = 1337
+    const name = "BOB"
     const maxSize = 5;
+
+    const metadata = getDefaultMetadata({name})
     const collectionArgs = {
         groupMint: collectionMint.publicKey,
         name: metadata.name,
@@ -16,14 +20,13 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
         uri: metadata.uri,
         maxSize: maxSize
     }
-    const seed = Math.floor(Math.random() * 100000)
 
     console.log("ruleSeed", seed);
     console.log("collectionMint", collectionMint.publicKey.toString());
     const receiver = undefined
     // const receiver = new PublicKey("")
 
-    const mints = setupCollection(
-        burgerProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed
+    setupCollection(
+        burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed
     )
 });
