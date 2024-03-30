@@ -626,6 +626,7 @@ class EpplexProvider {
                 updateAuthority: this.getProgramDelegate(),
                 payer: this.provider.wallet.publicKey,
                 token22Program: TOKEN_2022_PROGRAM_ID,
+                systemProgram: SystemProgram.programId,
             })
             .transaction();
     }
