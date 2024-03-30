@@ -501,6 +501,49 @@ export type EpplexBurger = {
       ]
     },
     {
+      "name": "tokenGameImmunity",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "groupMember",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenGameImmunityParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "gameCreate",
       "accounts": [
         {
@@ -972,49 +1015,6 @@ export type EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "CollectionMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenGameImmunity",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "groupMember",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenGameImmunityParams"
           }
         }
       ]
@@ -2474,6 +2474,49 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
+      "name": "tokenGameImmunity",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "groupMember",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "gameConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenGameImmunityParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "gameCreate",
       "accounts": [
         {
@@ -2945,49 +2988,6 @@ export const IDL: EpplexBurger = {
           "name": "params",
           "type": {
             "defined": "CollectionMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenGameImmunity",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "groupMember",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenGameImmunityParams"
           }
         }
       ]

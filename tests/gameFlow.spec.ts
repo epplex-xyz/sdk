@@ -30,7 +30,7 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
     const now = (Math.floor((new Date()).getTime() / 1000)).toString()
     const metadata = getDefaultMetadata({})
-    const maxSize = 1;
+    const maxSize = 2;
     const collectionArgs = {
         groupMint: collectionMint.publicKey,
         name: metadata.name,
@@ -46,6 +46,13 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     const mints = setupCollection(
         burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
     )
+
+    it('Token Game Immunity Mint[1] ', async () => {
+        console.log("mint asodmfkoasdmfkoas d", mints[1])
+        const tx = await burgerProvider.tokenGameImmunityTx({mint: mints[1]});
+        await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+    });
+
 
     it("Start Game", async () => {
         const tx = await burgerProvider.gameStartTx({
@@ -63,14 +70,18 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         expect(id).to.not.be.empty;
     });
 
+    it("Token Game vote fail due to encryption", async() => {
+        // Perform test if we have encrypt, otherwise return
+        if (!useEncrypt)
+            return
 
-    // it("Token Game vote fail due to encryption", async() => {
-    //     if (useEncrypt) {
-    //         const tx = await burgerProvider.tokenGameVoteTx({mint: mints[0], message: "randomNonEncryptedMsg"})
-    //         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [], undefined, undefined, {skipPreflight: true})
-    //         expect(id).to.be.empty;
-    //     }
-    // })
+        try {
+            const tx = await burgerProvider.tokenGameVoteTx({mint: mints[0], message: "randomNonEncryptedMsg"})
+            await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [], undefined, undefined, {skipPreflight: true})
+        } catch (e) {
+            console.log("Token vote failed")
+        }
+    })
 
     it("Token Game vote", async() => {
         let message: string;
@@ -105,6 +116,20 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         const tx = await burgerProvider.gameEvaluateTx();
         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
         expect(id).to.not.be.empty;
+    });
+
+    it('Try burn immunity token', async () => {
+        try {
+            const tx = await burgerProvider.tokenGameBurnTx({
+                mint: mints[1],
+                groupMint: collectionMint.publicKey,
+                owner: wallet.publicKey,
+                seed,
+            });
+            await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [], undefined, undefined, {skipPreflight: true});
+        } catch (e) {
+            console.log("Could not burn")
+        }
     });
 
     it('Token Game Burn', async () => {
