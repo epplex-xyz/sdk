@@ -30,9 +30,11 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
     // });
 
     // it('Update token metadata', async () => {
-    //     const mint = new PublicKey("9dqw9Fq9Riin1fynJQrXr6eaCE6fx3a49FMGDsyowa66")
+    //     // const mint = myNFts[0].mint
+    //     const mint = new PublicKey("9dqw9Fq9Riin1fynJQrXr6eaCE6fx3a49FMGDsyowa66") // true
+    //
     //     const symbol = "\uD83C\uDF54"
-    //     const uri = "https://shdw-drive.genesysgo.net/D5rr6uUDoMcKicdPZFFzKE2LvPNd7LppkrkB8c2pEHGKP/5000.json"
+    //     const uri = "https://shdw-drive.genesysgo.net/D5rr6uUDoMcKicdPZFFzKELvPNd7LppkrkB8c2pEHGKP/5000.json"
     //     const name = "Burger #5000"
     //
     //     const tx = await burgerProvider.tokenUpdateTx({mint, name, symbol, uri})
