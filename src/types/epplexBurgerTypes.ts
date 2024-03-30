@@ -791,6 +791,44 @@ export type EpplexBurger = {
       ]
     },
     {
+      "name": "tokenUpdate",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenUpdateParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "whitelistMint",
       "accounts": [
         {
@@ -1360,6 +1398,26 @@ export type EpplexBurger = {
       "type": {
         "kind": "struct",
         "fields": []
+      }
+    },
+    {
+      "name": "TokenUpdateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
       }
     },
     {
@@ -2706,6 +2764,44 @@ export const IDL: EpplexBurger = {
       ]
     },
     {
+      "name": "tokenUpdate",
+      "accounts": [
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "updateAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token22Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenUpdateParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "whitelistMint",
       "accounts": [
         {
@@ -3275,6 +3371,26 @@ export const IDL: EpplexBurger = {
       "type": {
         "kind": "struct",
         "fields": []
+      }
+    },
+    {
+      "name": "TokenUpdateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
       }
     },
     {
