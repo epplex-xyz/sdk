@@ -86,6 +86,13 @@ export interface BurnTxParams {
     useGameConfig?: boolean;
 }
 
+export interface TokenUpdateParams {
+    name: string;
+    symbol: string;
+    uri: string;
+    mint: PublicKey;
+}
+
 export interface TokenGameResetParams {
     mint: PublicKey;
 }

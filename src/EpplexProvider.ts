@@ -36,7 +36,7 @@ import {
     GameConfig,
     GameStartParams, GameUpdateParams, TokenGameBurnTxParams, TokenGameImmunityParams,
     TokenGameResetParams,
-    TokenGameVoteTxParams, WnsGroupMintParams, WnsMemberMintParams,
+    TokenGameVoteTxParams, TokenUpdateParams, WnsGroupMintParams, WnsMemberMintParams,
 } from "./types/EpplexProviderTypes";
 import { EpplexProviderWallet } from "./types/WalletProvider";
 import {getAtaAddress, getAtaAddressPubkey, getMintOwner, tryCreateATAIx} from "./utils/generic";
@@ -275,29 +275,7 @@ class EpplexProvider {
             .transaction();
     }
 
-    async tokenBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
-        const mintOwner =
-            owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAssociatedTokenAddressSync(
-            mint,
-            mintOwner,
-            undefined,
-            TOKEN_2022_PROGRAM_ID
-        );
 
-        return await this.program.methods
-            .tokenBurn({})
-            .accountsStrict({
-                mint: mint,
-                tokenAccount,
-                gameConfig: useGameConfig ? this.getGameConfig() : null,
-                permanentDelegate: this.getProgramDelegate(),
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                payer: this.provider.wallet.publicKey,
-                token22Program: TOKEN_2022_PROGRAM_ID,
-            })
-            .transaction();
-    }
 
     setEphemeralRuleSeed(seed: number) {
         this.ephemeralRuleSeed = seed;
@@ -612,6 +590,45 @@ class EpplexProvider {
         };
     }
 
+    async tokenBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
+        const mintOwner =
+            owner ?? (await getMintOwner(this.provider.connection, mint));
+        const tokenAccount = getAssociatedTokenAddressSync(
+            mint,
+            mintOwner,
+            undefined,
+            TOKEN_2022_PROGRAM_ID
+        );
+
+        return await this.program.methods
+            .tokenBurn({})
+            .accountsStrict({
+                mint: mint,
+                tokenAccount,
+                gameConfig: useGameConfig ? this.getGameConfig() : null,
+                permanentDelegate: this.getProgramDelegate(),
+                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                payer: this.provider.wallet.publicKey,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+    }
+
+    async tokenUpdateTx(args: TokenUpdateParams) {
+        return await this.program.methods
+            .tokenUpdate({
+                name: args.name,
+                symbol: args.symbol,
+                uri: args.uri
+            })
+            .accountsStrict({
+                mint: args.mint,
+                updateAuthority: this.getProgramDelegate(),
+                payer: this.provider.wallet.publicKey,
+                token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+    }
     /*
         * DEPRECATED Collection and mints
      */
