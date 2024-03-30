@@ -1,6 +1,6 @@
 import {setupGlobals} from "./utils/setup";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
-import {Keypair} from "@solana/web3.js";
+import {Keypair, PublicKey} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 
 describe("Testing Setup Colleciton -> Generate Mints", () => {
@@ -9,7 +9,7 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
 
     // TEST PARAMS
     const seed = 1337
-    const name = "BOB"
+    const name = "OTHER"
     const maxSize = 5;
 
     const metadata = getDefaultMetadata({name})
@@ -24,7 +24,6 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
     console.log("ruleSeed", seed);
     console.log("collectionMint", collectionMint.publicKey.toString());
     const receiver = undefined
-    // const receiver = new PublicKey("")
 
     setupCollection(
         burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, receiver, seed
