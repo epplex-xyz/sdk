@@ -52,7 +52,7 @@ export const CONNECTION = new Connection(
 
 export const PAYER_ADMIN = loadOrGenerateKeypair("epplex_PAYER_ADMIN");
 console.log("CONNECTION", CONNECTION.rpcEndpoint, CONFIRM_OPTIONS)
-console.log("PROGRAM_IDS", Object.values(PROGRAM_IDS).map((obj) => obj.toString()))
+console.log("PROGRAM_IDS", Object.values(PROGRAM_IDS).map((obj) => obj ? obj.toString() : undefined ))
 console.log("Payer Admin: ", PAYER_ADMIN.publicKey.toString())
 
 interface GetSetupReturn {
