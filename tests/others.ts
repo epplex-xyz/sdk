@@ -7,7 +7,7 @@ import coreProvider from "../src/CoreProvider";
 
 
 describe('Reset all tokens in PAYER_ADMIN', () => {
-    const {wallet, burgerProvider, wenProvider} = setupGlobals()
+    const {wallet, burgerProvider, wenProvider, coreProvider} = setupGlobals()
     const owner = wallet.publicKey;
 
     const connection = burgerProvider.provider.connection;
@@ -21,6 +21,12 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
     //     console.log("Number of NFTs", myNFts.length);
     //     expect(myNFts).to.not.be.empty;
     //
+    // });
+
+    // it('Get rule data', async () => {
+    //     const rule  = await coreProvider.getRuleData(69420)
+    //     console.log("Rule", Number(rule.renewalPrice)/1000_000_000);
+    //     // expect(myNFts).to.not.be.empty;
     // });
 
     // it('Get collection data', async () => {
