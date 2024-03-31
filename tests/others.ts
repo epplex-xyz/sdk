@@ -1,7 +1,13 @@
 import {setupGlobals} from "./utils/setup";
 import {expect} from "chai";
-import {EpNFTService, getTransactionSize, sendAndConfirmRawTransaction} from "../src";
-import {PublicKey, Transaction} from "@solana/web3.js";
+import {
+    EpNFTService,
+    getTransactionSize,
+    getWnsNftTransferIxs,
+    sendAndConfirmRawTransaction,
+    sendAndConfirmRawVersionedTransaction
+} from "../src";
+import {PublicKey, Transaction, TransactionInstruction} from "@solana/web3.js";
 import {DecodeTypesService} from "../src";
 import coreProvider from "../src/CoreProvider";
 
@@ -45,6 +51,19 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
     //
     //     const tx = await burgerProvider.tokenUpdateTx({mint, name, symbol, uri})
     //     const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+    // });
+
+    // it('Transfer', async () => {
+    //     // const mint = myNFts[0].mint
+    //     const mint = new PublicKey("")
+    //     const receiver = new PublicKey("")
+    //     let transferIxs = getWnsNftTransferIxs({
+    //         mint: mint,
+    //         sender: wallet.publicKey,
+    //         payer: wallet.publicKey,
+    //         receiver
+    //     })
+    //     await sendAndConfirmRawTransaction(connection, new Transaction().add(...transferIxs), wallet.publicKey, wallet, []);
     // });
 
 });
