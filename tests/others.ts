@@ -34,6 +34,31 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
     //     console.log("Rule", Number(rule.renewalPrice)/1000_000_000);
     //     // expect(myNFts).to.not.be.empty;
     // });
+    //
+    it('Get game data', async () => {
+        // GmaeConfig account 9953RREX8HmQjqkhWSpiuEg2RuHBa6tkKYiXuo4Dwcvz
+        const gameData  = await burgerProvider.getGameData()
+        const game = await burgerProvider.getGameConfig().toString()
+        console.log("game", game, gameData);
+
+        // expect(myNFts).to.not.be.empty;
+    });
+
+    it('Check collection amounts', async () => {
+        const collectionPda = wenProvider.getGroupAccountPda("DY7oYBeGCcNqEGSEFGNKVM8GDiVs7iTwZaBGVTs2LCZB")
+        // colleciton pda: 7XnWarbwQsncqkSXrNVxW52GDunjzs41o1wg5GQuzFZF
+        // console.log("collecitonPDA", collectionPda.toString())
+
+        const allMembers = await wenProvider
+            .metadataProgram
+            .account
+            .tokenGroupMember
+            .all([{memcmp: {offset: 32 + 8, bytes: collectionPda.toBase58()}}])
+            .then((res) =>
+                res.sort((a,b) => a.account.memberNumber - b.account.memberNumber)
+            )
+        console.log("Collection amount", allMembers.length);
+    });
 
     // it('Get collection data', async () => {
     //     const collectionMint = "DY7oYBeGCcNqEGSEFGNKVM8GDiVs7iTwZaBGVTs2LCZB"
