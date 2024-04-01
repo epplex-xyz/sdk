@@ -2,10 +2,12 @@ import {sendAndConfirmRawTransaction} from "../src";
 import {setupGlobals} from "./utils/setup";
 import {expect} from "chai";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
-import {Keypair} from "@solana/web3.js";
+import {Keypair, Transaction} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 import {readJson} from "./utils/keyUtils";
 import {importKey, generateNonce, encrypt} from "../src";
+import {createApproveCheckedInstruction, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
+import {getAtaAddress, getAtaAddressPubkey} from "../lib/utils/generic";
 
 /*
     Ephemerality:
@@ -21,7 +23,7 @@ import {importKey, generateNonce, encrypt} from "../src";
  */
 
 describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n vote ->\n evaluate ->\n burn ->\n end ->\n close", () => {
-    const {wallet, burgerProvider, coreProvider} = setupGlobals()
+    const {wallet, burgerProvider, coreProvider, wenProvider} = setupGlobals()
     const connection = burgerProvider.provider.connection;
 
     const seed = Math.floor(Math.random() * 100000)
@@ -47,6 +49,8 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         burgerProvider, coreProvider, collectionMint, collectionArgs, metadata, wallet, undefined, seed
     )
 
+    const freeze = Keypair.generate()
+
     it('Token Game Immunity Mint[1] ', async () => {
         console.log("mint asodmfkoasdmfkoas d", mints[1])
         const tx = await burgerProvider.tokenGameImmunityTx({mint: mints[1]});
@@ -70,6 +74,7 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         expect(id).to.not.be.empty;
     });
 
+
     it("Token Game vote fail due to encryption", async() => {
         // Perform test if we have encrypt, otherwise return
         if (!useEncrypt)
@@ -82,6 +87,29 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
             console.log("Token vote failed")
         }
     })
+
+    // it("Token Freeze before voting", async() => {
+    //     const approveIx = createApproveCheckedInstruction(
+    //         getAtaAddressPubkey(mints[0], wallet.publicKey),
+    //         mints[0],
+    //         freeze.publicKey,
+    //         wallet.publicKey,
+    //         1,
+    //         0,
+    //         undefined,
+    //         TOKEN_2022_PROGRAM_ID,
+    //     );
+    //
+    //     const freezeIx = await wenProvider.getFreezeNftIx({
+    //         mint: mints[0].toBase58(),
+    //         delegateAuthority: freeze.publicKey.toBase58(),
+    //         payer: wallet.publicKey.toBase58(),
+    //         authority: wallet.publicKey.toBase58(),
+    //     });
+    //
+    //     const id = await sendAndConfirmRawTransaction(connection, new Transaction().add(...[approveIx, freezeIx]), wallet.publicKey, wallet, [freeze])
+    //     expect(id).to.not.be.empty;
+    // })
 
     it("Token Game vote", async() => {
         let message: string;
@@ -101,6 +129,18 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, [])
         expect(id).to.not.be.empty;
     })
+
+    // it("Token Freeze before voting", async() => {
+    //     const thawIx = await wenProvider.getThawNftIx({
+    //         mint: mints[0].toBase58(),
+    //         delegateAuthority: freeze.publicKey.toBase58(),
+    //         payer: wallet.publicKey.toBase58(),
+    //         authority: wallet.publicKey.toBase58(),
+    //     });
+    //
+    //     const id = await sendAndConfirmRawTransaction(connection, new Transaction().add(...[thawIx]), wallet.publicKey, wallet, [freeze])
+    //     expect(id).to.not.be.empty;
+    // })
 
     it("Force Game End: update endTime to now", async () => {
         const tx = await burgerProvider.gameUpdateTx({
