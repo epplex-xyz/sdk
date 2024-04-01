@@ -1158,6 +1158,36 @@
               "The pubkey of the token group pda for collection verification"
             ],
             "type": "publicKey"
+          },
+          {
+            "name": "reserved0",
+            "docs": [
+              "Taken from xNFT repo Unused reserved byte space for additive future changes"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          },
+          {
+            "name": "reserved1",
+            "type": {
+              "array": [
+                "u8",
+                24
+              ]
+            }
+          },
+          {
+            "name": "reserved2",
+            "type": {
+              "array": [
+                "u8",
+                9
+              ]
+            }
           }
         ]
       }
