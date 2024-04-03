@@ -88,28 +88,28 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         }
     })
 
-    // it("Token Freeze before voting", async() => {
-    //     const approveIx = createApproveCheckedInstruction(
-    //         getAtaAddressPubkey(mints[0], wallet.publicKey),
-    //         mints[0],
-    //         freeze.publicKey,
-    //         wallet.publicKey,
-    //         1,
-    //         0,
-    //         undefined,
-    //         TOKEN_2022_PROGRAM_ID,
-    //     );
-    //
-    //     const freezeIx = await wenProvider.getFreezeNftIx({
-    //         mint: mints[0].toBase58(),
-    //         delegateAuthority: freeze.publicKey.toBase58(),
-    //         payer: wallet.publicKey.toBase58(),
-    //         authority: wallet.publicKey.toBase58(),
-    //     });
-    //
-    //     const id = await sendAndConfirmRawTransaction(connection, new Transaction().add(...[approveIx, freezeIx]), wallet.publicKey, wallet, [freeze])
-    //     expect(id).to.not.be.empty;
-    // })
+    it("Token Freeze before voting", async() => {
+        const approveIx = createApproveCheckedInstruction(
+            getAtaAddressPubkey(mints[0], wallet.publicKey),
+            mints[0],
+            freeze.publicKey,
+            wallet.publicKey,
+            1,
+            0,
+            undefined,
+            TOKEN_2022_PROGRAM_ID,
+        );
+
+        const freezeIx = await wenProvider.getFreezeNftIx({
+            mint: mints[0].toBase58(),
+            delegateAuthority: freeze.publicKey.toBase58(),
+            payer: wallet.publicKey.toBase58(),
+            authority: wallet.publicKey.toBase58(),
+        });
+
+        const id = await sendAndConfirmRawTransaction(connection, new Transaction().add(...[approveIx, freezeIx]), wallet.publicKey, wallet, [freeze])
+        expect(id).to.not.be.empty;
+    })
 
     it("Token Game vote", async() => {
         let message: string;
@@ -130,17 +130,17 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         expect(id).to.not.be.empty;
     })
 
-    // it("Token Freeze before voting", async() => {
-    //     const thawIx = await wenProvider.getThawNftIx({
-    //         mint: mints[0].toBase58(),
-    //         delegateAuthority: freeze.publicKey.toBase58(),
-    //         payer: wallet.publicKey.toBase58(),
-    //         authority: wallet.publicKey.toBase58(),
-    //     });
-    //
-    //     const id = await sendAndConfirmRawTransaction(connection, new Transaction().add(...[thawIx]), wallet.publicKey, wallet, [freeze])
-    //     expect(id).to.not.be.empty;
-    // })
+    it("Token Freeze before voting", async() => {
+        const thawIx = await wenProvider.getThawNftIx({
+            mint: mints[0].toBase58(),
+            delegateAuthority: freeze.publicKey.toBase58(),
+            payer: wallet.publicKey.toBase58(),
+            authority: wallet.publicKey.toBase58(),
+        });
+
+        const id = await sendAndConfirmRawTransaction(connection, new Transaction().add(...[thawIx]), wallet.publicKey, wallet, [freeze])
+        expect(id).to.not.be.empty;
+    })
 
     it("Force Game End: update endTime to now", async () => {
         const tx = await burgerProvider.gameUpdateTx({
