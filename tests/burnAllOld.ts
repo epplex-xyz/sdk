@@ -1,4 +1,4 @@
-import {setupGlobals} from "../utils/setup";
+import {setupGlobals} from "./utils/setup";
 import {
     createBurnInstruction,
     createCloseAccountInstruction,
@@ -6,8 +6,8 @@ import {
     TOKEN_2022_PROGRAM_ID
 } from "@solana/spl-token";
 import {expect} from "chai";
-import {EpNFTService, sendAndConfirmRawTransaction} from "../../src";
-import {getAtaAddressPubkey} from "../../lib/utils/generic";
+import {EpNFTService, sendAndConfirmRawTransaction} from "../src";
+import {getAtaAddressPubkey} from "../lib/utils/generic";
 import {PublicKey, Transaction} from "@solana/web3.js";
 
 describe('Burn All NFTs in PAYER_ADMIN', () => {
