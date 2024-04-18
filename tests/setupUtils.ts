@@ -5,7 +5,7 @@ import {
 } from "../src";
 import WenProvider from "../src/WenProvider";
 import {expect} from "chai";
-import {Keypair, PublicKey, TransactionInstruction} from "@solana/web3.js";
+import {ComputeBudgetProgram, Keypair, PublicKey, Transaction, TransactionInstruction} from "@solana/web3.js";
 import {WnsGroupMintParams} from "../src/types/EpplexProviderTypes";
 import {EpMintParams} from "../src/types/EpplexProviderTypes";
 import {PAYER_ADMIN} from "../src/constants/keys";
@@ -110,12 +110,24 @@ export function setupCollection(
             return
         }
 
+        // Compute budgest for rule create
+        const ixs = [
+            ComputeBudgetProgram.setComputeUnitLimit({
+                units: 200_000
+            }),
+            ComputeBudgetProgram.setComputeUnitPrice({
+                microLamports: 50_000,
+            }),
+        ];
         const tx = await burger.ephemeralRuleCreateTx({
             seed: baseSeed,
             renewalPrice: 1000_000_000_000, // 1000 SOL
             treasury: PAYER_ADMIN
         })
-        const id = await sendAndConfirmRawTransaction(burger.provider.connection, tx, wallet.publicKey, wallet, [])
+
+        const id = await sendAndConfirmRawTransaction(
+            burger.provider.connection, new Transaction().add(...ixs, tx), wallet.publicKey, wallet, []
+        )
         expect(id).to.not.be.empty;
     });
 

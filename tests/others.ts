@@ -7,17 +7,20 @@ import {
     sendAndConfirmRawTransaction,
     sendAndConfirmRawVersionedTransaction
 } from "../src";
-import {PublicKey, Transaction, TransactionInstruction} from "@solana/web3.js";
+import {ComputeBudgetProgram, PublicKey, SystemProgram, Transaction, TransactionInstruction} from "@solana/web3.js";
 import {DecodeTypesService} from "../src";
 import coreProvider from "../src/CoreProvider";
+import {ASSOCIATED_TOKEN_PROGRAM_ID, NATIVE_MINT} from "@solana/spl-token";
+import {getProgramAddress} from "../src/utils/generic";
+import {WNS_PROGRAM_ID} from "../lib/constants/wenCore";
+import {getAtaAddressPubkey} from "../lib/utils/generic";
 
 
-describe('Reset all tokens in PAYER_ADMIN', () => {
+describe('Other tests', () => {
     const {wallet, burgerProvider, wenProvider, coreProvider} = setupGlobals()
     const owner = wallet.publicKey;
-
     const connection = burgerProvider.provider.connection;
-    let myNFts: any[] = [];
+    // let myNFts: any[] = [];
 
     // it('Get all NFTs', async () => {
     //     myNFts = await EpNFTService.getT22NFTs(
@@ -35,30 +38,31 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
     //     // expect(myNFts).to.not.be.empty;
     // });
     //
-    it('Get game data', async () => {
-        // GmaeConfig account 9953RREX8HmQjqkhWSpiuEg2RuHBa6tkKYiXuo4Dwcvz
-        const gameData  = await burgerProvider.getGameData()
-        const game = await burgerProvider.getGameConfig().toString()
-        console.log("game", game, gameData);
 
-        // expect(myNFts).to.not.be.empty;
-    });
+    // it('Get game data', async () => {
+    //     // GmaeConfig account 9953RREX8HmQjqkhWSpiuEg2RuHBa6tkKYiXuo4Dwcvz
+    //     const gameData  = await burgerProvider.getGameData()
+    //     const game = await burgerProvider.getGameConfig().toString()
+    //     console.log("game", game, gameData);
+    //
+    //     // expect(myNFts).to.not.be.empty;
+    // });
 
-    it('Check collection amounts', async () => {
-        const collectionPda = wenProvider.getGroupAccountPda("DY7oYBeGCcNqEGSEFGNKVM8GDiVs7iTwZaBGVTs2LCZB")
-        // colleciton pda: 7XnWarbwQsncqkSXrNVxW52GDunjzs41o1wg5GQuzFZF
-        // console.log("collecitonPDA", collectionPda.toString())
-
-        const allMembers = await wenProvider
-            .metadataProgram
-            .account
-            .tokenGroupMember
-            .all([{memcmp: {offset: 32 + 8, bytes: collectionPda.toBase58()}}])
-            .then((res) =>
-                res.sort((a,b) => a.account.memberNumber - b.account.memberNumber)
-            )
-        console.log("Collection amount", allMembers.length);
-    });
+    // it('Check collection amounts', async () => {
+    //     const collectionPda = wenProvider.getGroupAccountPda("DY7oYBeGCcNqEGSEFGNKVM8GDiVs7iTwZaBGVTs2LCZB")
+    //     // colleciton pda: 7XnWarbwQsncqkSXrNVxW52GDunjzs41o1wg5GQuzFZF
+    //     // console.log("collecitonPDA", collectionPda.toString())
+    //
+    //     const allMembers = await wenProvider
+    //         .metadataProgram
+    //         .account
+    //         .tokenGroupMember
+    //         .all([{memcmp: {offset: 32 + 8, bytes: collectionPda.toBase58()}}])
+    //         .then((res) =>
+    //             res.sort((a,b) => a.account.memberNumber - b.account.memberNumber)
+    //         )
+    //     console.log("Collection amount", allMembers.length);
+    // });
 
     // it('Get collection data', async () => {
     //     const collectionMint = "DY7oYBeGCcNqEGSEFGNKVM8GDiVs7iTwZaBGVTs2LCZB"
@@ -78,17 +82,59 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
     //     const id = await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
     // });
 
-    // it('Transfer', async () => {
-    //     // const mint = myNFts[0].mint
-    //     const mint = new PublicKey("")
-    //     const receiver = new PublicKey("")
-    //     let transferIxs = getWnsNftTransferIxs({
-    //         mint: mint,
-    //         sender: wallet.publicKey,
-    //         payer: wallet.publicKey,
-    //         receiver
+    // it('Transfer NFT', async () => {
+    //     const NFTs = [
+    //
+    //     ]
+    //
+    //     const ixs = [
+    //         ComputeBudgetProgram.setComputeUnitLimit({
+    //             units: 300_000
+    //
+    //         }),
+    //         ComputeBudgetProgram.setComputeUnitPrice({
+    //             microLamports: 50_000,
+    //         }),
+    //     ];
+    //
+    //     const receiver = new PublicKey("m1ntPh1KmXxAaWA5eHJvyyG7sMr2HAvmrMFV9ZqAWeW");
+    //     let i = 0;
+    //     for (const nft of NFTs) {
+    //         // const receiver = new PublicKey(receivers[i])
+    //         console.log("sending", nft)
+    //         const mint = new PublicKey(nft)
+    //         let transferIxs = getWnsNftTransferIxs({
+    //             mint: mint,
+    //             sender: wallet.publicKey,
+    //             payer: wallet.publicKey,
+    //             receiver
+    //         })
+    //         await sendAndConfirmRawTransaction(connection, new Transaction().add(...[...ixs, ...transferIxs]), wallet.publicKey, wallet, []);
+    //         i++
+    //     }
+    // });
+
+
+    // it('Transfer SOL', async () => {
+    //     console.log("Transfer SOL")
+    //     const ixs = [
+    //         ComputeBudgetProgram.setComputeUnitLimit({
+    //             units: 200_000
+    //
+    //         }),
+    //         ComputeBudgetProgram.setComputeUnitPrice({
+    //             microLamports: 50_000,
+    //         }),
+    //     ];
+    //
+    //     const receiver = new PublicKey("");
+    //     const ix = SystemProgram.transfer({
+    //         fromPubkey: wallet.publicKey,
+    //         toPubkey: receiver,
+    //         lamports: BigInt(38000000000),
     //     })
-    //     await sendAndConfirmRawTransaction(connection, new Transaction().add(...transferIxs), wallet.publicKey, wallet, []);
+    //
+    //     await sendAndConfirmRawTransaction(connection, new Transaction().add(...[...ixs, ix]), wallet.publicKey, wallet, []);
     // });
 
 });

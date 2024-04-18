@@ -2,12 +2,12 @@ import {sendAndConfirmRawTransaction} from "../src";
 import {setupGlobals} from "./utils/setup";
 import {expect} from "chai";
 import {getDefaultMetadata} from "./utils/getDefaultMetadata";
-import {Keypair, Transaction} from "@solana/web3.js";
+import {ComputeBudgetProgram, Keypair, Transaction} from "@solana/web3.js";
 import {setupCollection} from "./setupUtils";
 import {readJson} from "./utils/keyUtils";
 import {importKey, generateNonce, encrypt} from "../src";
 import {createApproveCheckedInstruction, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
-import {getAtaAddress, getAtaAddressPubkey} from "../lib/utils/generic";
+import {getAtaAddressPubkey} from "../lib/utils/generic";
 
 /*
     Ephemerality:
@@ -26,8 +26,17 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     const {wallet, burgerProvider, coreProvider, wenProvider} = setupGlobals()
     const connection = burgerProvider.provider.connection;
 
-    const seed = Math.floor(Math.random() * 100000)
+    // const seed = Math.floor(Math.random() * 100000)
+    const seed = 4141
     const collectionMint = Keypair.generate();
+    const ixs = [
+        ComputeBudgetProgram.setComputeUnitLimit({
+            units: 200_000
+        }),
+        ComputeBudgetProgram.setComputeUnitPrice({
+            microLamports: 50_000,
+        }),
+    ];
 
     const newTimestamp = (Math.floor((new Date()).getTime() / 1000 + 3600 * 12)).toString()
     const now = (Math.floor((new Date()).getTime() / 1000)).toString()
@@ -38,7 +47,9 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
         name: metadata.name,
         symbol: metadata.symbol,
         uri: metadata.uri,
-        maxSize: maxSize
+        maxSize: maxSize,
+        // computeBudget: 1_000_000,
+        // computeUnit: 100_000
     }
 
     const encryptKeypair: {public: string, private: string} = readJson("/Users/Mac/Documents/Crypto/epPlex-xyz/burger-game/encryptKeypair.json")
@@ -52,9 +63,9 @@ describe("Testing Game Flow: mint ->\n create ->\n reset mints ->\n start ->\n v
     const freeze = Keypair.generate()
 
     it('Token Game Immunity Mint[1] ', async () => {
-        console.log("mint asodmfkoasdmfkoas d", mints[1])
+        console.log("Immunity mint", mints[1])
         const tx = await burgerProvider.tokenGameImmunityTx({mint: mints[1]});
-        await sendAndConfirmRawTransaction(connection, tx, wallet.publicKey, wallet, []);
+        await sendAndConfirmRawTransaction(connection, new Transaction().add(...ixs, tx), wallet.publicKey, wallet, []);
     });
 
 

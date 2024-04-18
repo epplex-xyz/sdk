@@ -2,7 +2,7 @@ import {setupGlobals} from "./utils/setup";
 import {expect} from "chai";
 import {EpNFTService, getTransactionSize, sendAndConfirmRawTransaction} from "../src";
 import {PublicKey, Transaction} from "@solana/web3.js";
-import {DecodeTypesService} from "../src";
+import {EpNFT} from "../lib";
 
 
 describe('Reset all tokens in PAYER_ADMIN', () => {
@@ -10,7 +10,7 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
     const owner = wallet.publicKey;
 
     const connection = burgerProvider.provider.connection;
-    let myNFts: any[] = [];
+    let myNFts: EpNFT[] = [];
 
     it('Get all NFTs', async () => {
         myNFts = await EpNFTService.getT22NFTs(
@@ -21,14 +21,6 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
         expect(myNFts).to.not.be.empty;
     });
 
-    it('Get Game data', async () => {
-        const data = await burgerProvider.getGameData()
-        if (data === undefined)
-            return
-        const res = DecodeTypesService.convertGameData(data)
-        console.log("Data result", res)
-    });
-
     it('Reset all tokens', async () => {
         const ixs = [];
         const batchSize = 5; // Number of iterations after which transaction will be executed
@@ -37,9 +29,17 @@ describe('Reset all tokens in PAYER_ADMIN', () => {
             const mint: PublicKey = myNFts[i].mint;
 
             // TODO paste collectionMint in here, excludes the collection mint
-            if (mint.toString() === "GgvNcNBDFyayh3EW4HXBvGBeQtLsxzUE7rgBK8gVUJ8M") {
+            if (mint.toString() === "8kNVHWjGPT241f4oeUZQxhemJFir7pyxqXAMy32Bksj1") {
                 continue
             }
+
+            // if (myNFts[i].tokenMetadata === undefined) {
+            //     continue
+            // }
+            // // console.log("sdasd", myNFts[i].tokenMetadata)
+            // if (!myNFts[i].tokenMetadata.name.includes("BOB")) {
+            //     continue
+            // }
 
             const tx = await burgerProvider.tokenGameResetTx({mint});
             ixs.push(...tx.instructions);
