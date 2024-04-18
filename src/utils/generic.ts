@@ -95,10 +95,12 @@ export function explorerUrl(connection: Connection, tx: string): string {
     if (connection.rpcEndpoint.includes("devnet")) {
         cluster = "devnet-solana"
     } else if (connection.rpcEndpoint.includes("mainnet")) {
-        // cluster = "mainnet-qn1"
-        cluster = ""
+        cluster = "mainnet-alpha"
+    } else if (connection.rpcEndpoint.includes("burgerbob")) {
+        cluster = "mainnet-alpha"
     }
 
+    // return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`
     // return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`
     return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
 }
@@ -165,11 +167,11 @@ export async function sendAndConfirmRawVersionedTransaction(
     logTx: boolean = true,
     confirmOptions: SendOptions = CONFIRM_OPTIONS,
 ): Promise<TransactionSignature | null> {
-    const latestBlockhash = await connection
-        .getLatestBlockhash(commitment)
+    const {value, context} = await connection
+        .getLatestBlockhashAndContext(commitment)
     const messageV0 = new TransactionMessage({
         payerKey: feePayer,
-        recentBlockhash: latestBlockhash.blockhash,
+        recentBlockhash: value.blockhash,
         instructions: ixs,
     }).compileToV0Message();
 
@@ -181,7 +183,17 @@ export async function sendAndConfirmRawVersionedTransaction(
         }
         tx.sign(signers);
 
-        txId = await connection.sendRawTransaction(tx.serialize(), confirmOptions);
+        // const simulation = await connection.simulateTransaction(tx as any);
+        // console.log("[wallet] simulated tx", simulation.value.logs);
+
+        txId = await connection.sendRawTransaction(
+            tx.serialize(),
+            {
+                ...confirmOptions,
+                minContextSlot: context.slot,
+                maxRetries: 1
+            }
+        );
 
         if (logTx) {
             console.log(explorerUrl(connection, txId));
@@ -190,8 +202,8 @@ export async function sendAndConfirmRawVersionedTransaction(
             await connection.confirmTransaction(
                 {
                     signature: txId,
-                    blockhash: latestBlockhash.blockhash,
-                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+                    blockhash: value.blockhash,
+                    lastValidBlockHeight: value.lastValidBlockHeight,
                 },
                 commitment
             )
@@ -207,6 +219,78 @@ export async function sendAndConfirmRawVersionedTransaction(
         return null;
     }
 }
+
+export async function sendAndConfirmRawVersionedTransactionWithRetries(
+    connection: Connection,
+    ixs: TransactionInstruction[],
+    feePayer: PublicKey,
+    wallet?: NodeWallet,
+    signers: Keypair[] = [],
+    commitment: Commitment = COMMITMENT,
+    logTx: boolean = true,
+    confirmOptions: SendOptions = CONFIRM_OPTIONS,
+): Promise<TransactionSignature | null> {
+    const {value, context} = await connection
+        .getLatestBlockhashAndContext(commitment)
+    const messageV0 = new TransactionMessage({
+        payerKey: feePayer,
+        recentBlockhash: value.blockhash,
+        instructions: ixs,
+    }).compileToV0Message();
+
+    let tx = new VersionedTransaction(messageV0);
+    if (wallet !== undefined) {
+        tx = await wallet.signTransaction(tx);
+    }
+    tx.sign(signers);
+
+    const lastValidBlockHeight = context.slot + 150
+
+    let blockHeight = await this._connection.getBlockHeight()
+
+    // retry until block height is greater than last valid block height
+    let retries = 0
+    let txId;
+    while (blockHeight < lastValidBlockHeight) {
+        console.log("Retry: ", retries)
+
+        try {
+            txId = await connection.sendRawTransaction(
+                tx.serialize(),
+                {
+                    ...confirmOptions,
+                    minContextSlot: context.slot,
+                    maxRetries: 1
+                }
+            );
+
+            if (logTx) {
+                console.log(explorerUrl(connection, txId));
+            }
+
+            const res = (
+                await connection.confirmTransaction(
+                    {
+                        signature: txId,
+                        blockhash: value.blockhash,
+                        lastValidBlockHeight: value.lastValidBlockHeight,
+                    },
+                    commitment
+                )
+            );
+
+            if (res.value.err) {
+                console.log("Res", res.value.err);
+            }
+        } catch {
+            blockHeight = await connection.getBlockHeight()
+        }
+        retries = retries + 1
+    }
+
+    return txId;
+}
+
 
 // Taken from switchboard
 // https://github.com/switchboard-xyz/solana-sdk/blob/d049b53fe70769493bb8195685a1bcf737bdee9b/javascript/solana.js/src/TransactionObject.ts#L353
