@@ -19,7 +19,7 @@ export const DEFAULT_NFT_NAME = "DEFAULT_DEV";
     1. .local_keys/epplex_PAYER_ADMIN.json needs to exist
     2. yarn test-collection or another test in package.json
  */
-const RPC = process.env.RPC;
+const RPC = process.env.RPC as string;
 if (!RPC) {
     throw new Error("RPC is not defined in .env file");
 }
