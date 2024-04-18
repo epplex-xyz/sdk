@@ -16,10 +16,10 @@ describe('Burn All NFTs in PAYER_ADMIN', () => {
             connection,
             owner,
         );
-        console.log("Number of NFTs", myNFts.length);
+        myNFts = myNFts.filter((i) => Number(i.amount) > 0)
+        console.log("Number of NFTs", myNFts.length, myNFts[0]);
         expect(myNFts).to.not.be.empty;
     });
-
 
     it('Burn all WNS', async () => {
         for (let i = 0; i < myNFts.length; i++) {

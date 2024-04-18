@@ -8,7 +8,7 @@ import {
 import {expect} from "chai";
 import {EpNFTService, sendAndConfirmRawTransaction} from "../src";
 import {getAtaAddressPubkey} from "../lib/utils/generic";
-import {PublicKey, Transaction} from "@solana/web3.js";
+import {ComputeBudgetProgram, PublicKey, Transaction} from "@solana/web3.js";
 
 describe('Burn All NFTs in PAYER_ADMIN', () => {
     const {wallet, burgerProvider} = setupGlobals()
@@ -67,7 +67,15 @@ describe('Burn All NFTs in PAYER_ADMIN', () => {
             )
 
             await sendAndConfirmRawTransaction(
-                burgerProvider.provider.connection, new Transaction().add(...ixs), wallet.publicKey, wallet, []
+                burgerProvider.provider.connection, new Transaction().add(...[
+                    ComputeBudgetProgram.setComputeUnitLimit({
+                        units: 5_000,
+                    }),
+                    ComputeBudgetProgram.setComputeUnitPrice({
+                        microLamports: 1_000,
+                    }),
+                    ...ixs
+                ]), wallet.publicKey, wallet, []
             );
         }
     });

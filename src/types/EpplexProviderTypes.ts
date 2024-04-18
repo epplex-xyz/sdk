@@ -91,6 +91,7 @@ export interface TokenUpdateParams {
     symbol: string;
     uri: string;
     mint: PublicKey;
+    additionalMetadata: { field: string, value: string}
 }
 
 export interface TokenGameResetParams {
