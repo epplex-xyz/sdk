@@ -619,7 +619,8 @@ class EpplexProvider {
             .tokenUpdate({
                 name: args.name,
                 symbol: args.symbol,
-                uri: args.uri
+                uri: args.uri,
+                additionalMetadata: args.additionalMetadata
             })
             .accountsStrict({
                 mint: args.mint,

@@ -1431,21 +1431,51 @@ export type EpplexBurger = {
       }
     },
     {
+      "name": "AddMetadataArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "field",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
       "name": "TokenUpdateParams",
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "name",
-            "type": "string"
+            "type": {
+              "option": "string"
+            }
           },
           {
             "name": "symbol",
-            "type": "string"
+            "type": {
+              "option": "string"
+            }
           },
           {
             "name": "uri",
-            "type": "string"
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "additionalMetadata",
+            "type": {
+              "option": {
+                "defined": "AddMetadataArgs"
+              }
+            }
           }
         ]
       }
@@ -3434,21 +3464,51 @@ export const IDL: EpplexBurger = {
       }
     },
     {
+      "name": "AddMetadataArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "field",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
       "name": "TokenUpdateParams",
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "name",
-            "type": "string"
+            "type": {
+              "option": "string"
+            }
           },
           {
             "name": "symbol",
-            "type": "string"
+            "type": {
+              "option": "string"
+            }
           },
           {
             "name": "uri",
-            "type": "string"
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "additionalMetadata",
+            "type": {
+              "option": {
+                "defined": "AddMetadataArgs"
+              }
+            }
           }
         ]
       }
