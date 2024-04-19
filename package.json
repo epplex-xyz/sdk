@@ -1,7 +1,7 @@
 {
 	"name": "@epplex-xyz/sdk",
 	"author": "epPlex",
-	"version": "0.2.5",
+	"version": "0.2.6",
 	"description": "epPlex Typescript SDK",
 	"license": "MIT",
 	"homepage": "https://github.com/epplex-xyz/sdk",

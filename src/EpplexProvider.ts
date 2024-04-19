@@ -617,10 +617,10 @@ class EpplexProvider {
     async tokenUpdateTx(args: TokenUpdateParams) {
         return await this.program.methods
             .tokenUpdate({
-                name: args.name,
-                symbol: args.symbol,
-                uri: args.uri,
-                additionalMetadata: args.additionalMetadata
+                name: args.name ?? null,
+                symbol: args.symbol ?? null,
+                uri: args.uri ?? null,
+                additionalMetadata: args.additionalMetadata ?? null
             })
             .accountsStrict({
                 mint: args.mint,

@@ -87,11 +87,11 @@ export interface BurnTxParams {
 }
 
 export interface TokenUpdateParams {
-    name: string;
-    symbol: string;
-    uri: string;
+    name?: string;
+    symbol?: string;
+    uri?: string;
     mint: PublicKey;
-    additionalMetadata: { field: string, value: string}
+    additionalMetadata?: { field: string, value: string}
 }
 
 export interface TokenGameResetParams {
