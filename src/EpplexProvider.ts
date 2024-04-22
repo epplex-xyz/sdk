@@ -300,7 +300,7 @@ class EpplexProvider {
             .tokenGameBurn({})
             .accountsStrict({
                 mint: args.mint,
-                sourceTokenAccount: tokenAccount,
+                sourceTokenAccount: args.sourceAta ?? tokenAccount,
                 tokenAccount: destinationTokenAccount,
                 gameConfig: this.getGameConfig(),
                 permanentDelegate: this.getProgramDelegate(),
@@ -324,11 +324,6 @@ class EpplexProvider {
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
-            .preInstructions([
-                ComputeBudgetProgram.setComputeUnitLimit({
-                    units:  300_000, //
-                }),
-            ])
             .transaction();
     }
 

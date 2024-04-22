@@ -77,6 +77,7 @@ export interface TokenGameVoteTxParams {
 export interface TokenGameBurnTxParams {
     mint: PublicKey;
     groupMint: PublicKey;
+    sourceAta?: PublicKey
     owner?: PublicKey;
     seed?: number;
 }
