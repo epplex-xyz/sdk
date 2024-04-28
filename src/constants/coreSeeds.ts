@@ -6,15 +6,17 @@ import EpplexCoreIdl from "../idl/epplex_core.json";
 import { EpplexCore } from "../types/epplexCoreTypes";
 
 export type CoreProgram = anchor.Program<EpplexCore>;
+
 export function getEpplexCoreProgram(
     provider: Provider,
     coreProgramId: PublicKey,
-) {
+): CoreProgram {
     const idl = {
         ...EpplexCoreIdl,
         address: coreProgramId.toString(),
     } as anchor.Idl;
-    return new anchor.Program(idl, provider);
+    const program = new anchor.Program(idl, provider) as unknown as CoreProgram;
+    return program;
 }
 export const SEED_GLOBAL_COLLECTION = Buffer.from(
     JSON.parse(

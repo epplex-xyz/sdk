@@ -35,7 +35,7 @@ export interface CreateWhitelistMintTxParams {
 }
 
 export interface WnsMemberMintParams {
-    groupMint: PublicKey,
+    groupMint: PublicKey;
     mint: PublicKey;
     expiryDate: string;
     name: string;
@@ -48,7 +48,7 @@ export interface WnsMemberMintParams {
 }
 
 export interface WnsGroupMintParams {
-    groupMint: PublicKey,
+    groupMint: PublicKey;
     name: string;
     symbol: string;
     uri: string;
@@ -77,9 +77,14 @@ export interface TokenGameVoteTxParams {
 export interface TokenGameBurnTxParams {
     mint: PublicKey;
     groupMint: PublicKey;
-    sourceAta?: PublicKey
+    sourceAta?: PublicKey;
     owner?: PublicKey;
     seed?: number;
+}
+
+export interface TokenGameFreezeTxParams {
+    mint: PublicKey;
+    owner?: PublicKey;
 }
 export interface BurnTxParams {
     mint: PublicKey;
@@ -87,12 +92,17 @@ export interface BurnTxParams {
     useGameConfig?: boolean;
 }
 
+export interface ThawTxParams {
+    mint: PublicKey;
+    owner?: PublicKey;
+}
+
 export interface TokenUpdateParams {
     name?: string;
     symbol?: string;
     uri?: string;
     mint: PublicKey;
-    additionalMetadata?: { field: string, value: string}
+    additionalMetadata?: { field: string; value: string };
 }
 
 export interface TokenGameResetParams {
@@ -111,8 +121,8 @@ export interface GameStartParams {
     gameName: string;
     isEncrypted: boolean;
     publicEncryptKey: string;
-    ruleSeed: number,
-    tokenGroup: PublicKey,
+    ruleSeed: number;
+    tokenGroup: PublicKey;
 }
 
 export interface GameUpdateParams {

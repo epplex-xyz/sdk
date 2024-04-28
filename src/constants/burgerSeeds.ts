@@ -2,19 +2,23 @@ import { PublicKey } from "@solana/web3.js";
 import EpplexBurgerIdl from "../idl/epplex_burger.json";
 import { BURGER_PROGRAM_ID } from "./ids";
 import * as anchor from "@coral-xyz/anchor";
-import { EpplexBurger } from "../types/epplexBurgerTypes";
+import { type EpplexBurger } from "../types/epplexBurgerTypes";
 import { BorshCoder, EventParser, Provider } from "@coral-xyz/anchor";
 
 export type BurgerProgram = anchor.Program<EpplexBurger>;
 export function getEpplexBurgerProgram(
     provider: Provider,
     burgerProgramId: PublicKey,
-) {
+): BurgerProgram {
     const idl = {
         ...EpplexBurgerIdl,
         address: burgerProgramId.toString(),
     } as anchor.Idl;
-    return new anchor.Program(idl, provider);
+    const program = new anchor.Program(
+        idl,
+        provider,
+    ) as unknown as BurgerProgram;
+    return program;
 }
 
 export function getEpplexBurgerEventParser(burgerProgramId: PublicKey) {
