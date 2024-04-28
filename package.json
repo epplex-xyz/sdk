@@ -1,7 +1,7 @@
 {
 	"name": "@epplex-xyz/sdk",
 	"author": "epPlex",
-	"version": "0.2.8",
+	"version": "0.3.0",
 	"description": "epPlex Typescript SDK",
 	"license": "MIT",
 	"homepage": "https://github.com/epplex-xyz/sdk",
@@ -51,6 +51,7 @@
 		"test-wns": "dotenv        -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/wns.spec.ts",
 		"test-blockchain": "dotenv -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/blockchain.spec.ts",
 		"test-freeze": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freeze.spec.ts",
+		"test-freeze-thaw": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freezeThaw.spec.ts",
 		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts",
 		"burn-all-old": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAllOld.ts",
 		"reset-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/resetAll.ts",
@@ -78,7 +79,7 @@
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"@coral-xyz/anchor": "^0.29.0",
+		"@coral-xyz/anchor": "^0.30.0",
 		"@solana/spl-token": "^0.4.1",
 		"@solana/spl-token-metadata": "^0.1.2",
 		"@solana/web3.js": "1.90.0"

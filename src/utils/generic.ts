@@ -1,40 +1,57 @@
-// https://solana.stackexchange.com/questions/107/how-can-i-get-the-owner-wallet-of-an-nft-mint-using-web3-js
 import {
     Commitment,
     Connection,
     Keypair,
     ParsedAccountData,
-    PublicKey, SendOptions,
+    PublicKey,
+    SendOptions,
     Transaction,
-    TransactionInstruction, TransactionMessage,
-    TransactionSignature, VersionedTransaction
+    TransactionInstruction,
+    TransactionMessage,
+    TransactionSignature,
+    VersionedTransaction,
 } from "@solana/web3.js";
 import {
     ASSOCIATED_TOKEN_PROGRAM_ID,
     createAssociatedTokenAccountInstruction,
-    TOKEN_2022_PROGRAM_ID
+    TOKEN_2022_PROGRAM_ID,
 } from "@solana/spl-token";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
-import {COMMITMENT, CONFIRM_OPTIONS} from "./settings";
+import { COMMITMENT, CONFIRM_OPTIONS } from "./settings";
 
-export const getProgramAddress = (seeds: Uint8Array[], programId: PublicKey) => {
+export const getProgramAddress = (
+    seeds: Uint8Array[],
+    programId: PublicKey,
+) => {
     const [key] = PublicKey.findProgramAddressSync(seeds, programId);
     return key;
 };
 
-export function getAtaAddress(mint: string, owner: string, tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID): PublicKey {
+export function getAtaAddress(
+    mint: string,
+    owner: string,
+    tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID,
+): PublicKey {
     return getProgramAddress(
-        [new PublicKey(owner).toBuffer(), tokenProgramId.toBuffer(), new PublicKey(mint).toBuffer()],
+        [
+            new PublicKey(owner).toBuffer(),
+            tokenProgramId.toBuffer(),
+            new PublicKey(mint).toBuffer(),
+        ],
         ASSOCIATED_TOKEN_PROGRAM_ID,
-    )
-};
+    );
+}
 
-export function getAtaAddressPubkey(mint: PublicKey, owner: PublicKey, tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID): PublicKey {
+export function getAtaAddressPubkey(
+    mint: PublicKey,
+    owner: PublicKey,
+    tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID,
+): PublicKey {
     return getProgramAddress(
         [owner.toBuffer(), tokenProgramId.toBuffer(), mint.toBuffer()],
         ASSOCIATED_TOKEN_PROGRAM_ID,
-    )
-};
+    );
+}
 
 // export function getAtaAddress(mint: PublicKey | string, owner: PublicKey | string, tokenProgramId: PublicKey = TOKEN_2022_PROGRAM_ID): PublicKey {
 //     const mintKey = typeof mint === 'string' ? new PublicKey(mint) : mint;
@@ -46,17 +63,22 @@ export function getAtaAddressPubkey(mint: PublicKey, owner: PublicKey, tokenProg
 //     );
 // }
 
-export async function getMintOwner(connection: Connection, mint: PublicKey): Promise<PublicKey> {
+// https://solana.stackexchange.com/questions/107/how-can-i-get-the-owner-wallet-of-an-nft-mint-using-web3-js
+export async function getMintOwner(
+    connection: Connection,
+    mint: PublicKey,
+): Promise<PublicKey> {
     const largestAccounts = await connection.getTokenLargestAccounts(mint);
     const largestAccountInfo = await connection.getParsedAccountInfo(
-        largestAccounts.value[0].address  //first element is the largest account, assumed with 1
+        largestAccounts.value[0].address, //first element is the largest account, assumed with 1
     );
 
-    if (largestAccountInfo.value === null){
+    if (largestAccountInfo.value === null) {
         throw Error("Largest account does not exist");
     }
 
-    const owner = (largestAccountInfo.value.data as ParsedAccountData).parsed.info.owner;
+    const owner = (largestAccountInfo.value.data as ParsedAccountData).parsed
+        .info.owner;
 
     return new PublicKey(owner);
 }
@@ -71,7 +93,15 @@ export async function tryCreateATAIx(
 ): Promise<TransactionInstruction[]> {
     const acc = await connection.getAccountInfo(ata);
     if (acc === null) {
-        return [createAssociatedTokenAccountInstruction(payer, ata, owner, mint, tokenProgramId)];
+        return [
+            createAssociatedTokenAccountInstruction(
+                payer,
+                ata,
+                owner,
+                mint,
+                tokenProgramId,
+            ),
+        ];
     } else {
         return [];
     }
@@ -80,29 +110,31 @@ export async function tryCreateATAIx(
 /**
  * Get all T22 token accounts
  */
-export async function getTokenAccounts(connection: Connection, owner: PublicKey) {
-    const allTokenAccounts = await connection.getTokenAccountsByOwner(
-        owner,
-        {programId: TOKEN_2022_PROGRAM_ID}
-    );
+export async function getTokenAccounts(
+    connection: Connection,
+    owner: PublicKey,
+) {
+    const allTokenAccounts = await connection.getTokenAccountsByOwner(owner, {
+        programId: TOKEN_2022_PROGRAM_ID,
+    });
 
-    return allTokenAccounts
+    return allTokenAccounts;
 }
 
 export function explorerUrl(connection: Connection, tx: string): string {
     // localhost default
-    let cluster = "localnet-solana"
+    let cluster = "localnet-solana";
     if (connection.rpcEndpoint.includes("devnet")) {
-        cluster = "devnet-solana"
+        cluster = "devnet-solana";
     } else if (connection.rpcEndpoint.includes("mainnet")) {
-        cluster = "mainnet-alpha"
+        cluster = "mainnet-alpha";
     } else if (connection.rpcEndpoint.includes("burgerbob")) {
-        cluster = "mainnet-alpha"
+        cluster = "mainnet-alpha";
     }
 
     // return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`
     // return `https://explorer.solana.com/tx/${tx}?cluster=${cluster}`
-    return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`
+    return `\nhttps://solana.fm/tx/${tx}?cluster=${cluster}`;
 }
 
 export async function sendAndConfirmRawTransaction(
@@ -130,20 +162,21 @@ export async function sendAndConfirmRawTransaction(
             tx = await wallet.signTransaction(tx);
         }
 
-        txId = await connection.sendRawTransaction(tx.serialize(), confirmOptions);
+        txId = await connection.sendRawTransaction(
+            tx.serialize(),
+            confirmOptions,
+        );
         if (logTx) {
             console.log(explorerUrl(connection, txId));
         }
 
-        const res = (
-            await connection.confirmTransaction(
-                {
-                    signature: txId,
-                    blockhash: latestBlockhash.blockhash,
-                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-                },
-                commitment
-            )
+        const res = await connection.confirmTransaction(
+            {
+                signature: txId,
+                blockhash: latestBlockhash.blockhash,
+                lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+            },
+            commitment,
         );
 
         if (res.value.err) {
@@ -167,8 +200,8 @@ export async function sendAndConfirmRawVersionedTransaction(
     logTx: boolean = true,
     confirmOptions: SendOptions = CONFIRM_OPTIONS,
 ): Promise<TransactionSignature | null> {
-    const {value, context} = await connection
-        .getLatestBlockhashAndContext(commitment)
+    const { value, context } =
+        await connection.getLatestBlockhashAndContext(commitment);
     const messageV0 = new TransactionMessage({
         payerKey: feePayer,
         recentBlockhash: value.blockhash,
@@ -186,27 +219,22 @@ export async function sendAndConfirmRawVersionedTransaction(
         // const simulation = await connection.simulateTransaction(tx as any);
         // console.log("[wallet] simulated tx", simulation.value.logs);
 
-        txId = await connection.sendRawTransaction(
-            tx.serialize(),
-            {
-                ...confirmOptions,
-                minContextSlot: context.slot,
-                maxRetries: 1
-            }
-        );
+        txId = await connection.sendRawTransaction(tx.serialize(), {
+            ...confirmOptions,
+            minContextSlot: context.slot,
+            maxRetries: 1,
+        });
 
         if (logTx) {
             console.log(explorerUrl(connection, txId));
         }
-        const res = (
-            await connection.confirmTransaction(
-                {
-                    signature: txId,
-                    blockhash: value.blockhash,
-                    lastValidBlockHeight: value.lastValidBlockHeight,
-                },
-                commitment
-            )
+        const res = await connection.confirmTransaction(
+            {
+                signature: txId,
+                blockhash: value.blockhash,
+                lastValidBlockHeight: value.lastValidBlockHeight,
+            },
+            commitment,
         );
 
         if (res.value.err) {
@@ -230,8 +258,8 @@ export async function sendAndConfirmRawVersionedTransactionWithRetries(
     logTx: boolean = true,
     confirmOptions: SendOptions = CONFIRM_OPTIONS,
 ): Promise<TransactionSignature | null> {
-    const {value, context} = await connection
-        .getLatestBlockhashAndContext(commitment)
+    const { value, context } =
+        await connection.getLatestBlockhashAndContext(commitment);
     const messageV0 = new TransactionMessage({
         payerKey: feePayer,
         recentBlockhash: value.blockhash,
@@ -244,57 +272,54 @@ export async function sendAndConfirmRawVersionedTransactionWithRetries(
     }
     tx.sign(signers);
 
-    const lastValidBlockHeight = context.slot + 150
+    const lastValidBlockHeight = context.slot + 150;
 
-    let blockHeight = await this._connection.getBlockHeight()
+    let blockHeight = await this._connection.getBlockHeight();
 
     // retry until block height is greater than last valid block height
-    let retries = 0
+    let retries = 0;
     let txId;
     while (blockHeight < lastValidBlockHeight) {
-        console.log("Retry: ", retries)
+        console.log("Retry: ", retries);
 
         try {
-            txId = await connection.sendRawTransaction(
-                tx.serialize(),
-                {
-                    ...confirmOptions,
-                    minContextSlot: context.slot,
-                    maxRetries: 1
-                }
-            );
+            txId = await connection.sendRawTransaction(tx.serialize(), {
+                ...confirmOptions,
+                minContextSlot: context.slot,
+                maxRetries: 1,
+            });
 
             if (logTx) {
                 console.log(explorerUrl(connection, txId));
             }
 
-            const res = (
-                await connection.confirmTransaction(
-                    {
-                        signature: txId,
-                        blockhash: value.blockhash,
-                        lastValidBlockHeight: value.lastValidBlockHeight,
-                    },
-                    commitment
-                )
+            const res = await connection.confirmTransaction(
+                {
+                    signature: txId,
+                    blockhash: value.blockhash,
+                    lastValidBlockHeight: value.lastValidBlockHeight,
+                },
+                commitment,
             );
 
             if (res.value.err) {
                 console.log("Res", res.value.err);
             }
         } catch {
-            blockHeight = await connection.getBlockHeight()
+            blockHeight = await connection.getBlockHeight();
         }
-        retries = retries + 1
+        retries = retries + 1;
     }
 
     return txId;
 }
 
-
 // Taken from switchboard
 // https://github.com/switchboard-xyz/solana-sdk/blob/d049b53fe70769493bb8195685a1bcf737bdee9b/javascript/solana.js/src/TransactionObject.ts#L353
-export function getTransactionSize(payer: PublicKey, ixns: TransactionInstruction[]){
+export function getTransactionSize(
+    payer: PublicKey,
+    ixns: TransactionInstruction[],
+) {
     const encodeLength = (len: number) => {
         const bytes = new Array<number>();
         let remLen = len;

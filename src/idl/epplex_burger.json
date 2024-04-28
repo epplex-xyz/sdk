@@ -1,1020 +1,2632 @@
 {
-  "version": "0.1.0",
-  "name": "epplex_burger",
-  "constants": [
-    {
-      "name": "SEED_BURGER_METADATA",
-      "type": "bytes",
-      "value": "[98, 117, 114, 103, 101, 114, 109, 101, 116, 97, 100, 97, 116, 97]"
-    },
-    {
-      "name": "SEED_GAME_CONFIG",
-      "type": "bytes",
-      "value": "[71, 65, 77, 69, 95, 67, 79, 78, 70, 73, 71]"
-    },
-    {
-      "name": "SEED_PROGRAM_DELEGATE",
-      "type": "bytes",
-      "value": "[66, 85, 82, 71, 69, 82, 95, 68, 69, 76, 69, 71, 65, 84, 69]"
-    }
-  ],
+  "address": "epBuJysRKuFMMWTWoX6ZKPz5WTZWb98mDqn1emVj84n",
+  "metadata": {
+    "name": "epplex_burger",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
   "instructions": [
     {
-      "name": "wnsGroupMint",
-      "accounts": [
-        {
-          "name": "groupMint",
-          "isMut": true,
-          "isSigner": true,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "group",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "extraMetasAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "distributionAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "royaltyProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+      "name": "collection_mint",
+      "discriminator": [
+        120,
+        203,
+        203,
+        220,
+        173,
+        178,
+        148,
+        237
       ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "WnsGroupMintParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "wnsMemberMint",
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": true,
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
+          "name": "token_account",
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
+          "name": "token_metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  103,
+                  101,
+                  114,
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
-          "name": "permanentDelegate",
-          "isMut": true,
-          "isSigner": false
+          "name": "collection_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "params.collection_counter"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "epplex_core"
+            }
+          }
+        },
+        {
+          "name": "permanent_delegate",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "group",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "member",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "extraMetasAccount",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "signer": true
         },
         {
           "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "address": "SysvarRent111111111111111111111111111111111"
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
+          "name": "associated_token",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
+          "name": "epplex_core",
+          "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"
+        }
+      ],
+      "args": [
+        {
+          "name": "_params",
+          "type": {
+            "defined": {
+              "name": "CollectionMintParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ephemeral_data_add",
+      "discriminator": [
+        99,
+        148,
+        182,
+        132,
+        220,
+        192,
+        125,
+        51
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "nft"
+        },
+        {
+          "name": "rule"
+        },
+        {
+          "name": "rule_creator",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "data",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "epplex_core",
+          "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "WnsMemberMintParams"
+            "defined": {
+              "name": "EphemeralDataAddParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "ephemeralRuleCreate",
+      "name": "ephemeral_rule_create",
+      "discriminator": [
+        183,
+        203,
+        160,
+        237,
+        160,
+        10,
+        47,
+        19
+      ],
       "accounts": [
         {
           "name": "signer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "rule",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         },
         {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
+          "name": "epplex_core",
+          "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "EphemeralRuleCreateParams"
+            "defined": {
+              "name": "EphemeralRuleCreateParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "ephemeralDataAdd",
+      "name": "game_close",
+      "discriminator": [
+        129,
+        159,
+        87,
+        164,
+        71,
+        110,
+        69,
+        180
+      ],
+      "accounts": [
+        {
+          "name": "game_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "game_create",
+      "discriminator": [
+        252,
+        239,
+        139,
+        45,
+        245,
+        58,
+        58,
+        231
+      ],
+      "accounts": [
+        {
+          "name": "game_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "game_end",
+      "discriminator": [
+        228,
+        195,
+        9,
+        178,
+        167,
+        154,
+        225,
+        136
+      ],
       "accounts": [
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "signer": true
         },
         {
-          "name": "nft",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ruleCreator",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
+          "name": "game_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "EphemeralDataAddParams"
+            "defined": {
+              "name": "GameEndParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "tokenGameBurn",
+      "name": "game_evaluate",
+      "discriminator": [
+        154,
+        253,
+        204,
+        9,
+        193,
+        59,
+        133,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true
+        },
+        {
+          "name": "game_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "GameEvaluateParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "game_start",
+      "discriminator": [
+        73,
+        147,
+        33,
+        152,
+        251,
+        141,
+        162,
+        140
+      ],
+      "accounts": [
+        {
+          "name": "game_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "GameStartParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "game_update",
+      "discriminator": [
+        9,
+        245,
+        43,
+        79,
+        165,
+        98,
+        90,
+        70
+      ],
+      "accounts": [
+        {
+          "name": "game_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "GameUpdateParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "program_delegate_close",
+      "discriminator": [
+        91,
+        90,
+        86,
+        113,
+        69,
+        113,
+        75,
+        114
+      ],
+      "accounts": [
+        {
+          "name": "program_delegate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "ProgramDelegateCloseParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "program_delegate_create",
+      "discriminator": [
+        0,
+        130,
+        238,
+        135,
+        202,
+        47,
+        220,
+        205
+      ],
+      "accounts": [
+        {
+          "name": "program_delegate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "ProgramDelegateCreateParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "token_burn",
+      "discriminator": [
+        203,
+        220,
+        27,
+        105,
+        125,
+        29,
+        20,
+        11
+      ],
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false
+          "name": "token_account",
+          "writable": true
         },
         {
-          "name": "sourceTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          "name": "token_metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  103,
+                  101,
+                  114,
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
+          "name": "game_config",
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
         },
         {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "groupMember",
-          "isMut": false,
-          "isSigner": false
+          "name": "permanent_delegate",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "TokenBurnParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "token_game_burn",
+      "discriminator": [
+        44,
+        88,
+        177,
+        65,
+        189,
+        53,
+        184,
+        181
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "token_account",
+          "writable": true
+        },
+        {
+          "name": "source_token_account",
+          "writable": true
+        },
+        {
+          "name": "game_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "permanent_delegate",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "group_member",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
           "name": "rule",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "* Epplex Core accounts"
-          ]
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "rule.seed",
+                "account": "EphemeralRule"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "epplex_core"
+            }
+          }
         },
         {
           "name": "data",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  68,
+                  65,
+                  84,
+                  65
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "epplex_core"
+            }
+          }
         },
         {
-          "name": "epplexAuthority",
-          "isMut": true,
-          "isSigner": false
+          "name": "epplex_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  65,
+                  85,
+                  84,
+                  72
+                ]
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "epplex_core"
+            }
+          }
         },
         {
-          "name": "epplexTreasury",
-          "isMut": true,
-          "isSigner": false
+          "name": "epplex_treasury",
+          "writable": true
         },
         {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
+          "name": "epplex_core",
+          "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"
         },
         {
-          "name": "metasAccountList",
-          "isMut": false,
-          "isSigner": false
+          "name": "metas_account_list"
         },
         {
           "name": "manager",
-          "isMut": false,
-          "isSigner": false
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
         },
         {
-          "name": "approveAccount",
-          "isMut": true,
-          "isSigner": false
+          "name": "approve_account",
+          "writable": true
         },
         {
-          "name": "distributionTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          "name": "distribution_token_account",
+          "writable": true
         },
         {
-          "name": "distributionAccount",
-          "isMut": true,
-          "isSigner": false
+          "name": "distribution_account",
+          "writable": true
         },
         {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false
+          "name": "payment_mint"
         },
         {
           "name": "wrd",
-          "isMut": false,
-          "isSigner": false
+          "address": "WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"
         },
         {
           "name": "wns",
-          "isMut": false,
-          "isSigner": false
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "TokenGameBurnParams"
+            "defined": {
+              "name": "TokenGameBurnParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "tokenGameVote",
+      "name": "token_game_freeze",
+      "discriminator": [
+        80,
+        21,
+        65,
+        69,
+        253,
+        176,
+        237,
+        250
+      ],
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "tokenAccount",
-          "isMut": false,
-          "isSigner": false
+          "name": "token_account",
+          "writable": true
         },
         {
-          "name": "groupMember",
-          "isMut": false,
-          "isSigner": false
+          "name": "group_member",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
         },
         {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
+          "name": "game_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "payer",
-          "isMut": false,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
+          "name": "authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "manager",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "wns",
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "TokenGameVoteParams"
+            "defined": {
+              "name": "TokenGameFreezeParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "tokenGameReset",
+      "name": "token_game_immunity",
+      "discriminator": [
+        206,
+        179,
+        197,
+        82,
+        230,
+        128,
+        23,
+        62
+      ],
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "groupMember",
-          "isMut": false,
-          "isSigner": false
+          "name": "group_member",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "game_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "payer",
-          "isMut": false,
-          "isSigner": true
+          "signer": true
         },
         {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
+          "name": "update_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
         },
         {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "TokenGameResetParams"
+            "defined": {
+              "name": "TokenGameImmunityParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "tokenGameImmunity",
+      "name": "token_game_reset",
+      "discriminator": [
+        29,
+        162,
+        227,
+        219,
+        145,
+        97,
+        193,
+        116
+      ],
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
-          "name": "groupMember",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false
+          "name": "group_member",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
         },
         {
           "name": "payer",
-          "isMut": false,
-          "isSigner": true
+          "signer": true
         },
         {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
+          "name": "game_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "update_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "TokenGameImmunityParams"
+            "defined": {
+              "name": "TokenGameResetParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "gameCreate",
-      "accounts": [
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+      "name": "token_game_vote",
+      "discriminator": [
+        208,
+        131,
+        183,
+        148,
+        179,
+        125,
+        152,
+        192
       ],
-      "args": []
-    },
-    {
-      "name": "gameStart",
-      "accounts": [
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "GameStartParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "gameEvaluate",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "GameEvaluateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "gameEnd",
-      "accounts": [
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "GameEndParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "gameUpdate",
-      "accounts": [
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "GameUpdateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "gameClose",
-      "accounts": [
-        {
-          "name": "gameConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "programDelegateCreate",
-      "accounts": [
-        {
-          "name": "programDelegate",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "ProgramDelegateCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "programDelegateClose",
-      "accounts": [
-        {
-          "name": "programDelegate",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "ProgramDelegateCloseParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "tokenRenew",
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false,
+          "writable": true
+        },
+        {
+          "name": "token_account"
+        },
+        {
+          "name": "group_member",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "game_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  65,
+                  77,
+                  69,
+                  95,
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "signer": true
+        },
+        {
+          "name": "update_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "TokenGameVoteParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "token_renew",
+      "discriminator": [
+        214,
+        32,
+        137,
+        136,
+        167,
+        11,
+        64,
+        124
+      ],
+      "accounts": [
+        {
+          "name": "mint",
           "docs": [
             "Technically anyone could pay to renew but why would they?"
-          ]
+          ],
+          "writable": true
         },
         {
-          "name": "tokenMetadata",
-          "isMut": false,
-          "isSigner": false
+          "name": "token_metadata",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  103,
+                  101,
+                  114,
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
-          "name": "mintPayment",
-          "isMut": false,
-          "isSigner": false
+          "name": "mint_payment"
         },
         {
-          "name": "proceedsTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          "name": "proceeds_token_account",
+          "writable": true
         },
         {
-          "name": "payerTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          "name": "payer_token_account",
+          "writable": true
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
+          "name": "update_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "_params",
+          "type": {
+            "defined": {
+              "name": "TokenRenewParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "token_thaw",
+      "discriminator": [
+        210,
+        33,
+        154,
+        151,
+        20,
+        222,
+        182,
+        117
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "token_account",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "user"
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "manager",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "wns",
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "TokenRenewParams"
+            "defined": {
+              "name": "TokenThawParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "tokenBurn",
+      "name": "token_update",
+      "discriminator": [
+        0,
+        83,
+        87,
+        40,
+        152,
+        45,
+        219,
+        197
+      ],
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "gameConfig",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "update_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "TokenBurnParams"
+            "defined": {
+              "name": "TokenUpdateParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "tokenUpdate",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+      "name": "whitelist_mint",
+      "discriminator": [
+        210,
+        85,
+        94,
+        18,
+        130,
+        142,
+        59,
+        121
       ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenUpdateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "whitelistMint",
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
+          "name": "token_account",
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
+          "name": "token_metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  103,
+                  101,
+                  114,
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
+          "name": "permanent_delegate",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
         },
         {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
+          "name": "global_collection_config",
+          "writable": true
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "address": "SysvarRent111111111111111111111111111111111"
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
+          "name": "associated_token",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
+          "name": "epplex_core",
+          "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg"
         }
       ],
       "args": [
         {
-          "name": "params",
+          "name": "_params",
           "type": {
-            "defined": "WhitelistMintParams"
+            "defined": {
+              "name": "WhitelistMintParams"
+            }
           }
         }
       ]
     },
     {
-      "name": "collectionMint",
+      "name": "wns_group_mint",
+      "discriminator": [
+        140,
+        161,
+        194,
+        132,
+        186,
+        241,
+        4,
+        203
+      ],
       "accounts": [
         {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
+          "name": "group_mint",
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true,
+          "signer": true
         },
         {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
+          "name": "token_account",
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
-          "name": "tokenMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false
+          "name": "permanent_delegate",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "group",
+          "writable": true
+        },
+        {
+          "name": "extra_metas_account",
+          "writable": true
+        },
+        {
+          "name": "manager",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "distribution_account",
+          "writable": true
         },
         {
           "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "address": "SysvarRent111111111111111111111111111111111"
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         },
         {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
+          "name": "associated_token",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
-          "name": "epplexCore",
-          "isMut": false,
-          "isSigner": false
+          "name": "wns",
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
+        },
+        {
+          "name": "royalty_program",
+          "address": "WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "CollectionMintParams"
+            "defined": {
+              "name": "WnsGroupMintParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "wns_member_mint",
+      "discriminator": [
+        50,
+        140,
+        25,
+        186,
+        88,
+        35,
+        195,
+        40
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_account",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true
+        },
+        {
+          "name": "token_metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  103,
+                  101,
+                  114,
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "permanent_delegate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  66,
+                  85,
+                  82,
+                  71,
+                  69,
+                  82,
+                  95,
+                  68,
+                  69,
+                  76,
+                  69,
+                  71,
+                  65,
+                  84,
+                  69
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "group",
+          "writable": true
+        },
+        {
+          "name": "member",
+          "writable": true
+        },
+        {
+          "name": "manager",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "extra_metas_account",
+          "writable": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token22_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associated_token",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "wns",
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "WnsMemberMintParams"
+            }
           }
         }
       ]
@@ -1023,847 +2635,212 @@
   "accounts": [
     {
       "name": "BurgerMetadata",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "docs": [
-              "The bump, used for PDA validation."
-            ],
-            "type": "u8"
-          }
-        ]
-      }
+      "discriminator": [
+        237,
+        198,
+        226,
+        111,
+        10,
+        148,
+        197,
+        206
+      ]
+    },
+    {
+      "name": "CollectionConfig",
+      "discriminator": [
+        223,
+        110,
+        152,
+        160,
+        174,
+        157,
+        106,
+        255
+      ]
+    },
+    {
+      "name": "EphemeralData",
+      "discriminator": [
+        209,
+        230,
+        131,
+        116,
+        60,
+        98,
+        222,
+        43
+      ]
+    },
+    {
+      "name": "EphemeralRule",
+      "discriminator": [
+        46,
+        73,
+        141,
+        97,
+        56,
+        138,
+        247,
+        139
+      ]
     },
     {
       "name": "GameConfig",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "docs": [
-              "The bump, used for PDA validation."
-            ],
-            "type": "u8"
-          },
-          {
-            "name": "gameRound",
-            "docs": [
-              "The game number"
-            ],
-            "type": "u8"
-          },
-          {
-            "name": "gameName",
-            "docs": [
-              "The game number"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "gameStatus",
-            "docs": [
-              "The game status"
-            ],
-            "type": {
-              "defined": "GameStatus"
-            }
-          },
-          {
-            "name": "phaseStartTimestamp",
-            "docs": [
-              "Phase start"
-            ],
-            "type": "i64"
-          },
-          {
-            "name": "phaseEndTimestamp",
-            "docs": [
-              "Phase end"
-            ],
-            "type": "i64"
-          },
-          {
-            "name": "gameMaster",
-            "docs": [
-              "Game master"
-            ],
-            "type": "publicKey"
-          },
-          {
-            "name": "voteType",
-            "docs": [
-              "Game vote type"
-            ],
-            "type": {
-              "defined": "VoteType"
-            }
-          },
-          {
-            "name": "inputType",
-            "docs": [
-              "Game input type"
-            ],
-            "type": {
-              "defined": "InputType"
-            }
-          },
-          {
-            "name": "gamePrompt",
-            "docs": [
-              "Game question of 150 characters"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "isEncrypted",
-            "docs": [
-              "Is answer encrypted"
-            ],
-            "type": "bool"
-          },
-          {
-            "name": "publicEncryptKey",
-            "docs": [
-              "Public encrypt key"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "burnAmount",
-            "docs": [
-              "Total amount of burgers who perished"
-            ],
-            "type": "u16"
-          },
-          {
-            "name": "submissionAmount",
-            "docs": [
-              "Amount of burgers who submitted an answer within a round"
-            ],
-            "type": "u16"
-          },
-          {
-            "name": "ruleSeed",
-            "docs": [
-              "Seed for ephemeral rule"
-            ],
-            "type": "u64"
-          },
-          {
-            "name": "tokenGroup",
-            "docs": [
-              "The pubkey of the token group pda for collection verification"
-            ],
-            "type": "publicKey"
-          },
-          {
-            "name": "reserved0",
-            "docs": [
-              "Taken from xNFT repo Unused reserved byte space for additive future changes"
-            ],
-            "type": {
-              "array": [
-                "u8",
-                64
-              ]
-            }
-          },
-          {
-            "name": "reserved1",
-            "type": {
-              "array": [
-                "u8",
-                24
-              ]
-            }
-          },
-          {
-            "name": "reserved2",
-            "type": {
-              "array": [
-                "u8",
-                9
-              ]
-            }
-          }
-        ]
-      }
+      "discriminator": [
+        45,
+        146,
+        146,
+        33,
+        170,
+        69,
+        96,
+        133
+      ]
+    },
+    {
+      "name": "GlobalCollectionConfig",
+      "discriminator": [
+        184,
+        236,
+        73,
+        161,
+        76,
+        7,
+        235,
+        53
+      ]
+    },
+    {
+      "name": "Manager",
+      "discriminator": [
+        221,
+        78,
+        171,
+        233,
+        213,
+        142,
+        113,
+        56
+      ]
     },
     {
       "name": "ProgramDelegate",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "docs": [
-              "The bump, used for PDA validation."
-            ],
-            "type": "u8"
-          }
-        ]
-      }
-    }
-  ],
-  "types": [
-    {
-      "name": "CollectionMintParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "expiryDate",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "collectionCounter",
-            "type": "u64"
-          }
-        ]
-      }
+      "discriminator": [
+        135,
+        21,
+        195,
+        136,
+        18,
+        9,
+        154,
+        35
+      ]
     },
     {
-      "name": "EphemeralDataAddParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "time",
-            "type": "i64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "EphemeralRuleCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "seed",
-            "type": "u64"
-          },
-          {
-            "name": "ruleCreator",
-            "type": "publicKey"
-          },
-          {
-            "name": "renewalPrice",
-            "type": "u64"
-          },
-          {
-            "name": "treasury",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "GameEndParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "GameEvaluateParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "GameStartParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "endTimestamp",
-            "type": "i64"
-          },
-          {
-            "name": "voteType",
-            "type": {
-              "defined": "VoteType"
-            }
-          },
-          {
-            "name": "inputType",
-            "type": {
-              "defined": "InputType"
-            }
-          },
-          {
-            "name": "gamePrompt",
-            "type": "string"
-          },
-          {
-            "name": "gameName",
-            "type": "string"
-          },
-          {
-            "name": "isEncrypted",
-            "type": "bool"
-          },
-          {
-            "name": "publicEncryptKey",
-            "type": "string"
-          },
-          {
-            "name": "ruleSeed",
-            "type": "u64"
-          },
-          {
-            "name": "tokenGroup",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "GameUpdateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "phaseStartTimestamp",
-            "type": {
-              "option": "i64"
-            }
-          },
-          {
-            "name": "phaseEndTimestamp",
-            "type": {
-              "option": "i64"
-            }
-          },
-          {
-            "name": "voteType",
-            "type": {
-              "option": {
-                "defined": "VoteType"
-              }
-            }
-          },
-          {
-            "name": "tokenGroup",
-            "type": {
-              "option": "publicKey"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "ProgramDelegateCloseParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "ProgramDelegateCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenBurnParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenGameBurnParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenGameImmunityParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenGameResetParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "TokenGameVoteParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "message",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenRenewParams",
-      "type": {
-        "kind": "struct",
-        "fields": []
-      }
-    },
-    {
-      "name": "AddMetadataArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "field",
-            "type": "string"
-          },
-          {
-            "name": "value",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenUpdateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": {
-              "option": "string"
-            }
-          },
-          {
-            "name": "symbol",
-            "type": {
-              "option": "string"
-            }
-          },
-          {
-            "name": "uri",
-            "type": {
-              "option": "string"
-            }
-          },
-          {
-            "name": "additionalMetadata",
-            "type": {
-              "option": {
-                "defined": "AddMetadataArgs"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "WhitelistMintParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "expiryDate",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "WnsGroupMintParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "maxSize",
-            "type": "u32"
-          },
-          {
-            "name": "paymentMint",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "WnsMemberMintParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "expiryDate",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "GameStatus",
-      "docs": [
-        "Represents game activity."
-      ],
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "InProgress"
-          },
-          {
-            "name": "Evaluate"
-          },
-          {
-            "name": "Finished"
-          }
-        ]
-      }
-    },
-    {
-      "name": "VoteType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "VoteOnce"
-          },
-          {
-            "name": "VoteMany"
-          }
-        ]
-      }
-    },
-    {
-      "name": "InputType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "Choice"
-          },
-          {
-            "name": "Text"
-          },
-          {
-            "name": "Number"
-          }
-        ]
-      }
+      "name": "TokenGroupMember",
+      "discriminator": [
+        17,
+        208,
+        50,
+        173,
+        30,
+        127,
+        245,
+        94
+      ]
     }
   ],
   "events": [
     {
-      "name": "EvTokenGameVote",
-      "fields": [
-        {
-          "name": "answer",
-          "type": "string",
-          "index": false
-        },
-        {
-          "name": "participant",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "gameRoundId",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "nft",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "voteTimestamp",
-          "type": "i64",
-          "index": false
-        }
-      ]
-    },
-    {
-      "name": "EvTokenGameBurn",
-      "fields": [
-        {
-          "name": "nft",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "gameRoundId",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "participant",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "burnTimestamp",
-          "type": "i64",
-          "index": false
-        }
-      ]
-    },
-    {
-      "name": "EvTokenGameReset",
-      "fields": [
-        {
-          "name": "gameRoundId",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "nft",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "resetTimestamp",
-          "type": "i64",
-          "index": false
-        }
-      ]
-    },
-    {
-      "name": "EvTokenGameImmunity",
-      "fields": [
-        {
-          "name": "gameRoundId",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "nft",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "immunityTimestamp",
-          "type": "i64",
-          "index": false
-        }
-      ]
-    },
-    {
       "name": "EvGameEnd",
-      "fields": [
-        {
-          "name": "gameRoundId",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "endTimestamp",
-          "type": "i64",
-          "index": false
-        },
-        {
-          "name": "gamePrompt",
-          "type": "string",
-          "index": false
-        },
-        {
-          "name": "gameName",
-          "type": "string",
-          "index": false
-        },
-        {
-          "name": "voteType",
-          "type": {
-            "defined": "VoteType"
-          },
-          "index": false
-        },
-        {
-          "name": "inputType",
-          "type": {
-            "defined": "InputType"
-          },
-          "index": false
-        },
-        {
-          "name": "publicEncryptKey",
-          "type": "string",
-          "index": false
-        },
-        {
-          "name": "burnAmount",
-          "type": "u16",
-          "index": false
-        },
-        {
-          "name": "submissionAmount",
-          "type": "u16",
-          "index": false
-        }
+      "discriminator": [
+        217,
+        248,
+        105,
+        22,
+        24,
+        149,
+        156,
+        66
       ]
     },
     {
       "name": "EvGameStart",
-      "fields": [
-        {
-          "name": "gameRoundId",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "gameStartTimestamp",
-          "type": "i64",
-          "index": false
-        },
-        {
-          "name": "gameEndTimestamp",
-          "type": "i64",
-          "index": false
-        },
-        {
-          "name": "gamePrompt",
-          "type": "string",
-          "index": false
-        },
-        {
-          "name": "gameName",
-          "type": "string",
-          "index": false
-        },
-        {
-          "name": "voteType",
-          "type": {
-            "defined": "VoteType"
-          },
-          "index": false
-        },
-        {
-          "name": "inputType",
-          "type": {
-            "defined": "InputType"
-          },
-          "index": false
-        },
-        {
-          "name": "publicEncryptKey",
-          "type": "string",
-          "index": false
-        },
-        {
-          "name": "burnAmount",
-          "type": "u16",
-          "index": false
-        },
-        {
-          "name": "submissionAmount",
-          "type": "u16",
-          "index": false
-        }
+      "discriminator": [
+        209,
+        178,
+        27,
+        16,
+        235,
+        128,
+        203,
+        232
       ]
     },
     {
       "name": "EvGameUpdate",
-      "fields": [
-        {
-          "name": "gameRoundId",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "gameStartTimestamp",
-          "type": {
-            "option": "i64"
-          },
-          "index": false
-        },
-        {
-          "name": "gameEndTimestamp",
-          "type": {
-            "option": "i64"
-          },
-          "index": false
-        },
-        {
-          "name": "voteType",
-          "type": {
-            "option": {
-              "defined": "VoteType"
-            }
-          },
-          "index": false
-        },
-        {
-          "name": "tokenGroup",
-          "type": {
-            "option": "publicKey"
-          },
-          "index": false
-        }
+      "discriminator": [
+        159,
+        197,
+        133,
+        78,
+        88,
+        209,
+        145,
+        242
+      ]
+    },
+    {
+      "name": "EvTokenGameBurn",
+      "discriminator": [
+        148,
+        119,
+        226,
+        103,
+        166,
+        46,
+        201,
+        93
+      ]
+    },
+    {
+      "name": "EvTokenGameImmunity",
+      "discriminator": [
+        153,
+        246,
+        166,
+        154,
+        100,
+        141,
+        85,
+        18
+      ]
+    },
+    {
+      "name": "EvTokenGameReset",
+      "discriminator": [
+        214,
+        253,
+        57,
+        214,
+        78,
+        211,
+        129,
+        59
+      ]
+    },
+    {
+      "name": "EvTokenGameVote",
+      "discriminator": [
+        124,
+        42,
+        166,
+        49,
+        204,
+        205,
+        196,
+        103
       ]
     }
   ],
@@ -2029,7 +3006,1042 @@
       "msg": "Unable to evaluate game"
     }
   ],
-  "metadata": {
-    "address": "epBuJysRKuFMMWTWoX6ZKPz5WTZWb98mDqn1emVj84n"
-  }
+  "types": [
+    {
+      "name": "AddMetadataArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "field",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BurgerMetadata",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "The bump, used for PDA validation."
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CollectionConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "The bump, used for PDA validation."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "renewal_price",
+            "type": "u64"
+          },
+          {
+            "name": "mint_price",
+            "type": "u64"
+          },
+          {
+            "name": "standard_duration",
+            "type": "u32"
+          },
+          {
+            "name": "grace_period",
+            "type": "i64"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "collection_size",
+            "type": "u32"
+          },
+          {
+            "name": "mint_count",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CollectionMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "expiry_date",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "collection_counter",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EphemeralData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "rule",
+            "type": "pubkey"
+          },
+          {
+            "name": "expiry_time",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EphemeralDataAddParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "time",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EphemeralRule",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "seed",
+            "type": "u64"
+          },
+          {
+            "name": "rule_creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "renewal_price",
+            "type": "u64"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EphemeralRuleCreateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "seed",
+            "type": "u64"
+          },
+          {
+            "name": "rule_creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "renewal_price",
+            "type": "u64"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EvGameEnd",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "game_round_id",
+            "type": "u8"
+          },
+          {
+            "name": "end_timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "game_prompt",
+            "type": "string"
+          },
+          {
+            "name": "game_name",
+            "type": "string"
+          },
+          {
+            "name": "vote_type",
+            "type": {
+              "defined": {
+                "name": "VoteType"
+              }
+            }
+          },
+          {
+            "name": "input_type",
+            "type": {
+              "defined": {
+                "name": "InputType"
+              }
+            }
+          },
+          {
+            "name": "public_encrypt_key",
+            "type": "string"
+          },
+          {
+            "name": "burn_amount",
+            "type": "u16"
+          },
+          {
+            "name": "submission_amount",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EvGameStart",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "game_round_id",
+            "type": "u8"
+          },
+          {
+            "name": "game_start_timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "game_end_timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "game_prompt",
+            "type": "string"
+          },
+          {
+            "name": "game_name",
+            "type": "string"
+          },
+          {
+            "name": "vote_type",
+            "type": {
+              "defined": {
+                "name": "VoteType"
+              }
+            }
+          },
+          {
+            "name": "input_type",
+            "type": {
+              "defined": {
+                "name": "InputType"
+              }
+            }
+          },
+          {
+            "name": "public_encrypt_key",
+            "type": "string"
+          },
+          {
+            "name": "burn_amount",
+            "type": "u16"
+          },
+          {
+            "name": "submission_amount",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EvGameUpdate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "game_round_id",
+            "type": "u8"
+          },
+          {
+            "name": "game_start_timestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "game_end_timestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "vote_type",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "VoteType"
+                }
+              }
+            }
+          },
+          {
+            "name": "token_group",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "EvTokenGameBurn",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nft",
+            "type": "pubkey"
+          },
+          {
+            "name": "game_round_id",
+            "type": "u8"
+          },
+          {
+            "name": "participant",
+            "type": "pubkey"
+          },
+          {
+            "name": "burn_timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EvTokenGameImmunity",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "game_round_id",
+            "type": "u8"
+          },
+          {
+            "name": "nft",
+            "type": "pubkey"
+          },
+          {
+            "name": "immunity_timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EvTokenGameReset",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "game_round_id",
+            "type": "u8"
+          },
+          {
+            "name": "nft",
+            "type": "pubkey"
+          },
+          {
+            "name": "reset_timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EvTokenGameVote",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "answer",
+            "type": "string"
+          },
+          {
+            "name": "participant",
+            "type": "pubkey"
+          },
+          {
+            "name": "game_round_id",
+            "type": "u8"
+          },
+          {
+            "name": "nft",
+            "type": "pubkey"
+          },
+          {
+            "name": "vote_timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "The bump, used for PDA validation."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "game_round",
+            "docs": [
+              "The game number"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "game_name",
+            "docs": [
+              "The game number"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "game_status",
+            "docs": [
+              "The game status"
+            ],
+            "type": {
+              "defined": {
+                "name": "GameStatus"
+              }
+            }
+          },
+          {
+            "name": "phase_start_timestamp",
+            "docs": [
+              "Phase start"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "phase_end_timestamp",
+            "docs": [
+              "Phase end"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "game_master",
+            "docs": [
+              "Game master"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "vote_type",
+            "docs": [
+              "Game vote type"
+            ],
+            "type": {
+              "defined": {
+                "name": "VoteType"
+              }
+            }
+          },
+          {
+            "name": "input_type",
+            "docs": [
+              "Game input type"
+            ],
+            "type": {
+              "defined": {
+                "name": "InputType"
+              }
+            }
+          },
+          {
+            "name": "game_prompt",
+            "docs": [
+              "Game question of 150 characters"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "is_encrypted",
+            "docs": [
+              "Is answer encrypted"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "public_encrypt_key",
+            "docs": [
+              "Public encrypt key"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "burn_amount",
+            "docs": [
+              "Total amount of burgers who perished"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "submission_amount",
+            "docs": [
+              "Amount of burgers who submitted an answer within a round"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "rule_seed",
+            "docs": [
+              "Seed for ephemeral rule"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "token_group",
+            "docs": [
+              "The pubkey of the token group pda for collection verification"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "_reserved0",
+            "docs": [
+              "Taken from xNFT repo Unused reserved byte space for additive future changes"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          },
+          {
+            "name": "_reserved1",
+            "type": {
+              "array": [
+                "u8",
+                24
+              ]
+            }
+          },
+          {
+            "name": "_reserved2",
+            "type": {
+              "array": [
+                "u8",
+                9
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameEndParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "GameEvaluateParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "GameStartParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "end_timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "vote_type",
+            "type": {
+              "defined": {
+                "name": "VoteType"
+              }
+            }
+          },
+          {
+            "name": "input_type",
+            "type": {
+              "defined": {
+                "name": "InputType"
+              }
+            }
+          },
+          {
+            "name": "game_prompt",
+            "type": "string"
+          },
+          {
+            "name": "game_name",
+            "type": "string"
+          },
+          {
+            "name": "is_encrypted",
+            "type": "bool"
+          },
+          {
+            "name": "public_encrypt_key",
+            "type": "string"
+          },
+          {
+            "name": "rule_seed",
+            "type": "u64"
+          },
+          {
+            "name": "token_group",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameStatus",
+      "docs": [
+        "Represents game activity."
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "InProgress"
+          },
+          {
+            "name": "Evaluate"
+          },
+          {
+            "name": "Finished"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameUpdateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "phase_start_timestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "phase_end_timestamp",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "vote_type",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "VoteType"
+                }
+              }
+            }
+          },
+          {
+            "name": "token_group",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalCollectionConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "collection_counter",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InputType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "Choice"
+          },
+          {
+            "name": "Text"
+          },
+          {
+            "name": "Number"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Manager",
+      "docs": [
+        "Data struct for a `Manager`"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "ProgramDelegate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "The bump, used for PDA validation."
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProgramDelegateCloseParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "ProgramDelegateCreateParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenBurnParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenGameBurnParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenGameFreezeParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenGameImmunityParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenGameResetParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenGameVoteParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "message",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenGroupMember",
+      "docs": [
+        "Data struct for a `TokenGroupMember`"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "docs": [
+              "The associated mint, used to counter spoofing to be sure that member",
+              "belongs to a particular mint"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "group",
+            "docs": [
+              "The pubkey of the `TokenGroup`"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "member_number",
+            "docs": [
+              "The member number"
+            ],
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenRenewParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenThawParams",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "TokenUpdateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "symbol",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "uri",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "additional_metadata",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "AddMetadataArgs"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "VoteOnce"
+          },
+          {
+            "name": "VoteMany"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WhitelistMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "expiry_date",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WnsGroupMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "max_size",
+            "type": "u32"
+          },
+          {
+            "name": "payment_mint",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WnsMemberMintParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "expiry_date",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "SEED_BURGER_METADATA",
+      "type": "bytes",
+      "value": "[98, 117, 114, 103, 101, 114, 109, 101, 116, 97, 100, 97, 116, 97]"
+    },
+    {
+      "name": "SEED_GAME_CONFIG",
+      "type": "bytes",
+      "value": "[71, 65, 77, 69, 95, 67, 79, 78, 70, 73, 71]"
+    },
+    {
+      "name": "SEED_PROGRAM_DELEGATE",
+      "type": "bytes",
+      "value": "[66, 85, 82, 71, 69, 82, 95, 68, 69, 76, 69, 71, 65, 84, 69]"
+    }
+  ]
 }

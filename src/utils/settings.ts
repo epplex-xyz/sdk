@@ -1,9 +1,9 @@
-import {Cluster, SendOptions} from "@solana/web3.js";
+import { Cluster, SendOptions } from "@solana/web3.js";
 
 export const CONFIRM_OPTIONS: SendOptions = {
     skipPreflight: false,
     // maxRetries: 1,
-}
+};
 
 export const COMMITMENT = "confirmed";
 
@@ -20,7 +20,7 @@ export function getClusterByEndpoint(
         return "local";
     } else if (endpointUrl.includes("8899")) {
         return "local";
-    } else if (endpointUrl.includes("burgerbob")){
+    } else if (endpointUrl.includes("burgerbob")) {
         return "mainnet";
     } else {
         throw new Error("Unknown network");

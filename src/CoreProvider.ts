@@ -1,35 +1,49 @@
 import * as anchor from "@coral-xyz/anchor";
-import {BN} from "@coral-xyz/anchor";
+import { BN } from "@coral-xyz/anchor";
 import {
     ComputeBudgetProgram,
     ConfirmOptions,
-    Connection, PublicKey,
+    Connection,
+    PublicKey,
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
 } from "@solana/web3.js";
-import {CORE_PROGRAM_ID} from "./constants/ids";
-import {EpplexProviderWallet} from "./types/WalletProvider";
+import { CORE_PROGRAM_ID } from "./constants/ids";
+import { EpplexProviderWallet } from "./types/WalletProvider";
 import {
     CoreProgram,
-    getCollectionConfig, getCollectionMint, getEphemeralAuth, getEphemeralData, getEphemeralRule, getEpplexCoreProgram,
-    getGlobalCollectionConfig, getMint,
+    getCollectionConfig,
+    getCollectionMint,
+    getEphemeralAuth,
+    getEphemeralData,
+    getEphemeralRule,
+    getEpplexCoreProgram,
+    getGlobalCollectionConfig,
+    getMint,
 } from "./constants/coreSeeds";
-import {DEFAULT_COMPUTE_BUDGET} from "./constants/transaction";
+import { DEFAULT_COMPUTE_BUDGET } from "./constants/transaction";
 import {
     CreateCollectionTxParams,
     EphemeralData,
     EphemeralRule,
-    GlobalCollectionConfig, MemberShipAppendTxParams, RuleTxParams, TimeTxParams
+    GlobalCollectionConfig,
+    MemberShipAppendTxParams,
+    RuleTxParams,
+    TimeTxParams,
 } from "./types/CoreProviderTypes";
-import {ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
-import {PAYER_ADMIN} from "./constants/keys";
-import {getAtaAddressPubkey, getMintOwner} from "./utils/generic";
-import {getReadonlyWallet} from "./utils/wallet";
+import {
+    ASSOCIATED_TOKEN_PROGRAM_ID,
+    getAssociatedTokenAddressSync,
+    TOKEN_2022_PROGRAM_ID,
+} from "@solana/spl-token";
+import { PAYER_ADMIN } from "./constants/keys";
+import { getAtaAddressPubkey, getMintOwner } from "./utils/generic";
+import { getReadonlyWallet } from "./utils/wallet";
 
 class CoreProvider {
     provider: anchor.AnchorProvider;
-    program: CoreProgram
+    program: CoreProgram;
     treasury: PublicKey;
 
     constructor(
@@ -37,15 +51,19 @@ class CoreProvider {
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
         coreProgramId: PublicKey = CORE_PROGRAM_ID,
-        epplexTreasury?: PublicKey
+        epplexTreasury?: PublicKey,
     ) {
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
         this.program = getEpplexCoreProgram(this.provider, coreProgramId);
-        this.treasury = epplexTreasury ?? PAYER_ADMIN
+        this.treasury = epplexTreasury ?? PAYER_ADMIN;
     }
 
-    static fromAnchorProvider(provider: anchor.AnchorProvider) : CoreProvider {
-        const epplexProvider = new CoreProvider(provider.wallet, provider.connection, provider.opts);
+    static fromAnchorProvider(provider: anchor.AnchorProvider): CoreProvider {
+        const epplexProvider = new CoreProvider(
+            provider.wallet,
+            provider.connection,
+            provider.opts,
+        );
         return epplexProvider;
     }
 
@@ -54,7 +72,12 @@ class CoreProvider {
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
         coreProgramId: PublicKey = CORE_PROGRAM_ID,
     ): CoreProvider {
-        return new CoreProvider(getReadonlyWallet(), connection, opts, coreProgramId);
+        return new CoreProvider(
+            getReadonlyWallet(),
+            connection,
+            opts,
+            coreProgramId,
+        );
     }
 
     /**
@@ -63,7 +86,7 @@ class CoreProvider {
     async createGlobalCollectionConfigTx(): Promise<Transaction> {
         return await this.program.methods
             .globalCollectionConfigCreate()
-            .accounts({
+            .accountsStrict({
                 globalCollectionConfig: this.getGlobalCollectionConfig(),
                 payer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
@@ -71,14 +94,13 @@ class CoreProvider {
             .transaction();
     }
 
-
     /**
      * Close Global Collection Config
      */
-    async closeGlobalCollectionConfigTx(collectionId: number): Promise<Transaction> {
+    async closeGlobalCollectionConfigTx(): Promise<Transaction> {
         return await this.program.methods
             .globalCollectionConfigClose()
-            .accounts({
+            .accountsStrict({
                 globalCollectionConfig: this.getGlobalCollectionConfig(),
                 payer: this.provider.wallet.publicKey,
             })
@@ -90,9 +112,11 @@ class CoreProvider {
      */
     async closeCollectionConfigTx(collectionId: number): Promise<Transaction> {
         return await this.program.methods
-            .collectionClose({collectionId: new BN(collectionId)})
-            .accounts({
-                collectionConfig: this.getCollectionConfig(new BN(collectionId)),
+            .collectionClose({ collectionId: new BN(collectionId) })
+            .accountsStrict({
+                collectionConfig: this.getCollectionConfig(
+                    new BN(collectionId),
+                ),
                 payer: this.provider.wallet.publicKey,
             })
             .transaction();
@@ -111,13 +135,13 @@ class CoreProvider {
         collectionMintUri,
         collectionSize,
         authority,
-        computeBudget = DEFAULT_COMPUTE_BUDGET
+        computeBudget = DEFAULT_COMPUTE_BUDGET,
     }: CreateCollectionTxParams): Promise<Transaction> {
         const tokenAccount = getAssociatedTokenAddressSync(
             mint,
             this.provider.wallet.publicKey,
             undefined,
-            TOKEN_2022_PROGRAM_ID
+            TOKEN_2022_PROGRAM_ID,
         );
 
         const collectionCreateIx = await this.program.methods
@@ -133,7 +157,7 @@ class CoreProvider {
                 collectionSize,
                 authority,
             })
-            .accounts({
+            .accountsStrict({
                 mint,
                 collectionConfig: collectionConfigAddress,
                 globalCollectionConfig: this.getGlobalCollectionConfig(),
@@ -144,13 +168,14 @@ class CoreProvider {
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
-            }).instruction();
+            })
+            .instruction();
 
-        const ixs= [
+        const ixs = [
             ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget
+                units: computeBudget,
             }),
-            collectionCreateIx
+            collectionCreateIx,
         ];
 
         return new Transaction().add(...ixs);
@@ -158,14 +183,11 @@ class CoreProvider {
 
     async getGlobalCollectionConfigData(): Promise<GlobalCollectionConfig | null> {
         try {
-            return await this.program
-                .account
-                .globalCollectionConfig
-                .fetch(
-                    this.getGlobalCollectionConfig()
-                );
+            return await this.program.account.globalCollectionConfig.fetch(
+                this.getGlobalCollectionConfig(),
+            );
         } catch (err) {
-            return null
+            return null;
         }
     }
 
@@ -188,19 +210,23 @@ class CoreProvider {
     /*
      * Ephemeral Membership
      */
-    async memberShipBurnTx(membership: PublicKey, seed: number, owner?: PublicKey): Promise<Transaction> {
+    async memberShipBurnTx(
+        membership: PublicKey,
+        seed: number,
+        owner?: PublicKey,
+    ): Promise<Transaction> {
         const membershipOwner =
             owner ?? (await getMintOwner(this.provider.connection, membership));
         const membershipAta = getAssociatedTokenAddressSync(
             membership,
             membershipOwner,
             undefined,
-            TOKEN_2022_PROGRAM_ID
+            TOKEN_2022_PROGRAM_ID,
         );
 
         return await this.program.methods
             .membershipBurn()
-            .accounts({
+            .accountsStrict({
                 burner: this.provider.wallet.publicKey,
                 epplexTreasury: this.treasury,
                 membership,
@@ -222,14 +248,23 @@ class CoreProvider {
      * @param uri
      */
     async membershipCreateTx(
-        time: number, name: string, symbol: string, uri: string,
-        membership: PublicKey, ruleCreator: PublicKey, seed: number, payer?: PublicKey
+        time: number,
+        name: string,
+        symbol: string,
+        uri: string,
+        membership: PublicKey,
+        ruleCreator: PublicKey,
+        seed: number,
+        payer?: PublicKey,
     ): Promise<Transaction> {
-        const membershipAta = getAtaAddressPubkey(membership, this.provider.wallet.publicKey);
+        const membershipAta = getAtaAddressPubkey(
+            membership,
+            this.provider.wallet.publicKey,
+        );
 
         return await this.program.methods
             .membershipCreate(new BN(time), name, symbol, uri)
-            .accounts({
+            .accountsStrict({
                 ruleCreator,
                 payer: payer ?? this.provider.wallet.publicKey,
                 membership,
@@ -245,10 +280,12 @@ class CoreProvider {
             .transaction();
     }
 
-    async membershipAppendTx(args: MemberShipAppendTxParams): Promise<Transaction> {
+    async membershipAppendTx(
+        args: MemberShipAppendTxParams,
+    ): Promise<Transaction> {
         return await this.program.methods
             .membershipAppend(new BN(args.time))
-            .accounts({
+            .accountsStrict({
                 membership: args.membership,
                 ruleCreator: args.ruleCreator,
                 rule: this.getEphemeralRule(args.seed),
@@ -265,9 +302,9 @@ class CoreProvider {
                 seed: new BN(args.seed),
                 ruleCreator: args.ruleCreator,
                 renewalPrice: new BN(args.renewalPrice),
-                treasury: args.treasury
+                treasury: args.treasury,
             })
-            .accounts({
+            .accountsStrict({
                 rule: this.getEphemeralRule(args.seed),
                 signer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
@@ -281,9 +318,9 @@ class CoreProvider {
                 seed: new BN(args.seed),
                 ruleCreator: args.ruleCreator,
                 renewalPrice: new BN(args.renewalPrice),
-                treasury: args.treasury
+                treasury: args.treasury,
             })
-            .accounts({
+            .accountsStrict({
                 rule: this.getEphemeralRule(args.seed),
                 signer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
@@ -295,15 +332,17 @@ class CoreProvider {
         time,
         seed,
         membership,
-        treasury
+        treasury,
     }: TimeTxParams): Promise<Transaction> {
         return await this.program.methods
             .timeRemove(new BN(time))
-            .accounts({
+            .accountsStrict({
                 treasury,
                 membership: membership,
                 rule: this.getEphemeralRule(seed),
                 data: this.getEphemeralData(membership),
+                payer: this.provider.wallet.publicKey,
+                systemProgram: SystemProgram.programId,
             })
             .transaction();
     }
@@ -312,15 +351,17 @@ class CoreProvider {
         time,
         seed,
         membership,
-        treasury
+        treasury,
     }: TimeTxParams): Promise<Transaction> {
         return await this.program.methods
             .timeAdd(new BN(time))
-            .accounts({
+            .accountsStrict({
                 treasury,
                 membership: membership,
                 rule: this.getEphemeralRule(seed),
                 data: this.getEphemeralData(membership),
+                payer: this.provider.wallet.publicKey,
+                systemProgram: SystemProgram.programId,
             })
             .transaction();
     }
@@ -338,23 +379,20 @@ class CoreProvider {
     }
 
     async getRuleData(seed: number): Promise<EphemeralRule | undefined> {
-        return await this.program
-            .account
-            .ephemeralRule
+        return await this.program.account.ephemeralRule
             .fetch(this.getEphemeralRule(seed))
-            .then(account => account)
+            .then((account) => account)
             .catch(() => undefined);
     }
 
-    async getEphemeralDataAccount(membership: PublicKey): Promise<EphemeralData | undefined> {
-        return await this.program
-            .account
-            .ephemeralData
+    async getEphemeralDataAccount(
+        membership: PublicKey,
+    ): Promise<EphemeralData | undefined> {
+        return await this.program.account.ephemeralData
             .fetch(this.getEphemeralData(membership))
-            .then(account => account)
-            .catch(() => undefined)
+            .then((account) => account)
+            .catch(() => undefined);
     }
-
 }
 
 export default CoreProvider;

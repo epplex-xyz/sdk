@@ -1,4 +1,4 @@
-import {IdlInputType, IdlVoteType} from "./types/EpplexProviderTypes";
+import { IdlInputType, IdlVoteType } from "./types/EpplexProviderTypes";
 
 export enum GameStatus {
     None,
@@ -19,7 +19,6 @@ export enum InputType {
     Number,
     Text,
 }
-
 
 class DecodeTypesService {
     static decodeInputType(obj: any): InputType {
@@ -87,24 +86,24 @@ class DecodeTypesService {
     static convertStringVote(vote: string | undefined): IdlVoteType {
         switch (vote) {
             case "voteOnce":
-                return { voteOnce: {} }
+                return { voteOnce: {} };
             case "voteMany":
-                return { voteMany: {} }
+                return { voteMany: {} };
             default:
-                return { voteOnce: {} }
+                return { voteOnce: {} };
         }
     }
 
     static convertStringInput(input: string | undefined): IdlInputType {
         switch (input) {
             case "text":
-                return { text: {} }
+                return { text: {} };
             case "choice":
-                return { choice: {} }
+                return { choice: {} };
             case "number":
-                return { number: {} }
+                return { number: {} };
             default:
-                return { text: {} }
+                return { text: {} };
         }
     }
 

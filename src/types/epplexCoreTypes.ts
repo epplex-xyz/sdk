@@ -1,160 +1,881 @@
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/epplex_core.json`.
+ */
 export type EpplexCore = {
-  "version": "0.1.0",
-  "name": "epplex_core",
-  "constants": [
-    {
-      "name": "SEED_COLLECTION_CONFIG",
-      "type": "bytes",
-      "value": "[67, 79, 78, 70, 73, 71]"
-    },
-    {
-      "name": "SEED_EPHEMERAL_DATA",
-      "type": "bytes",
-      "value": "[69, 80, 72, 69, 77, 69, 82, 65, 76, 95, 68, 65, 84, 65]"
-    },
-    {
-      "name": "SEED_EPHEMERAL_AUTH",
-      "type": "bytes",
-      "value": "[69, 80, 72, 69, 77, 69, 82, 65, 76, 95, 65, 85, 84, 72]"
-    },
-    {
-      "name": "SEED_EPHEMERAL_RULE",
-      "type": "bytes",
-      "value": "[69, 80, 72, 69, 77, 69, 82, 65, 76, 95, 82, 85, 76, 69]"
-    },
-    {
-      "name": "SEED_GLOBAL_COLLECTION_CONFIG",
-      "type": "bytes",
-      "value": "[71, 76, 79, 66, 65, 76, 95, 67, 79, 76, 76, 69, 67, 84, 73, 79, 78]"
-    },
-    {
-      "name": "SEED_MINT",
-      "type": "bytes",
-      "value": "[77, 73, 78, 84]"
-    },
-    {
-      "name": "SEED_COLLECTION_MINT",
-      "type": "bytes",
-      "value": "[67, 79, 76, 76, 69, 67, 84, 73, 79, 78, 95, 77, 73, 78, 84]"
-    }
-  ],
+  "address": "epCoD6BqcNinLvKN3KkY55vk4Kxs3W1JTENs1xqWUTg",
+  "metadata": {
+    "name": "epplexCore",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Ephemeral NFT creation"
+  },
   "instructions": [
     {
-      "name": "ruleCreate",
-      "accounts": [
-        {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rule",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+      "name": "collectionClose",
+      "discriminator": [
+        253,
+        25,
+        113,
+        241,
+        251,
+        223,
+        15,
+        21
       ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "RuleManageParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "ruleModify",
       "accounts": [
         {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rule",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "RuleManageParams"
+          "name": "collectionConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "params.collection_id"
+              }
+            ]
           }
-        }
-      ]
-    },
-    {
-      "name": "membershipCreate",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "membershipAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "ruleCreator",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "collectionCloseParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "collectionCreate",
+      "discriminator": [
+        12,
+        0,
+        143,
+        182,
+        226,
+        157,
+        125,
+        226
+      ],
+      "accounts": [
+        {
+          "name": "collectionConfig",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "global_collection_config.collection_counter",
+                "account": "globalCollectionConfig"
+              }
+            ]
+          }
         },
         {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
+          "name": "globalCollectionConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  76,
+                  79,
+                  66,
+                  65,
+                  76,
+                  95,
+                  67,
+                  79,
+                  76,
+                  76,
+                  69,
+                  67,
+                  84,
+                  73,
+                  79,
+                  78
+                ]
+              }
+            ]
+          }
         },
         {
-          "name": "epplexAuthority",
-          "isMut": false,
-          "isSigner": false
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67,
+                  79,
+                  76,
+                  76,
+                  69,
+                  67,
+                  84,
+                  73,
+                  79,
+                  78,
+                  95,
+                  77,
+                  73,
+                  78,
+                  84
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "global_collection_config.collection_counter",
+                "account": "globalCollectionConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenAccount",
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "token22Program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "associatedTokenProgram"
+            }
+          }
+        },
+        {
+          "name": "updateAuthority",
+          "signer": true
         },
         {
           "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "address": "SysvarRent111111111111111111111111111111111"
         },
         {
           "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "collectionCreateParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "collectionMint",
+      "discriminator": [
+        120,
+        203,
+        203,
+        220,
+        173,
+        178,
+        148,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  77,
+                  73,
+                  78,
+                  84
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "params.collection_id"
+              },
+              {
+                "kind": "account",
+                "path": "collection_config.mint_count",
+                "account": "collectionConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenAccount",
+          "docs": [
+            "CHECK this account is created in the instruction body, so no need to check data layout"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "token22Program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "associatedToken"
+            }
+          }
+        },
+        {
+          "name": "permanentDelegate",
+          "docs": [
+            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
+          ]
+        },
+        {
+          "name": "updateAuthority",
+          "signer": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "collectionConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  67,
+                  79,
+                  78,
+                  70,
+                  73,
+                  71
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "params.collection_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "This is the admin account assigned when the collection is created."
+          ],
+          "signer": true,
+          "relations": [
+            "collectionConfig"
+          ]
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token22Program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associatedToken",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "tokenCollectionCreateParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "globalCollectionConfigClose",
+      "discriminator": [
+        38,
+        55,
+        3,
+        129,
+        5,
+        248,
+        35,
+        21
+      ],
+      "accounts": [
+        {
+          "name": "globalCollectionConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  76,
+                  79,
+                  66,
+                  65,
+                  76,
+                  95,
+                  67,
+                  79,
+                  76,
+                  76,
+                  69,
+                  67,
+                  84,
+                  73,
+                  79,
+                  78
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "globalCollectionConfigCreate",
+      "discriminator": [
+        80,
+        217,
+        90,
+        92,
+        237,
+        104,
+        85,
+        187
+      ],
+      "accounts": [
+        {
+          "name": "globalCollectionConfig",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  71,
+                  76,
+                  79,
+                  66,
+                  65,
+                  76,
+                  95,
+                  67,
+                  79,
+                  76,
+                  76,
+                  69,
+                  67,
+                  84,
+                  73,
+                  79,
+                  78
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "membershipAppend",
+      "discriminator": [
+        27,
+        19,
+        34,
+        120,
+        227,
+        23,
+        80,
+        15
+      ],
+      "accounts": [
+        {
+          "name": "membership",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true
+        },
+        {
+          "name": "rule",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "rule.seed",
+                "account": "ephemeralRule"
+              }
+            ]
+          }
+        },
+        {
+          "name": "ruleCreator",
+          "signer": true
+        },
+        {
+          "name": "data",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  68,
+                  65,
+                  84,
+                  65
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "membership"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "time",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "membershipBurn",
+      "discriminator": [
+        81,
+        96,
+        99,
+        118,
+        240,
+        157,
+        239,
+        249
+      ],
+      "accounts": [
+        {
+          "name": "membership",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true
+        },
+        {
+          "name": "membershipAta",
+          "writable": true
+        },
+        {
+          "name": "burner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "epplexTreasury",
+          "writable": true
+        },
+        {
+          "name": "rule",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "rule.seed",
+                "account": "ephemeralRule"
+              }
+            ]
+          }
+        },
+        {
+          "name": "data",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  68,
+                  65,
+                  84,
+                  65
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "membership"
+              }
+            ]
+          }
+        },
+        {
+          "name": "epplexAuthority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  65,
+                  85,
+                  84,
+                  72
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "token22Program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "membershipCreate",
+      "discriminator": [
+        52,
+        19,
+        20,
+        241,
+        159,
+        205,
+        181,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "membership",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "membershipAta",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "token22Program"
+              },
+              {
+                "kind": "account",
+                "path": "membership"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "associatedTokenProgram"
+            }
+          }
+        },
+        {
+          "name": "ruleCreator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "rule",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "rule.seed",
+                "account": "ephemeralRule"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "data",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  68,
+                  65,
+                  84,
+                  65
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "membership"
+              }
+            ]
+          }
+        },
+        {
+          "name": "epplexAuthority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  65,
+                  85,
+                  84,
+                  72
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "token22Program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
@@ -177,242 +898,462 @@ export type EpplexCore = {
       ]
     },
     {
-      "name": "membershipAppend",
+      "name": "membershipWnsBurn",
+      "discriminator": [
+        180,
+        27,
+        37,
+        225,
+        21,
+        136,
+        54,
+        243
+      ],
       "accounts": [
         {
           "name": "membership",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
+          "name": "membershipAta",
+          "writable": true
         },
         {
-          "name": "ruleCreator",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
+          "name": "sourceAta",
+          "writable": true
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "burner",
+          "signer": true
+        },
+        {
+          "name": "epplexTreasury",
+          "writable": true
+        },
+        {
+          "name": "rule",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "rule.seed",
+                "account": "ephemeralRule"
+              }
+            ]
+          }
+        },
+        {
+          "name": "data",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  68,
+                  65,
+                  84,
+                  65
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "membership"
+              }
+            ]
+          }
+        },
+        {
+          "name": "epplexAuthority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  65,
+                  85,
+                  84,
+                  72
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "metasAccountList"
+        },
+        {
+          "name": "manager",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "approveAccount",
+          "writable": true
+        },
+        {
+          "name": "distributionTokenAccount",
+          "writable": true
+        },
+        {
+          "name": "distributionAccount",
+          "writable": true
+        },
+        {
+          "name": "paymentMint"
+        },
+        {
+          "name": "wrd",
+          "address": "WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"
+        },
+        {
+          "name": "wns",
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token22Program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "ruleCreate",
+      "discriminator": [
+        69,
+        179,
+        255,
+        184,
+        203,
+        38,
+        219,
+        176
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "rule",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "params.seed"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "time",
-          "type": "i64"
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "ruleManageParams"
+            }
+          }
         }
       ]
     },
     {
-      "name": "membershipBurn",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "membershipAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "burner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "epplexTreasury",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "epplexAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
+      "name": "ruleModify",
+      "discriminator": [
+        140,
+        209,
+        4,
+        132,
+        184,
+        142,
+        157,
+        130
       ],
-      "args": []
-    },
-    {
-      "name": "membershipWnsBurn",
       "accounts": [
         {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "membershipAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sourceAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "burner",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "epplexTreasury",
-          "isMut": true,
-          "isSigner": false
+          "name": "signer",
+          "writable": true,
+          "signer": true
         },
         {
           "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "epplexAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metasAccountList",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "approveAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "distributionTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "distributionAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrd",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "params.seed"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "ruleManageParams"
+            }
+          }
+        }
+      ]
     },
     {
       "name": "timeAdd",
+      "discriminator": [
+        35,
+        17,
+        204,
+        191,
+        197,
+        2,
+        13,
+        35
+      ],
       "accounts": [
         {
           "name": "membership",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "treasury",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "relations": [
+            "rule"
+          ]
         },
         {
           "name": "rule",
-          "isMut": false,
-          "isSigner": false
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "rule.seed",
+                "account": "ephemeralRule"
+              }
+            ]
+          },
+          "relations": [
+            "data"
+          ]
         },
         {
           "name": "data",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  68,
+                  65,
+                  84,
+                  65
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "membership"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
@@ -424,39 +1365,104 @@ export type EpplexCore = {
     },
     {
       "name": "timeRemove",
+      "discriminator": [
+        56,
+        52,
+        215,
+        71,
+        62,
+        170,
+        28,
+        241
+      ],
       "accounts": [
         {
           "name": "membership",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "CHECK"
-          ]
+          ],
+          "writable": true
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "treasury",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "relations": [
+            "rule"
+          ]
         },
         {
           "name": "rule",
-          "isMut": false,
-          "isSigner": false
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  82,
+                  85,
+                  76,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "rule.seed",
+                "account": "ephemeralRule"
+              }
+            ]
+          },
+          "relations": [
+            "data"
+          ]
         },
         {
           "name": "data",
-          "isMut": true,
-          "isSigner": false
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  69,
+                  80,
+                  72,
+                  69,
+                  77,
+                  69,
+                  82,
+                  65,
+                  76,
+                  95,
+                  68,
+                  65,
+                  84,
+                  65
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "membership"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
@@ -468,290 +1474,242 @@ export type EpplexCore = {
     },
     {
       "name": "tokenMint",
+      "discriminator": [
+        3,
+        44,
+        164,
+        184,
+        123,
+        13,
+        245,
+        179
+      ],
       "accounts": [
         {
           "name": "mint",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  77,
+                  73,
+                  78,
+                  84
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "global_collection_config.collection_counter",
+                "account": "globalCollectionConfig"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
           "docs": [
             "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "token22Program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "associatedToken"
+            }
+          }
         },
         {
           "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false,
           "docs": [
             "CHECK gives the option to set the permanent delegate to any keypair or PDA"
           ]
         },
         {
           "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
+          "signer": true
         },
         {
           "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
+          "writable": true
         },
         {
           "name": "payer",
-          "isMut": true,
-          "isSigner": true
+          "writable": true,
+          "signer": true
         },
         {
           "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "address": "SysvarRent111111111111111111111111111111111"
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
+          "address": "11111111111111111111111111111111"
         },
         {
           "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
           "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "TokenCreateParams"
+            "defined": {
+              "name": "tokenCreateParams"
+            }
           }
         }
       ]
-    },
-    {
-      "name": "collectionMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
-          ]
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": true,
-          "docs": [
-            "This is the admin account assigned when the collection is created."
-          ]
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenCollectionCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionCreate",
-      "accounts": [
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "CollectionCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionClose",
-      "accounts": [
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "CollectionCloseParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "globalCollectionConfigCreate",
-      "accounts": [
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "globalCollectionConfigClose",
-      "accounts": [
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
+    {
+      "name": "collectionConfig",
+      "discriminator": [
+        223,
+        110,
+        152,
+        160,
+        174,
+        157,
+        106,
+        255
+      ]
+    },
+    {
+      "name": "ephemeralData",
+      "discriminator": [
+        209,
+        230,
+        131,
+        116,
+        60,
+        98,
+        222,
+        43
+      ]
+    },
+    {
+      "name": "ephemeralRule",
+      "discriminator": [
+        46,
+        73,
+        141,
+        97,
+        56,
+        138,
+        247,
+        139
+      ]
+    },
+    {
+      "name": "globalCollectionConfig",
+      "discriminator": [
+        184,
+        236,
+        73,
+        161,
+        76,
+        7,
+        235,
+        53
+      ]
+    },
+    {
+      "name": "manager",
+      "discriminator": [
+        221,
+        78,
+        171,
+        233,
+        213,
+        142,
+        113,
+        56
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "invalidCalculation",
+      "msg": "Invalid calculation"
+    },
+    {
+      "code": 6001,
+      "name": "destroyTimestampNotExceeded",
+      "msg": "Destroy timestamp has not been exceeded"
+    },
+    {
+      "code": 6002,
+      "name": "escalatedAuthority",
+      "msg": "You don't have the authority to perform this action"
+    },
+    {
+      "code": 6003,
+      "name": "overflow",
+      "msg": "overflow"
+    },
+    {
+      "code": 6004,
+      "name": "notExpired",
+      "msg": "The membership has not yet expired! Note that the grace period is 14 hours."
+    },
+    {
+      "code": 6005,
+      "name": "alreadyExpired",
+      "msg": "The membership has already expired! You cannot remove time from it."
+    }
+  ],
+  "types": [
+    {
+      "name": "collectionCloseParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "collectionId",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "collectionConfig",
       "type": {
@@ -766,7 +1724,7 @@ export type EpplexCore = {
           },
           {
             "name": "authority",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "renewalPrice",
@@ -786,7 +1744,7 @@ export type EpplexCore = {
           },
           {
             "name": "treasury",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "collectionSize",
@@ -795,6 +1753,54 @@ export type EpplexCore = {
           {
             "name": "mintCount",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "collectionCreateParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "renewalPrice",
+            "type": "u64"
+          },
+          {
+            "name": "mintPrice",
+            "type": "u64"
+          },
+          {
+            "name": "standardDuration",
+            "type": "u32"
+          },
+          {
+            "name": "gracePeriod",
+            "type": "i64"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "collectionSize",
+            "type": "u32"
           }
         ]
       }
@@ -810,11 +1816,11 @@ export type EpplexCore = {
           },
           {
             "name": "mint",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "rule",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "expiryTime",
@@ -838,7 +1844,7 @@ export type EpplexCore = {
           },
           {
             "name": "ruleCreator",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "renewalPrice",
@@ -846,7 +1852,7 @@ export type EpplexCore = {
           },
           {
             "name": "treasury",
-            "type": "publicKey"
+            "type": "pubkey"
           }
         ]
       }
@@ -866,71 +1872,19 @@ export type EpplexCore = {
           }
         ]
       }
-    }
-  ],
-  "types": [
+    },
     {
-      "name": "CollectionCloseParams",
+      "name": "manager",
+      "docs": [
+        "Data struct for a `Manager`"
+      ],
       "type": {
         "kind": "struct",
-        "fields": [
-          {
-            "name": "collectionId",
-            "type": "u64"
-          }
-        ]
+        "fields": []
       }
     },
     {
-      "name": "CollectionCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "authority",
-            "type": "publicKey"
-          },
-          {
-            "name": "renewalPrice",
-            "type": "u64"
-          },
-          {
-            "name": "mintPrice",
-            "type": "u64"
-          },
-          {
-            "name": "standardDuration",
-            "type": "u32"
-          },
-          {
-            "name": "gracePeriod",
-            "type": "i64"
-          },
-          {
-            "name": "treasury",
-            "type": "publicKey"
-          },
-          {
-            "name": "collectionSize",
-            "type": "u32"
-          }
-        ]
-      }
-    },
-    {
-      "name": "RuleManageParams",
+      "name": "ruleManageParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -940,7 +1894,7 @@ export type EpplexCore = {
           },
           {
             "name": "ruleCreator",
-            "type": "publicKey"
+            "type": "pubkey"
           },
           {
             "name": "renewalPrice",
@@ -948,44 +1902,13 @@ export type EpplexCore = {
           },
           {
             "name": "treasury",
-            "type": "publicKey"
+            "type": "pubkey"
           }
         ]
       }
     },
     {
-      "name": "TokenCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "additionalMetadata",
-            "type": {
-              "vec": {
-                "array": [
-                  "string",
-                  2
-                ]
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenCollectionCreateParams",
+      "name": "tokenCollectionCreateParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1020,1120 +1943,72 @@ export type EpplexCore = {
       }
     },
     {
-      "name": "MintError",
+      "name": "tokenCreateParams",
       "type": {
-        "kind": "enum",
-        "variants": [
+        "kind": "struct",
+        "fields": [
           {
-            "name": "UnauthorizedMintAuthority"
+            "name": "name",
+            "type": "string"
           },
           {
-            "name": "InvalidTreasuryAccount"
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "additionalMetadata",
+            "type": {
+              "vec": {
+                "array": [
+                  "string",
+                  2
+                ]
+              }
+            }
           }
         ]
       }
     }
   ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "InvalidCalculation",
-      "msg": "Invalid calculation"
-    },
-    {
-      "code": 6001,
-      "name": "DestroyTimestampNotExceeded",
-      "msg": "Destroy timestamp has not been exceeded"
-    },
-    {
-      "code": 6002,
-      "name": "EscalatedAuthority",
-      "msg": "You don't have the authority to perform this action"
-    },
-    {
-      "code": 6003,
-      "name": "Overflow",
-      "msg": "Overflow"
-    },
-    {
-      "code": 6004,
-      "name": "NotExpired",
-      "msg": "The membership has not yet expired! Note that the grace period is 14 hours."
-    },
-    {
-      "code": 6005,
-      "name": "AlreadyExpired",
-      "msg": "The membership has already expired! You cannot remove time from it."
-    }
-  ]
-};
-
-export const IDL: EpplexCore = {
-  "version": "0.1.0",
-  "name": "epplex_core",
   "constants": [
     {
-      "name": "SEED_COLLECTION_CONFIG",
+      "name": "seedCollectionConfig",
       "type": "bytes",
       "value": "[67, 79, 78, 70, 73, 71]"
     },
     {
-      "name": "SEED_EPHEMERAL_DATA",
+      "name": "seedCollectionMint",
       "type": "bytes",
-      "value": "[69, 80, 72, 69, 77, 69, 82, 65, 76, 95, 68, 65, 84, 65]"
+      "value": "[67, 79, 76, 76, 69, 67, 84, 73, 79, 78, 95, 77, 73, 78, 84]"
     },
     {
-      "name": "SEED_EPHEMERAL_AUTH",
+      "name": "seedEphemeralAuth",
       "type": "bytes",
       "value": "[69, 80, 72, 69, 77, 69, 82, 65, 76, 95, 65, 85, 84, 72]"
     },
     {
-      "name": "SEED_EPHEMERAL_RULE",
+      "name": "seedEphemeralData",
+      "type": "bytes",
+      "value": "[69, 80, 72, 69, 77, 69, 82, 65, 76, 95, 68, 65, 84, 65]"
+    },
+    {
+      "name": "seedEphemeralRule",
       "type": "bytes",
       "value": "[69, 80, 72, 69, 77, 69, 82, 65, 76, 95, 82, 85, 76, 69]"
     },
     {
-      "name": "SEED_GLOBAL_COLLECTION_CONFIG",
+      "name": "seedGlobalCollectionConfig",
       "type": "bytes",
       "value": "[71, 76, 79, 66, 65, 76, 95, 67, 79, 76, 76, 69, 67, 84, 73, 79, 78]"
     },
     {
-      "name": "SEED_MINT",
+      "name": "seedMint",
       "type": "bytes",
       "value": "[77, 73, 78, 84]"
-    },
-    {
-      "name": "SEED_COLLECTION_MINT",
-      "type": "bytes",
-      "value": "[67, 79, 76, 76, 69, 67, 84, 73, 79, 78, 95, 77, 73, 78, 84]"
-    }
-  ],
-  "instructions": [
-    {
-      "name": "ruleCreate",
-      "accounts": [
-        {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rule",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "RuleManageParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "ruleModify",
-      "accounts": [
-        {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rule",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "RuleManageParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "membershipCreate",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "membershipAta",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "ruleCreator",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "epplexAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "time",
-          "type": "i64"
-        },
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "membershipAppend",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ruleCreator",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "time",
-          "type": "i64"
-        }
-      ]
-    },
-    {
-      "name": "membershipBurn",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "membershipAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "burner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "epplexTreasury",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "epplexAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "membershipWnsBurn",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "membershipAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "sourceAta",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "burner",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "epplexTreasury",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "epplexAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metasAccountList",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "manager",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "approveAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "distributionTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "distributionAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wrd",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "wns",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "timeAdd",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "treasury",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "time",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "timeRemove",
-      "accounts": [
-        {
-          "name": "membership",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "treasury",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rule",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "time",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "tokenMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
-          ]
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionMint",
-      "accounts": [
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "permanentDelegate",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK gives the option to set the permanent delegate to any keypair or PDA"
-          ]
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": true,
-          "docs": [
-            "This is the admin account assigned when the collection is created."
-          ]
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedToken",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "TokenCollectionCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionCreate",
-      "accounts": [
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "tokenAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK this account is created in the instruction body, so no need to check data layout"
-          ]
-        },
-        {
-          "name": "updateAuthority",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "token22Program",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "CollectionCreateParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "collectionClose",
-      "accounts": [
-        {
-          "name": "collectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "CollectionCloseParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "globalCollectionConfigCreate",
-      "accounts": [
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "globalCollectionConfigClose",
-      "accounts": [
-        {
-          "name": "globalCollectionConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": []
-    }
-  ],
-  "accounts": [
-    {
-      "name": "collectionConfig",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "docs": [
-              "The bump, used for PDA validation."
-            ],
-            "type": "u8"
-          },
-          {
-            "name": "authority",
-            "type": "publicKey"
-          },
-          {
-            "name": "renewalPrice",
-            "type": "u64"
-          },
-          {
-            "name": "mintPrice",
-            "type": "u64"
-          },
-          {
-            "name": "standardDuration",
-            "type": "u32"
-          },
-          {
-            "name": "gracePeriod",
-            "type": "i64"
-          },
-          {
-            "name": "treasury",
-            "type": "publicKey"
-          },
-          {
-            "name": "collectionSize",
-            "type": "u32"
-          },
-          {
-            "name": "mintCount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "ephemeralData",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "mint",
-            "type": "publicKey"
-          },
-          {
-            "name": "rule",
-            "type": "publicKey"
-          },
-          {
-            "name": "expiryTime",
-            "type": "i64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "ephemeralRule",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
-            "name": "seed",
-            "type": "u64"
-          },
-          {
-            "name": "ruleCreator",
-            "type": "publicKey"
-          },
-          {
-            "name": "renewalPrice",
-            "type": "u64"
-          },
-          {
-            "name": "treasury",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "globalCollectionConfig",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "collectionCounter",
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
-    }
-  ],
-  "types": [
-    {
-      "name": "CollectionCloseParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "collectionId",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "CollectionCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "authority",
-            "type": "publicKey"
-          },
-          {
-            "name": "renewalPrice",
-            "type": "u64"
-          },
-          {
-            "name": "mintPrice",
-            "type": "u64"
-          },
-          {
-            "name": "standardDuration",
-            "type": "u32"
-          },
-          {
-            "name": "gracePeriod",
-            "type": "i64"
-          },
-          {
-            "name": "treasury",
-            "type": "publicKey"
-          },
-          {
-            "name": "collectionSize",
-            "type": "u32"
-          }
-        ]
-      }
-    },
-    {
-      "name": "RuleManageParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "seed",
-            "type": "u64"
-          },
-          {
-            "name": "ruleCreator",
-            "type": "publicKey"
-          },
-          {
-            "name": "renewalPrice",
-            "type": "u64"
-          },
-          {
-            "name": "treasury",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "additionalMetadata",
-            "type": {
-              "vec": {
-                "array": [
-                  "string",
-                  2
-                ]
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "TokenCollectionCreateParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "name": "collectionId",
-            "type": "u64"
-          },
-          {
-            "name": "additionalMetadata",
-            "type": {
-              "vec": {
-                "array": [
-                  "string",
-                  2
-                ]
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "MintError",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "UnauthorizedMintAuthority"
-          },
-          {
-            "name": "InvalidTreasuryAccount"
-          }
-        ]
-      }
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "InvalidCalculation",
-      "msg": "Invalid calculation"
-    },
-    {
-      "code": 6001,
-      "name": "DestroyTimestampNotExceeded",
-      "msg": "Destroy timestamp has not been exceeded"
-    },
-    {
-      "code": 6002,
-      "name": "EscalatedAuthority",
-      "msg": "You don't have the authority to perform this action"
-    },
-    {
-      "code": 6003,
-      "name": "Overflow",
-      "msg": "Overflow"
-    },
-    {
-      "code": 6004,
-      "name": "NotExpired",
-      "msg": "The membership has not yet expired! Note that the grace period is 14 hours."
-    },
-    {
-      "code": 6005,
-      "name": "AlreadyExpired",
-      "msg": "The membership has already expired! You cannot remove time from it."
     }
   ]
 };

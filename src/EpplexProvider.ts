@@ -3,7 +3,6 @@ import {
     ASSOCIATED_TOKEN_PROGRAM_ID,
     getAssociatedTokenAddressSync,
     TOKEN_2022_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import {
     ComputeBudgetProgram,
@@ -13,49 +12,65 @@ import {
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
-    TransactionInstruction,
 } from "@solana/web3.js";
 import {
-    BurgerProgram, getEpplexBurgerEventParser,
+    BurgerProgram,
+    getEpplexBurgerEventParser,
     getEpplexBurgerProgram,
     getGameConfig,
     getProgramDelegate,
     getTokenBurgerMetadata,
 } from "./constants/burgerSeeds";
 import {
-    getCollectionConfig, getEphemeralAuth,
+    getCollectionConfig,
+    getEphemeralAuth,
     getGlobalCollectionConfig,
 } from "./constants/coreSeeds";
 import { BURGER_PROGRAM_ID, CORE_PROGRAM_ID } from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
-import {DEFAULT_COMPUTE_BUDGET, DEFAULT_COMPUTE_UNIT} from "./constants/transaction";
+import {
+    DEFAULT_COMPUTE_BUDGET,
+    DEFAULT_COMPUTE_UNIT,
+} from "./constants/transaction";
 import {
     BurnTxParams,
     CreateCollectionMintTxTxParams,
-    CreateWhitelistMintTxParams, EphemeralDataAppendTxParams, EphemeralRuleCreateTxParams,
+    CreateWhitelistMintTxParams,
+    EphemeralDataAppendTxParams,
+    EphemeralRuleCreateTxParams,
     GameConfig,
-    GameStartParams, GameUpdateParams, TokenGameBurnTxParams, TokenGameImmunityParams,
+    GameStartParams,
+    GameUpdateParams,
+    ThawTxParams,
+    TokenGameBurnTxParams,
+    TokenGameFreezeTxParams,
+    TokenGameImmunityParams,
     TokenGameResetParams,
-    TokenGameVoteTxParams, TokenUpdateParams, WnsGroupMintParams, WnsMemberMintParams,
+    TokenGameVoteTxParams,
+    TokenUpdateParams,
+    WnsGroupMintParams,
+    WnsMemberMintParams,
 } from "./types/EpplexProviderTypes";
 import { EpplexProviderWallet } from "./types/WalletProvider";
-import {getAtaAddress, getAtaAddressPubkey, getMintOwner, tryCreateATAIx} from "./utils/generic";
 import {
-    DISTRIBUTION_PROGRAM_ID, getApproveAccountPda,
+    getAtaAddress,
+    getAtaAddressPubkey,
+    getMintOwner,
+} from "./utils/generic";
+import {
+    DISTRIBUTION_PROGRAM_ID,
+    getApproveAccountPda,
     getDistributionAccount,
     getExtraMetasAccount,
     getGroupAccount,
     getManagerAccount,
     getMemberAccount,
-    WNS_PROGRAM_ID
+    WNS_PROGRAM_ID,
 } from "./constants/wenCore";
-import {getReadonlyWallet} from "./utils/wallet";
-import {BN} from "@coral-xyz/anchor";
-import {
-    getEphemeralRule,
-    getEphemeralData,
-} from "./constants/coreSeeds";
-import {MemberShipAppendTxParams, RuleTxParams} from "./types/CoreProviderTypes";
+import { getReadonlyWallet } from "./utils/wallet";
+import { BN } from "@coral-xyz/anchor";
+import { getEphemeralRule, getEphemeralData } from "./constants/coreSeeds";
+
 interface Programs {
     burger?: PublicKey;
     core?: PublicKey;
@@ -67,8 +82,8 @@ const DEFAULT_PROGRAMS: Programs = {
     burger: BURGER_PROGRAM_ID,
     core: CORE_PROGRAM_ID,
     wns: WNS_PROGRAM_ID,
-    royalty: DISTRIBUTION_PROGRAM_ID
-}
+    royalty: DISTRIBUTION_PROGRAM_ID,
+};
 
 class EpplexProvider {
     provider: anchor.AnchorProvider;
@@ -82,30 +97,33 @@ class EpplexProvider {
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
         programIds: Programs = DEFAULT_PROGRAMS,
-        ephemeralRuleSeed?: number
+        ephemeralRuleSeed?: number,
     ) {
-        const burgerProgram = programIds.burger ?? DEFAULT_PROGRAMS.burger
+        const burgerProgram = programIds.burger ?? DEFAULT_PROGRAMS.burger;
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
         this.program = getEpplexBurgerProgram(this.provider, burgerProgram);
-        this.eventParser = getEpplexBurgerEventParser(burgerProgram)
+        this.eventParser = getEpplexBurgerEventParser(burgerProgram);
         this.programIds = {
             burger: burgerProgram,
             core: programIds.core ?? DEFAULT_PROGRAMS.core,
             wns: programIds.wns ?? DEFAULT_PROGRAMS.wns,
-            royalty: programIds.royalty ?? DEFAULT_PROGRAMS.royalty
-        }
+            royalty: programIds.royalty ?? DEFAULT_PROGRAMS.royalty,
+        };
         this.ephemeralRuleSeed = ephemeralRuleSeed;
     }
 
     /*
-        * Providers
+     * Providers
      */
-    static fromAnchorProvider(provider: anchor.AnchorProvider, programs: Programs = DEFAULT_PROGRAMS): EpplexProvider {
+    static fromAnchorProvider(
+        provider: anchor.AnchorProvider,
+        programs: Programs = DEFAULT_PROGRAMS,
+    ): EpplexProvider {
         const epplexProvider = new EpplexProvider(
             provider.wallet,
             provider.connection,
             provider.opts,
-            programs
+            programs,
         );
         return epplexProvider;
     }
@@ -115,14 +133,21 @@ class EpplexProvider {
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
         programs: Programs = DEFAULT_PROGRAMS,
     ): EpplexProvider {
-        return new EpplexProvider(getReadonlyWallet(), connection, opts, programs);
+        return new EpplexProvider(
+            getReadonlyWallet(),
+            connection,
+            opts,
+            programs,
+        );
     }
 
     /*
         EPHEMERALITY
      */
     // Equivalent to membershipAppend in Core
-    async ephemeralDataAddTx(args: EphemeralDataAppendTxParams): Promise<Transaction> {
+    async ephemeralDataAddTx(
+        args: EphemeralDataAppendTxParams,
+    ): Promise<Transaction> {
         return await this.program.methods
             .ephemeralDataAdd(new BN(args.time))
             .accountsStrict({
@@ -132,25 +157,27 @@ class EpplexProvider {
                 data: this.getEphemeralData(args.membership),
                 payer: args.payer ?? this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
-                epplexCore: this.programIds.core
+                epplexCore: this.programIds.core,
             })
             .transaction();
     }
 
     // Equivalent to ruleCreate in Core
-    async ephemeralRuleCreateTx(args: EphemeralRuleCreateTxParams): Promise<Transaction> {
+    async ephemeralRuleCreateTx(
+        args: EphemeralRuleCreateTxParams,
+    ): Promise<Transaction> {
         return await this.program.methods
             .ephemeralRuleCreate({
                 seed: new BN(args.seed),
                 ruleCreator: this.getProgramDelegate(),
                 renewalPrice: new BN(args.renewalPrice),
-                treasury: args.treasury
+                treasury: args.treasury,
             })
             .accountsStrict({
                 rule: this.getEphemeralRule(args.seed),
                 signer: this.provider.wallet.publicKey,
                 systemProgram: SystemProgram.programId,
-                epplexCore: this.programIds.core
+                epplexCore: this.programIds.core,
             })
             .transaction();
     }
@@ -164,23 +191,36 @@ class EpplexProvider {
                 symbol: params.symbol,
                 uri: params.uri,
                 maxSize: params.maxSize,
-                paymentMint
+                paymentMint,
             })
             .accountsStrict({
                 groupMint: params.groupMint,
-                tokenAccount: getAtaAddress(params.groupMint.toString(), payer.toString()),
+                tokenAccount: getAtaAddress(
+                    params.groupMint.toString(),
+                    payer.toString(),
+                ),
                 permanentDelegate: this.getProgramDelegate(),
                 payer: payer,
-                group: getGroupAccount(params.groupMint.toString(), this.programIds.wns),
-                extraMetasAccount: getExtraMetasAccount(params.groupMint.toString(), this.programIds.wns),
-                distributionAccount: getDistributionAccount(params.groupMint.toString(), paymentMint.toString(), this.programIds.royalty),
+                group: getGroupAccount(
+                    params.groupMint.toString(),
+                    this.programIds.wns,
+                ),
+                extraMetasAccount: getExtraMetasAccount(
+                    params.groupMint.toString(),
+                    this.programIds.wns,
+                ),
+                distributionAccount: getDistributionAccount(
+                    params.groupMint.toString(),
+                    paymentMint.toString(),
+                    this.programIds.royalty,
+                ),
                 manager: getManagerAccount(this.programIds.wns),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
                 wns: this.programIds.wns,
-                royaltyProgram: this.programIds.royalty
+                royaltyProgram: this.programIds.royalty,
             })
             .instruction();
 
@@ -215,19 +255,31 @@ class EpplexProvider {
             })
             .accountsStrict({
                 mint: params.mint,
-                tokenAccount: getAtaAddress(params.mint.toString(), payer.toString()),
+                tokenAccount: getAtaAddress(
+                    params.mint.toString(),
+                    payer.toString(),
+                ),
                 tokenMetadata: this.getTokenBurgerMetadata(params.mint),
                 permanentDelegate: this.getProgramDelegate(),
                 payer: payer,
-                group: getGroupAccount(params.groupMint.toString(), this.programIds.wns),
-                member: getMemberAccount(params.mint.toString(), this.programIds.wns),
-                extraMetasAccount: getExtraMetasAccount(params.mint.toString(), this.programIds.wns),
+                group: getGroupAccount(
+                    params.groupMint.toString(),
+                    this.programIds.wns,
+                ),
+                member: getMemberAccount(
+                    params.mint.toString(),
+                    this.programIds.wns,
+                ),
+                extraMetasAccount: getExtraMetasAccount(
+                    params.mint.toString(),
+                    this.programIds.wns,
+                ),
                 manager: getManagerAccount(this.programIds.wns),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 associatedToken: ASSOCIATED_TOKEN_PROGRAM_ID,
-                wns: this.programIds.wns
+                wns: this.programIds.wns,
             })
             .instruction();
 
@@ -243,8 +295,8 @@ class EpplexProvider {
         ];
 
         if (params.addGameReset) {
-            const tx = await this.tokenGameResetTx({mint: params.mint})
-            ixs.push(...tx.instructions)
+            const tx = await this.tokenGameResetTx({ mint: params.mint });
+            ixs.push(...tx.instructions);
         }
 
         if (params.ephemeralDataSeed) {
@@ -254,15 +306,14 @@ class EpplexProvider {
                 seed: params.ephemeralDataSeed,
                 payer: payer,
             });
-            ixs.push(...tx.instructions)
+            ixs.push(...tx.instructions);
         }
 
         return new Transaction().add(...ixs);
     }
 
-
     /*
-        * States
+     * States
      */
     async createProgramDelegateTx() {
         return await this.program.methods
@@ -275,8 +326,6 @@ class EpplexProvider {
             .transaction();
     }
 
-
-
     setEphemeralRuleSeed(seed: number) {
         this.ephemeralRuleSeed = seed;
     }
@@ -288,14 +337,22 @@ class EpplexProvider {
         }
 
         const mintOwner =
-            args.owner ?? (await getMintOwner(this.provider.connection, args.mint));
+            args.owner ??
+            (await getMintOwner(this.provider.connection, args.mint));
         const tokenAccount = getAtaAddressPubkey(args.mint, mintOwner);
 
-        const epplexAuthority = this.getEphemeralAuth()
-        const destinationTokenAccount = getAtaAddressPubkey(args.mint, epplexAuthority);
+        const epplexAuthority = this.getEphemeralAuth();
+        const destinationTokenAccount = getAtaAddressPubkey(
+            args.mint,
+            epplexAuthority,
+        );
 
         const paymentMint = PublicKey.default;
-        const distribution = getDistributionAccount(args.groupMint, paymentMint, this.programIds.royalty);
+        const distribution = getDistributionAccount(
+            args.groupMint,
+            paymentMint,
+            this.programIds.royalty,
+        );
         return await this.program.methods
             .tokenGameBurn({})
             .accountsStrict({
@@ -316,11 +373,20 @@ class EpplexProvider {
                 manager: getManagerAccount(this.programIds.wns),
                 wrd: this.programIds.royalty,
                 wns: this.programIds.wns,
-                distributionTokenAccount: getAtaAddressPubkey(paymentMint, distribution),
+                distributionTokenAccount: getAtaAddressPubkey(
+                    paymentMint,
+                    distribution,
+                ),
                 distributionAccount: distribution,
                 paymentMint,
-                metasAccountList: getExtraMetasAccount(args.mint, this.programIds.wns),
-                approveAccount: getApproveAccountPda(args.mint, this.programIds.wns),
+                metasAccountList: getExtraMetasAccount(
+                    args.mint,
+                    this.programIds.wns,
+                ),
+                approveAccount: getApproveAccountPda(
+                    args.mint,
+                    this.programIds.wns,
+                ),
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 systemProgram: SystemProgram.programId,
             })
@@ -330,7 +396,8 @@ class EpplexProvider {
     async tokenGameVoteTx(args: TokenGameVoteTxParams) {
         // Could just do this.provider.wallet.publicKey
         const mintOwner =
-            args.owner ?? (await getMintOwner(this.provider.connection, args.mint));
+            args.owner ??
+            (await getMintOwner(this.provider.connection, args.mint));
 
         return await this.program.methods
             .tokenGameVote({
@@ -344,6 +411,27 @@ class EpplexProvider {
                 payer: mintOwner,
                 updateAuthority: this.getProgramDelegate(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
+            })
+            .transaction();
+    }
+    async tokenGameFreezeTx(args: TokenGameFreezeTxParams) {
+        // Could just do this.provider.wallet.publicKey
+        const mintOwner =
+            args.owner ??
+            (await getMintOwner(this.provider.connection, args.mint));
+
+        return await this.program.methods
+            .tokenGameFreeze({})
+            .accountsStrict({
+                mint: args.mint,
+                tokenAccount: getAtaAddressPubkey(args.mint, mintOwner),
+                groupMember: this.getMemberAccountPda(args.mint),
+                gameConfig: this.getGameConfig(),
+                payer: mintOwner,
+                authority: this.getProgramDelegate(),
+                manager: getManagerAccount(),
+                token22Program: TOKEN_2022_PROGRAM_ID,
+                wns: this.programIds.wns,
             })
             .transaction();
     }
@@ -362,7 +450,7 @@ class EpplexProvider {
             .transaction();
     }
 
-    async tokenGameImmunityTx({mint}: TokenGameImmunityParams) {
+    async tokenGameImmunityTx({ mint }: TokenGameImmunityParams) {
         return await this.program.methods
             .tokenGameImmunity({})
             .accountsStrict({
@@ -384,20 +472,17 @@ class EpplexProvider {
         return getTokenBurgerMetadata(mint, this.program.programId);
     }
 
-
     /*
-        * Game stuff
+     * Game stuff
      */
     getGameConfig(): PublicKey {
         return getGameConfig(this.program.programId);
     }
 
     async getGameData(): Promise<GameConfig | undefined> {
-        return await this.program
-            .account
-            .gameConfig
+        return await this.program.account.gameConfig
             .fetch(this.getGameConfig())
-            .then(account => account)
+            .then((account) => account)
             .catch(() => undefined);
     }
 
@@ -450,10 +535,14 @@ class EpplexProvider {
     async gameUpdateTx(params: GameUpdateParams): Promise<Transaction> {
         return await this.program.methods
             .gameUpdate({
-                phaseStartTimestamp: params.phaseStartTimestamp ? new anchor.BN(params.phaseStartTimestamp) : null,
-                phaseEndTimestamp: params.phaseEndTimestamp ? new anchor.BN(params.phaseEndTimestamp) : null,
+                phaseStartTimestamp: params.phaseStartTimestamp
+                    ? new anchor.BN(params.phaseStartTimestamp)
+                    : null,
+                phaseEndTimestamp: params.phaseEndTimestamp
+                    ? new anchor.BN(params.phaseEndTimestamp)
+                    : null,
                 voteType: params.voteType ?? null,
-                tokenGroup: params.tokenGroup ?? null
+                tokenGroup: params.tokenGroup ?? null,
             })
             .accountsStrict({
                 gameConfig: this.getGameConfig(),
@@ -473,21 +562,21 @@ class EpplexProvider {
     }
 
     /*
-        * WNS
+     * WNS
      */
     getGroupAccountPda(groupMint: PublicKey): PublicKey {
-        return getGroupAccount(groupMint, this.programIds.wns)
+        return getGroupAccount(groupMint, this.programIds.wns);
     }
 
     getMemberAccountPda(groupMint: PublicKey): PublicKey {
-        return getMemberAccount(groupMint, this.programIds.wns)
+        return getMemberAccount(groupMint, this.programIds.wns);
     }
 
     /*
-        * Ephemeral Core
+     * Ephemeral Core
      */
     getEphemeralAuth(): PublicKey {
-        return getEphemeralAuth(this.programIds.core)
+        return getEphemeralAuth(this.programIds.core);
     }
 
     getEphemeralRule(seed: number): PublicKey {
@@ -498,102 +587,31 @@ class EpplexProvider {
         return getEphemeralData(membership, this.programIds.core);
     }
 
+    async tokenThawTx(args: ThawTxParams) {
+        const mintOwner =
+            args.owner ??
+            (await getMintOwner(this.provider.connection, args.mint));
+        const tokenAccount = getAtaAddressPubkey(args.mint, mintOwner);
 
-    /*
-        DEPRECATED
-     */
-    async renewTokenTx(
-        mint: PublicKey,
-        fundUpTo: number = 0.1
-    ): Promise<{
-        tx: Transaction;
-        // signers: Keypair[]}
-    }> {
-        // const ata = getAssociatedTokenAddressSync(
-        //     mint, this.wallet.publicKey, undefined, TOKEN_2022_PROGRAM_ID
-        // );
-        const ixs: TransactionInstruction[] = [];
-
-        // const switchboardMint: NativeMint = await
-        // NativeMint.load(this.program.provider as AnchorProvider); const
-        // [payerAta, wrapSolTxn] = await
-        // switchboardMint.getOrCreateWrappedUserInstructions(
-        //     this.provider.wallet.publicKey,
-        //     { fundUpTo: fundUpTo }
-        // );
-        // if (wrapSolTxn === undefined) {
-        //     throw new Error("Wrap SOL failed");
-        // }
-        // ixs.push(...wrapSolTxn.ixns);
-
-        const WSOL_NATIVE_ADDRESS = new PublicKey(
-            "So11111111111111111111111111111111111111112"
-        );
-
-        // VAULT Ata
-        const proceedsAta = getAssociatedTokenAddressSync(
-            WSOL_NATIVE_ADDRESS,
-            PAYER_ADMIN,
-            undefined,
-            TOKEN_PROGRAM_ID
-        );
-
-        // Payer Ata - already created with switchboard stuff
-        const payerAta = getAssociatedTokenAddressSync(
-            WSOL_NATIVE_ADDRESS,
-            this.provider.wallet.publicKey,
-            undefined,
-            TOKEN_PROGRAM_ID
-        );
-
-        // const payerIx = await tryCreateATAIx(
-        //     this.connection, this.wallet.publicKey, payerAta,
-        //     this.wallet.publicKey, NativeMint.address
-        // );
-        const proceedsIx = await tryCreateATAIx(
-            this.provider.connection,
-            this.provider.wallet.publicKey,
-            proceedsAta,
-            PAYER_ADMIN,
-            WSOL_NATIVE_ADDRESS,
-            TOKEN_2022_PROGRAM_ID
-        );
-
-        ixs.push(...proceedsIx);
-
-        const renewIx = await this.program.methods
-            .tokenRenew({
-                renewTerms: 1,
-            })
+        return await this.program.methods
+            .tokenThaw({})
             .accountsStrict({
-                mint,
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
-                mintPayment: WSOL_NATIVE_ADDRESS,
-                proceedsTokenAccount: proceedsAta,
-                payerTokenAccount: payerAta,
+                mint: args.mint,
+                tokenAccount,
+                user: mintOwner,
                 payer: this.provider.wallet.publicKey,
-                updateAuthority: this.getProgramDelegate(),
+                authority: this.getProgramDelegate(),
+                manager: getManagerAccount(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
-                tokenProgram: TOKEN_PROGRAM_ID,
+                wns: this.programIds.wns,
             })
-            .instruction();
-        ixs.push(renewIx);
-
-        return {
-            tx: new Transaction().add(...ixs),
-            // signers: wrapSolTxn.signers
-        };
+            .transaction();
     }
 
     async tokenBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
         const mintOwner =
             owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAssociatedTokenAddressSync(
-            mint,
-            mintOwner,
-            undefined,
-            TOKEN_2022_PROGRAM_ID
-        );
+        const tokenAccount = getAtaAddressPubkey(mint, mintOwner);
 
         return await this.program.methods
             .tokenBurn({})
@@ -615,7 +633,7 @@ class EpplexProvider {
                 name: args.name ?? null,
                 symbol: args.symbol ?? null,
                 uri: args.uri ?? null,
-                additionalMetadata: args.additionalMetadata ?? null
+                additionalMetadata: args.additionalMetadata ?? null,
             })
             .accountsStrict({
                 mint: args.mint,
@@ -627,17 +645,17 @@ class EpplexProvider {
             .transaction();
     }
     /*
-        * DEPRECATED Collection and mints
+     * DEPRECATED Collection and mints
      */
     async createCollectionMintTx({
-         expiryDate,
-         collectionId,
-         mint,
-         name,
-         symbol,
-         uri,
-         computeBudget = DEFAULT_COMPUTE_BUDGET,
-     }: CreateCollectionMintTxTxParams) {
+        expiryDate,
+        collectionId,
+        mint,
+        name,
+        symbol,
+        uri,
+        computeBudget = DEFAULT_COMPUTE_BUDGET,
+    }: CreateCollectionMintTxTxParams) {
         const bigCollectionId = new anchor.BN(collectionId);
         const payer = this.provider.wallet.publicKey;
         const tokenCreateIx = await this.program.methods
@@ -656,7 +674,7 @@ class EpplexProvider {
                 payer: payer,
                 collectionConfig: getCollectionConfig(
                     bigCollectionId,
-                    this.programIds.core
+                    this.programIds.core,
                 ),
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
@@ -700,8 +718,9 @@ class EpplexProvider {
                 tokenAccount: getAtaAddress(mint.toString(), payer.toString()),
                 tokenMetadata: this.getTokenBurgerMetadata(mint),
                 permanentDelegate: this.getProgramDelegate(),
-                globalCollectionConfig:
-                    getGlobalCollectionConfig(this.programIds.core),
+                globalCollectionConfig: getGlobalCollectionConfig(
+                    this.programIds.core,
+                ),
                 payer: payer,
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
