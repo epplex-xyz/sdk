@@ -1204,7 +1204,8 @@ export type EpplexBurger = {
           "writable": true
         },
         {
-          "name": "tokenAccount"
+          "name": "tokenAccount",
+          "writable": true
         },
         {
           "name": "groupMember",
@@ -1295,6 +1296,7 @@ export type EpplexBurger = {
         },
         {
           "name": "authority",
+          "writable": true,
           "pda": {
             "seeds": [
               {

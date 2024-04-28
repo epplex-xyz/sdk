@@ -587,16 +587,11 @@ class EpplexProvider {
         return getEphemeralData(membership, this.programIds.core);
     }
 
-    async tokenThaw(args: ThawTxParams) {
+    async tokenThawTx(args: ThawTxParams) {
         const mintOwner =
             args.owner ??
             (await getMintOwner(this.provider.connection, args.mint));
-        const tokenAccount = getAssociatedTokenAddressSync(
-            args.mint,
-            mintOwner,
-            undefined,
-            TOKEN_2022_PROGRAM_ID,
-        );
+        const tokenAccount = getAtaAddressPubkey(args.mint, mintOwner);
 
         return await this.program.methods
             .tokenThaw({})
@@ -616,12 +611,7 @@ class EpplexProvider {
     async tokenBurnTx({ mint, owner, useGameConfig = true }: BurnTxParams) {
         const mintOwner =
             owner ?? (await getMintOwner(this.provider.connection, mint));
-        const tokenAccount = getAssociatedTokenAddressSync(
-            mint,
-            mintOwner,
-            undefined,
-            TOKEN_2022_PROGRAM_ID,
-        );
+        const tokenAccount = getAtaAddressPubkey(mint, mintOwner);
 
         return await this.program.methods
             .tokenBurn({})

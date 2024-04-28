@@ -1198,7 +1198,8 @@
           "writable": true
         },
         {
-          "name": "token_account"
+          "name": "token_account",
+          "writable": true
         },
         {
           "name": "group_member",
@@ -1289,6 +1290,7 @@
         },
         {
           "name": "authority",
+          "writable": true,
           "pda": {
             "seeds": [
               {
