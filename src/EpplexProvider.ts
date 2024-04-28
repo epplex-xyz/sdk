@@ -3,7 +3,6 @@ import {
     ASSOCIATED_TOKEN_PROGRAM_ID,
     getAssociatedTokenAddressSync,
     TOKEN_2022_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import {
     ComputeBudgetProgram,
@@ -13,7 +12,6 @@ import {
     SystemProgram,
     SYSVAR_RENT_PUBKEY,
     Transaction,
-    TransactionInstruction,
 } from "@solana/web3.js";
 import {
     BurgerProgram,
@@ -45,6 +43,7 @@ import {
     GameUpdateParams,
     ThawTxParams,
     TokenGameBurnTxParams,
+    TokenGameFreezeTxParams,
     TokenGameImmunityParams,
     TokenGameResetParams,
     TokenGameVoteTxParams,
@@ -57,7 +56,6 @@ import {
     getAtaAddress,
     getAtaAddressPubkey,
     getMintOwner,
-    tryCreateATAIx,
 } from "./utils/generic";
 import {
     DISTRIBUTION_PROGRAM_ID,
@@ -72,10 +70,7 @@ import {
 import { getReadonlyWallet } from "./utils/wallet";
 import { BN } from "@coral-xyz/anchor";
 import { getEphemeralRule, getEphemeralData } from "./constants/coreSeeds";
-import {
-    MemberShipAppendTxParams,
-    RuleTxParams,
-} from "./types/CoreProviderTypes";
+
 interface Programs {
     burger?: PublicKey;
     core?: PublicKey;
@@ -419,24 +414,24 @@ class EpplexProvider {
             })
             .transaction();
     }
-    async tokenGameFreezeTx(args: TokenGameVoteTxParams) {
+    async tokenGameFreezeTx(args: TokenGameFreezeTxParams) {
         // Could just do this.provider.wallet.publicKey
         const mintOwner =
             args.owner ??
             (await getMintOwner(this.provider.connection, args.mint));
 
         return await this.program.methods
-            .tokenGameFreeze({
-                message: args.message,
-            })
+            .tokenGameFreeze({})
             .accountsStrict({
                 mint: args.mint,
                 tokenAccount: getAtaAddressPubkey(args.mint, mintOwner),
                 groupMember: this.getMemberAccountPda(args.mint),
                 gameConfig: this.getGameConfig(),
                 payer: mintOwner,
-                updateAuthority: this.getProgramDelegate(),
+                authority: this.getProgramDelegate(),
+                manager: getManagerAccount(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
+                wns: this.programIds.wns,
             })
             .transaction();
     }
@@ -592,26 +587,28 @@ class EpplexProvider {
         return getEphemeralData(membership, this.programIds.core);
     }
 
-    async tokenThaw({ mint, owner, useGameConfig = true }: ThawTxParams) {
+    async tokenThaw(args: ThawTxParams) {
         const mintOwner =
-            owner ?? (await getMintOwner(this.provider.connection, mint));
+            args.owner ??
+            (await getMintOwner(this.provider.connection, args.mint));
         const tokenAccount = getAssociatedTokenAddressSync(
-            mint,
+            args.mint,
             mintOwner,
             undefined,
             TOKEN_2022_PROGRAM_ID,
         );
 
         return await this.program.methods
-            .tokenBurn({})
+            .tokenThaw({})
             .accountsStrict({
-                mint: mint,
+                mint: args.mint,
                 tokenAccount,
-                gameConfig: useGameConfig ? this.getGameConfig() : null,
-                permanentDelegate: this.getProgramDelegate(),
-                tokenMetadata: this.getTokenBurgerMetadata(mint),
+                user: mintOwner,
                 payer: this.provider.wallet.publicKey,
+                authority: this.getProgramDelegate(),
+                manager: getManagerAccount(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
+                wns: this.programIds.wns,
             })
             .transaction();
     }
