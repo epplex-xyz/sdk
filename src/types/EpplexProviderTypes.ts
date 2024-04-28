@@ -1,4 +1,4 @@
-import { IdlAccounts, IdlTypes } from "@coral-xyz/anchor";
+import { IdlAccounts } from "@coral-xyz/anchor";
 import { RawAccount } from "@solana/spl-token";
 import { TokenMetadata } from "@solana/spl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
@@ -145,6 +145,8 @@ export interface EphemeralRuleCreateTxParams {
     treasury: PublicKey;
 }
 
-export type IdlVoteType = IdlTypes<EpplexBurger>["VoteType"];
-export type IdlInputType = IdlTypes<EpplexBurger>["InputType"];
+// export type IdlVoteType = IdlTypes<EpplexBurger>["VoteType"];
+// export type IdlInputType = IdlTypes<EpplexBurger>["InputType"];
+export type IdlVoteType = any;
+export type IdlInputType = any;
 export type GameConfig = IdlAccounts<EpplexBurger>["gameConfig"];
