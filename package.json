@@ -51,6 +51,7 @@
 		"test-wns": "dotenv        -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/wns.spec.ts",
 		"test-blockchain": "dotenv -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/blockchain.spec.ts",
 		"test-freeze": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freeze.spec.ts",
+		"test-freeze-thaw": "dotenv      -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/freezeThaw.spec.ts",
 		"burn-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAll.ts",
 		"burn-all-old": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/burnAllOld.ts",
 		"reset-all": "dotenv       -- mocha --timeout 600000 --reporter spec --require ts-node/register tests/**/resetAll.ts",
