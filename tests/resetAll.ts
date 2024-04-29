@@ -9,7 +9,7 @@ import { PublicKey, Transaction } from "@solana/web3.js";
 import { EpNFT } from "../lib";
 
 describe("Reset all tokens in PAYER_ADMIN", () => {
-    const { wallet, burgerProvider, wenProvider } = setupGlobals();
+    const { wallet, burgerProvider } = setupGlobals();
     const owner = wallet.publicKey;
 
     const connection = burgerProvider.provider.connection;

@@ -1,23 +1,29 @@
-import {setupGlobals} from "./utils/setup";
-import {expect} from "chai";
+import { setupGlobals } from "./utils/setup";
+import { expect } from "chai";
 import {
     EpNFTService,
     getTransactionSize,
     getWnsNftTransferIxs,
     sendAndConfirmRawTransaction,
-    sendAndConfirmRawVersionedTransaction
+    sendAndConfirmRawVersionedTransaction,
 } from "../src";
-import {ComputeBudgetProgram, PublicKey, SystemProgram, Transaction, TransactionInstruction} from "@solana/web3.js";
-import {DecodeTypesService} from "../src";
+import {
+    ComputeBudgetProgram,
+    PublicKey,
+    SystemProgram,
+    Transaction,
+    TransactionInstruction,
+} from "@solana/web3.js";
+import { DecodeTypesService } from "../src";
 import coreProvider from "../src/CoreProvider";
-import {ASSOCIATED_TOKEN_PROGRAM_ID, NATIVE_MINT} from "@solana/spl-token";
-import {getProgramAddress} from "../src/utils/generic";
-import {WNS_PROGRAM_ID} from "../lib/constants/wenCore";
-import {getAtaAddressPubkey} from "../lib/utils/generic";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, NATIVE_MINT } from "@solana/spl-token";
+import { getProgramAddress } from "../src/utils/generic";
+import { WNS_PROGRAM_ID } from "../lib/constants/wenCore";
+import { getAtaAddressPubkey } from "../lib/utils/generic";
 
-
-describe('Other tests', () => {
-    const {wallet, burgerProvider, wenProvider, coreProvider} = setupGlobals()
+describe("Other tests", () => {
+    const { wallet, burgerProvider, wenProvider, coreProvider } =
+        setupGlobals();
     const owner = wallet.publicKey;
     const connection = burgerProvider.provider.connection;
     // let myNFts: any[] = [];
@@ -39,10 +45,10 @@ describe('Other tests', () => {
     // });
     //
 
-    // it('Get game data', async () => {
+    // it("Get game data", async () => {
     //     // GmaeConfig account 9953RREX8HmQjqkhWSpiuEg2RuHBa6tkKYiXuo4Dwcvz
-    //     const gameData  = await burgerProvider.getGameData()
-    //     const game = await burgerProvider.getGameConfig().toString()
+    //     const gameData = await burgerProvider.getGameData();
+    //     const game = await burgerProvider.getGameConfig().toString();
     //     console.log("game", game, gameData);
     //
     //     // expect(myNFts).to.not.be.empty;
@@ -114,7 +120,6 @@ describe('Other tests', () => {
     //     }
     // });
 
-
     // it('Transfer SOL', async () => {
     //     console.log("Transfer SOL")
     //     const ixs = [
@@ -136,5 +141,4 @@ describe('Other tests', () => {
     //
     //     await sendAndConfirmRawTransaction(connection, new Transaction().add(...[...ixs, ix]), wallet.publicKey, wallet, []);
     // });
-
 });
