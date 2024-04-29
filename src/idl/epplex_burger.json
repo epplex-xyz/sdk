@@ -1703,7 +1703,8 @@
           "writable": true
         },
         {
-          "name": "token_account"
+          "name": "token_account",
+          "writable": true
         },
         {
           "name": "group_member",
@@ -1789,10 +1790,12 @@
         },
         {
           "name": "payer",
+          "writable": true,
           "signer": true
         },
         {
           "name": "update_authority",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1821,6 +1824,66 @@
         {
           "name": "token22_program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "manager",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "wns",
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
         }
       ],
       "args": [

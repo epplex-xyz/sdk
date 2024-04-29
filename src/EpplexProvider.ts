@@ -410,6 +410,8 @@ class EpplexProvider {
                 payer: mintOwner,
                 updateAuthority: this.getProgramDelegate(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
+                manager: getManagerAccount(),
+                wns: this.programIds.wns,
             })
             .transaction();
     }

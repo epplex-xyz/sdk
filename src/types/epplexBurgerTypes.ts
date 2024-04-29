@@ -1709,7 +1709,8 @@ export type EpplexBurger = {
           "writable": true
         },
         {
-          "name": "tokenAccount"
+          "name": "tokenAccount",
+          "writable": true
         },
         {
           "name": "groupMember",
@@ -1795,10 +1796,12 @@ export type EpplexBurger = {
         },
         {
           "name": "payer",
+          "writable": true,
           "signer": true
         },
         {
           "name": "updateAuthority",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1827,6 +1830,66 @@ export type EpplexBurger = {
         {
           "name": "token22Program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "manager",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114
+                ]
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                7,
+                134,
+                23,
+                165,
+                21,
+                92,
+                237,
+                157,
+                54,
+                101,
+                201,
+                151,
+                37,
+                250,
+                15,
+                34,
+                6,
+                148,
+                207,
+                128,
+                135,
+                102,
+                45,
+                244,
+                195,
+                247,
+                215,
+                188,
+                148,
+                72,
+                148,
+                105
+              ]
+            }
+          }
+        },
+        {
+          "name": "wns",
+          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
         }
       ],
       "args": [
