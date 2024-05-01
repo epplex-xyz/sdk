@@ -103,6 +103,7 @@ export interface TokenUpdateParams {
     uri?: string;
     mint: PublicKey;
     additionalMetadata?: { field: string; value: string };
+    removeKey?: string;
 }
 
 export interface TokenGameResetParams {

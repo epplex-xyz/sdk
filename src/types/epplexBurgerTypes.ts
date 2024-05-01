@@ -1678,6 +1678,10 @@ export type EpplexBurger = {
         {
           "name": "token22Program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
@@ -3997,6 +4001,12 @@ export type EpplexBurger = {
                   "name": "addMetadataArgs"
                 }
               }
+            }
+          },
+          {
+            "name": "removeKey",
+            "type": {
+              "option": "string"
             }
           }
         ]

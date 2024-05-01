@@ -447,6 +447,7 @@ class EpplexProvider {
                 gameConfig: this.getGameConfig(),
                 updateAuthority: this.getProgramDelegate(),
                 token22Program: TOKEN_2022_PROGRAM_ID,
+                systemProgram: SystemProgram.programId,
             })
             .transaction();
     }
@@ -635,6 +636,7 @@ class EpplexProvider {
                 symbol: args.symbol ?? null,
                 uri: args.uri ?? null,
                 additionalMetadata: args.additionalMetadata ?? null,
+                removeKey: args.removeKey ?? null,
             })
             .accountsStrict({
                 mint: args.mint,
