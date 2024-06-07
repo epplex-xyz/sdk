@@ -161,6 +161,8 @@ export async function sendAndConfirmRawTransaction(
         if (wallet !== undefined) {
             tx = await wallet.signTransaction(tx);
         }
+        // const simulation = await connection.simulateTransaction(tx as any);
+        // console.log("[wallet] simulated tx", simulation.value.logs);
 
         txId = await connection.sendRawTransaction(
             tx.serialize(),

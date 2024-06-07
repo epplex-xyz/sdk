@@ -7,6 +7,8 @@ import {
 } from "../src";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { EpNFT } from "../lib";
+import { getAccount, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
+import { getAtaAddressPubkey } from "../lib/utils/generic";
 
 describe("Reset all tokens in PAYER_ADMIN", () => {
     const { wallet, burgerProvider } = setupGlobals();
@@ -23,8 +25,12 @@ describe("Reset all tokens in PAYER_ADMIN", () => {
 
     it("Reset all tokens", async () => {
         const ixs = [];
-        const batchSize = 5; // Number of iterations after which transaction will be executed
+        const batchSize = 1; // Number of iterations after which transaction will be executed
 
+        console.log(
+            "mynts",
+            myNFts.map((a) => a.mint.toString()),
+        );
         for (let i = 0; i < myNFts.length; i++) {
             const mint: PublicKey = myNFts[i].mint;
 
@@ -36,12 +42,26 @@ describe("Reset all tokens in PAYER_ADMIN", () => {
                 continue;
             }
 
-            // if (myNFts[i].tokenMetadata === undefined) {
-            //     continue
-            // }
-            // // console.log("sdasd", myNFts[i].tokenMetadata)
-            // if (!myNFts[i].tokenMetadata.name.includes("BOB")) {
-            //     continue
+            // const ata = getAtaAddressPubkey(mint, owner);
+            // const { isFrozen } = await getAccount(
+            //     connection,
+            //     ata,
+            //     undefined,
+            //     TOKEN_2022_PROGRAM_ID,
+            // );
+            // console.log(
+            //     "mint",
+            //     mint.toString(),
+            //     "ata",
+            //     ata.toString(),
+            //     isFrozen,
+            // );
+            // if (isFrozen) {
+            //     const unfreezeTx = await burgerProvider.tokenThawTx({
+            //         mint,
+            //         owner: wallet.publicKey,
+            //     });
+            //     ixs.push(...unfreezeTx.instructions);
             // }
 
             const tx = await burgerProvider.tokenGameResetTx({ mint });

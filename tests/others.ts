@@ -45,17 +45,17 @@ describe("Other tests", () => {
     // });
     //
 
-    // it("Get game data", async () => {
-    //     // GmaeConfig account 9953RREX8HmQjqkhWSpiuEg2RuHBa6tkKYiXuo4Dwcvz
-    //     const gameData = await burgerProvider.getGameData();
-    //     const game = await burgerProvider.getGameConfig().toString();
-    //     console.log("game", game, gameData);
-    //
-    //     // expect(myNFts).to.not.be.empty;
-    // });
+    it("Get game data", async () => {
+        // GmaeConfig account 9953RREX8HmQjqkhWSpiuEg2RuHBa6tkKYiXuo4Dwcvz
+        const gameData = await burgerProvider.getGameData();
+        const game = await burgerProvider.getGameConfig().toString();
+        console.log("game", game, gameData);
+
+        // expect(myNFts).to.not.be.empty;
+    });
 
     // it('Check collection amounts', async () => {
-    //     const collectionPda = wenProvider.getGroupAccountPda("DY7oYBeGCcNqEGSEFGNKVM8GDiVs7iTwZaBGVTs2LCZB")
+    //     const collectionPda = wenProvider.getGroupAccountPda("DY71oYBeGCcNqEGSEFGNKVM8GDiVs7iTwZaBGVTs2LCZB")
     //     // colleciton pda: 7XnWarbwQsncqkSXrNVxW52GDunjzs41o1wg5GQuzFZF
     //     // console.log("collecitonPDA", collectionPda.toString())
     //
@@ -118,27 +118,5 @@ describe("Other tests", () => {
     //         await sendAndConfirmRawTransaction(connection, new Transaction().add(...[...ixs, ...transferIxs]), wallet.publicKey, wallet, []);
     //         i++
     //     }
-    // });
-
-    // it('Transfer SOL', async () => {
-    //     console.log("Transfer SOL")
-    //     const ixs = [
-    //         ComputeBudgetProgram.setComputeUnitLimit({
-    //             units: 200_000
-    //
-    //         }),
-    //         ComputeBudgetProgram.setComputeUnitPrice({
-    //             microLamports: 50_000,
-    //         }),
-    //     ];
-    //
-    //     const receiver = new PublicKey("");
-    //     const ix = SystemProgram.transfer({
-    //         fromPubkey: wallet.publicKey,
-    //         toPubkey: receiver,
-    //         lamports: BigInt(38000000000),
-    //     })
-    //
-    //     await sendAndConfirmRawTransaction(connection, new Transaction().add(...[...ixs, ix]), wallet.publicKey, wallet, []);
     // });
 });
