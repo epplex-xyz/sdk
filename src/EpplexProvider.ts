@@ -4,6 +4,7 @@ import {
     TOKEN_2022_PROGRAM_ID,
 } from "@solana/spl-token";
 import {
+    Cluster,
     ComputeBudgetProgram,
     ConfirmOptions,
     Connection,
@@ -25,7 +26,12 @@ import {
     getEphemeralAuth,
     getGlobalCollectionConfig,
 } from "./constants/coreSeeds";
-import { BURGER_PROGRAM_ID, CORE_PROGRAM_ID } from "./constants/ids";
+import {
+    DEFAULT_PROGRAMS,
+    LOCAL_PROGRAMS,
+    MAINNET_DEVNET_PROGRAMS,
+    Programs,
+} from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
 import {
     DEFAULT_COMPUTE_BUDGET,
@@ -57,32 +63,16 @@ import {
     getMintOwner,
 } from "./utils/generic";
 import {
-    DISTRIBUTION_PROGRAM_ID,
     getApproveAccountPda,
     getDistributionAccount,
     getExtraMetasAccount,
     getGroupAccount,
     getManagerAccount,
     getMemberAccount,
-    WNS_PROGRAM_ID,
 } from "./constants/wenCore";
 import { getReadonlyWallet } from "./utils/wallet";
 import { BN } from "@coral-xyz/anchor";
 import { getEphemeralRule, getEphemeralData } from "./constants/coreSeeds";
-
-interface Programs {
-    burger?: PublicKey;
-    core?: PublicKey;
-    wns?: PublicKey;
-    royalty?: PublicKey;
-}
-
-const DEFAULT_PROGRAMS: Programs = {
-    burger: BURGER_PROGRAM_ID,
-    core: CORE_PROGRAM_ID,
-    wns: WNS_PROGRAM_ID,
-    royalty: DISTRIBUTION_PROGRAM_ID,
-};
 
 class EpplexProvider {
     provider: anchor.AnchorProvider;
@@ -90,25 +80,37 @@ class EpplexProvider {
     eventParser: anchor.EventParser;
     programIds: Programs;
     ephemeralRuleSeed?: number;
+    network: Cluster | "localnet";
 
     constructor(
         wallet: EpplexProviderWallet,
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
-        programIds: Programs = DEFAULT_PROGRAMS,
+        network: Cluster | "localnet" = "mainnet-beta",
+        programIds?: Programs,
         ephemeralRuleSeed?: number,
     ) {
-        const burgerProgram = programIds.burger ?? DEFAULT_PROGRAMS.burger;
+        this.setProgramIds(network, programIds);
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
-        this.program = getEpplexBurgerProgram(this.provider, burgerProgram);
-        this.eventParser = getEpplexBurgerEventParser(burgerProgram);
-        this.programIds = {
-            burger: burgerProgram,
-            core: programIds.core ?? DEFAULT_PROGRAMS.core,
-            wns: programIds.wns ?? DEFAULT_PROGRAMS.wns,
-            royalty: programIds.royalty ?? DEFAULT_PROGRAMS.royalty,
-        };
+        this.program = getEpplexBurgerProgram(
+            this.provider,
+            this.programIds.burger,
+        );
+        this.eventParser = getEpplexBurgerEventParser(this.programIds.burger);
         this.ephemeralRuleSeed = ephemeralRuleSeed;
+        this.network = network;
+    }
+
+    setProgramIds(network: Cluster | "localnet", programIds?: Programs) {
+        if (programIds === undefined) {
+            this.programIds = programIds;
+        } else if (network === "localnet") {
+            this.programIds = LOCAL_PROGRAMS;
+        } else if (["mainnet-beta", "devnet"].includes(network)) {
+            this.programIds = MAINNET_DEVNET_PROGRAMS;
+        } else {
+            this.programIds = DEFAULT_PROGRAMS;
+        }
     }
 
     /*
@@ -117,11 +119,13 @@ class EpplexProvider {
     static fromAnchorProvider(
         provider: anchor.AnchorProvider,
         programs: Programs = DEFAULT_PROGRAMS,
+        network: Cluster | "localnet" = "mainnet-beta",
     ): EpplexProvider {
         const epplexProvider = new EpplexProvider(
             provider.wallet,
             provider.connection,
             provider.opts,
+            network,
             programs,
         );
         return epplexProvider;
@@ -131,11 +135,13 @@ class EpplexProvider {
         connection: Connection,
         opts: ConfirmOptions = anchor.AnchorProvider.defaultOptions(),
         programs: Programs = DEFAULT_PROGRAMS,
+        network: Cluster | "localnet" = "mainnet-beta",
     ): EpplexProvider {
         return new EpplexProvider(
             getReadonlyWallet(),
             connection,
             opts,
+            network,
             programs,
         );
     }
@@ -412,6 +418,7 @@ class EpplexProvider {
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 manager: getManagerAccount(),
                 wns: this.programIds.wns,
+                // systemProgram: SystemProgram.programId
             })
             .transaction();
     }
