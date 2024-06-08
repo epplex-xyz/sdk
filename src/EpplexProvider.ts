@@ -239,7 +239,10 @@ class EpplexProvider {
                 name: params.name,
                 symbol: params.symbol,
                 uri: params.uri,
-                expiryDate: params.expiryDate,
+                addPermanentDelegate: params.addPermanentDelegate,
+                expiryDate: params.expiryDate ?? null,
+                royaltyBasisPoints: params.royaltyBasisPoints ?? null,
+                creators: params.creators ?? null,
             })
             .accountsStrict({
                 mint: params.mint,
@@ -276,9 +279,9 @@ class EpplexProvider {
             ComputeBudgetProgram.setComputeUnitLimit({
                 units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET,
             }),
-            ComputeBudgetProgram.setComputeUnitPrice({
-                microLamports: params.computeUnit ?? DEFAULT_COMPUTE_UNIT,
-            }),
+            // ComputeBudgetProgram.setComputeUnitPrice({
+            //     microLamports: params.computeUnit ?? DEFAULT_COMPUTE_UNIT,
+            // }),
             mintIx,
         ];
 

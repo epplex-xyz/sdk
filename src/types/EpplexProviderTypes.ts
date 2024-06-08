@@ -34,13 +34,20 @@ export interface CreateWhitelistMintTxParams {
     computeBudget?: number;
 }
 
+export interface CreatorsWithShare {
+    address: PublicKey;
+    share: number;
+}
 export interface WnsMemberMintParams {
     groupMint: PublicKey;
     mint: PublicKey;
-    expiryDate: string;
     name: string;
     symbol: string;
     uri: string;
+    addPermanentDelegate: boolean;
+    expiryDate?: string;
+    royaltyBasisPoints?: number;
+    creators?: CreatorsWithShare[];
     computeBudget?: number;
     computeUnit?: number;
     addGameReset?: boolean;
