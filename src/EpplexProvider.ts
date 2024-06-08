@@ -5,7 +5,6 @@ import {
 } from "@solana/spl-token";
 import {
     Cluster,
-    ComputeBudgetProgram,
     ConfirmOptions,
     Connection,
     PublicKey,
@@ -28,10 +27,6 @@ import {
 } from "./constants/coreSeeds";
 import { DEFAULT_PROGRAMS, getIdsByNetwork, Programs } from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
-import {
-    DEFAULT_COMPUTE_BUDGET,
-    DEFAULT_COMPUTE_UNIT,
-} from "./constants/transaction";
 import {
     BurnTxParams,
     CreateCollectionMintTxTxParams,
@@ -212,18 +207,7 @@ class EpplexProvider {
             })
             .instruction();
 
-        // TODO This should be moved out on the caller responsibility
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET,
-            }),
-            ComputeBudgetProgram.setComputeUnitPrice({
-                microLamports: params.computeUnit ?? DEFAULT_COMPUTE_UNIT,
-            }),
-            mintIx,
-        ];
-
-        return new Transaction().add(...ixs);
+        return new Transaction().add(mintIx);
     }
 
     /*
@@ -274,16 +258,7 @@ class EpplexProvider {
             })
             .instruction();
 
-        // TODO This should be moved out on the caller responsibility
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: params.computeBudget ?? DEFAULT_COMPUTE_BUDGET,
-            }),
-            // ComputeBudgetProgram.setComputeUnitPrice({
-            //     microLamports: params.computeUnit ?? DEFAULT_COMPUTE_UNIT,
-            // }),
-            mintIx,
-        ];
+        const ixs = [mintIx];
 
         if (params.addGameReset) {
             const tx = await this.tokenGameResetTx({ mint: params.mint });
@@ -650,7 +625,6 @@ class EpplexProvider {
         name,
         symbol,
         uri,
-        computeBudget = DEFAULT_COMPUTE_BUDGET,
     }: CreateCollectionMintTxTxParams) {
         const bigCollectionId = new anchor.BN(collectionId);
         const payer = this.provider.wallet.publicKey;
@@ -680,12 +654,7 @@ class EpplexProvider {
             })
             .instruction();
 
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget,
-            }),
-            tokenCreateIx,
-        ];
+        const ixs = [tokenCreateIx];
 
         return new Transaction().add(...ixs);
     }
@@ -699,7 +668,6 @@ class EpplexProvider {
         symbol,
         uri,
         mint,
-        computeBudget = DEFAULT_COMPUTE_BUDGET,
     }: CreateWhitelistMintTxParams) {
         const payer = this.provider.wallet.publicKey;
         const tokenCreateIx = await this.program.methods
@@ -726,14 +694,7 @@ class EpplexProvider {
             })
             .instruction();
 
-        const ixs = [
-            ComputeBudgetProgram.setComputeUnitLimit({
-                units: computeBudget,
-            }),
-            tokenCreateIx,
-        ];
-
-        return new Transaction().add(...ixs);
+        return new Transaction().add(tokenCreateIx);
     }
 }
 
