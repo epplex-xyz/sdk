@@ -2,7 +2,6 @@ import { Cluster, SendOptions } from "@solana/web3.js";
 
 export const CONFIRM_OPTIONS: SendOptions = {
     skipPreflight: false,
-    // maxRetries: 1,
 };
 
 export const COMMITMENT = "confirmed";
