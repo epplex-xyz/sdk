@@ -1050,38 +1050,38 @@ export type EpplexCore = {
             "program": {
               "kind": "const",
               "value": [
-                7,
-                134,
-                23,
-                165,
-                21,
-                92,
-                237,
-                157,
-                54,
-                101,
-                201,
+                14,
+                9,
+                56,
+                103,
+                39,
+                71,
+                245,
                 151,
-                37,
-                250,
-                15,
+                225,
+                11,
+                12,
+                66,
+                119,
+                20,
+                22,
+                254,
+                125,
+                49,
+                58,
+                181,
+                187,
+                140,
+                169,
+                88,
+                174,
+                154,
                 34,
-                6,
-                148,
-                207,
-                128,
-                135,
-                102,
-                45,
-                244,
-                195,
-                247,
-                215,
-                188,
-                148,
-                72,
-                148,
-                105
+                151,
+                209,
+                118,
+                77,
+                28
               ]
             }
           }
@@ -1103,11 +1103,11 @@ export type EpplexCore = {
         },
         {
           "name": "wrd",
-          "address": "WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"
+          "address": "diste3nXmK7ddDTs1zb6uday6j4etCa9RChD8fJ1xay"
         },
         {
           "name": "wns",
-          "address": "WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"
+          "address": "wns1gDLt8fgLcGhWi5MqAqgXpwEP1JftKE9eZnXS1HM"
         },
         {
           "name": "associatedTokenProgram",
@@ -1668,33 +1668,13 @@ export type EpplexCore = {
   "errors": [
     {
       "code": 6000,
-      "name": "invalidCalculation",
-      "msg": "Invalid calculation"
+      "name": "unauthorizedMintAuthority",
+      "msg": "unauthorized mint authority"
     },
     {
       "code": 6001,
-      "name": "destroyTimestampNotExceeded",
-      "msg": "Destroy timestamp has not been exceeded"
-    },
-    {
-      "code": 6002,
-      "name": "escalatedAuthority",
-      "msg": "You don't have the authority to perform this action"
-    },
-    {
-      "code": 6003,
-      "name": "overflow",
-      "msg": "overflow"
-    },
-    {
-      "code": 6004,
-      "name": "notExpired",
-      "msg": "The membership has not yet expired! Note that the grace period is 14 hours."
-    },
-    {
-      "code": 6005,
-      "name": "alreadyExpired",
-      "msg": "The membership has already expired! You cannot remove time from it."
+      "name": "invalidTreasuryAccount",
+      "msg": "the given treasury account does not match with the configured treasury"
     }
   ],
   "types": [
