@@ -1,32 +1,29 @@
-import {setupGlobals} from "./utils/setup";
-import {Keypair, PublicKey} from "@solana/web3.js";
-import {PAYER_ADMIN} from "../src/constants/keys";
-import {sendAndConfirmRawTransaction, sendAndConfirmRawVersionedTransaction} from "../src";
-import {expect} from "chai";
+import { PAYER_ADMIN, setupGlobals } from "./utils/setup";
+import { Commitment, Keypair, PublicKey, SendOptions } from "@solana/web3.js";
+import {
+    sendAndConfirmRawTransaction,
+    sendAndConfirmRawVersionedTransaction,
+} from "../src";
+import { expect } from "chai";
+import { COMMITMENT, CONFIRM_OPTIONS } from "../src/utils/settings";
 
 describe("Testing Setup Colleciton -> Generate Mints", () => {
     const { wallet, burgerProvider } = setupGlobals();
     const collectionMint = Keypair.generate();
     // const collectionMint = new PublicKey("BGhy7HhwtAJbqVZ6jo6cCTeJFsbhaAJ8YmapxaxUHwat")
 
-    const maxSize = 2;
+    const maxSize = 1;
     const collectionArgs = {
         groupMint: collectionMint.publicKey,
         // groupMint: collectionMint,
-
-        name: "Name \uD83C\uDF54",
+        name: "Col \uD83C\uDF54",
         symbol: "Collection Symbol",
         uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo",
-        maxSize: maxSize
-    }
-    const addGameReset = false;
+        maxSize: maxSize,
+        computeBudget: 200_000,
+        computeUnit: 80_000,
+    };
     const seed = undefined;
-    // const seed = Math.floor(Math.random() * 100000)
-    // const seed = 420
-    const renewalPrice = 1000_000_000_000
-    const expiryDate = 3133677600 // 2069 4 20
-
-
     console.log("ruleSeed", seed);
     console.log("collectionMint", collectionMint.publicKey.toString());
 
@@ -41,41 +38,71 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
     //     expect(id).to.not.be.empty;
     // });
 
-    it("Create a collection", async () => {
-        const tx = await burgerProvider.wnsGroupMintTx(collectionArgs)
-        const id = await sendAndConfirmRawVersionedTransaction(burgerProvider.provider.connection, tx.instructions, wallet.publicKey, wallet, [collectionMint]);
-        expect(id).to.not.be.empty;
-    });
+    // it("Create a collection", async () => {
+    //     const tx = await burgerProvider.wnsGroupMintTx(collectionArgs);
+    //     const id = await sendAndConfirmRawVersionedTransaction(
+    //         burgerProvider.provider.connection,
+    //         tx.instructions,
+    //         wallet.publicKey,
+    //         wallet,
+    //         [collectionMint],
+    //     );
+    //     expect(id).to.not.be.empty;
+    // });
 
     it("Max mint nfts into collection", async () => {
-        for(let i = 0; i < collectionArgs.maxSize; i++){
+        for (let i = 0; i < collectionArgs.maxSize; i++) {
             const mint = Keypair.generate();
             console.log(`mint ${i + 1}`, mint.publicKey.toString());
 
+            const creators = [
+                {
+                    address: new PublicKey(
+                        "burgMnyDXpqEczZkAt25z5fw3aGgJYqDCDT4JDY553W",
+                    ),
+                    share: 12,
+                },
+                {
+                    address: new PublicKey(
+                        "MA1NqUiWSgJz4VDXjPFfNoDWqBBRpMDnT4vxEnt9qbv",
+                    ),
+                    share: 88,
+                },
+            ];
+
             const mintArgs = {
-                expiryDate: expiryDate.toString(),
                 name: `Burger #${i + 1}`,
                 symbol: "BB",
                 uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo",
-                // groupMint: collectionMint,
-                groupMint: collectionMint.publicKey,
+                addPermanentDelegate: false,
+                creators: creators,
+                royaltyBasisPoints: 420,
+                // groupMint: collectionMint.publicKey,
+                groupMint: new PublicKey(
+                    "EKe8gh8YFvpkHKbVN2SS9PBP5HCz4zFQoX6oWrJ6qjhv",
+                ),
                 mint: mint.publicKey,
-                computeBudget: 600_000,
-                addGameReset,
-                ephemeralDataSeed: seed,
-            }
+                computeBudget: 400_000,
+                microLamports: 60_000,
+                addGameReset: false,
+            };
             const mintTx = await burgerProvider.wnsMemberMintTx(mintArgs);
 
             const id = await sendAndConfirmRawVersionedTransaction(
-                burgerProvider.provider.connection, [
-                    ...mintTx.instructions,
-                ], wallet.publicKey, wallet, [mint]
+                burgerProvider.provider.connection,
+                [...mintTx.instructions],
+                wallet.publicKey,
+                wallet,
+                [PAYER_ADMIN, mint],
+                undefined,
+                undefined,
+                undefined,
+                "High",
             );
 
             expect(id).to.not.be.empty;
-            mints.push(mint.publicKey)
+            mints.push(mint.publicKey);
         }
         expect(mints.length).to.be.equal(collectionArgs.maxSize);
     });
-
 });
