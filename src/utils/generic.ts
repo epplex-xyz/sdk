@@ -1,5 +1,6 @@
 import {
     Commitment,
+    ComputeBudgetProgram,
     Connection,
     Keypair,
     ParsedAccountData,
@@ -18,6 +19,7 @@ import {
 } from "@solana/spl-token";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 import { COMMITMENT, CONFIRM_OPTIONS } from "./settings";
+import { getPriorityFeeEstimate } from "./helius";
 
 export const getProgramAddress = (
     seeds: Uint8Array[],
@@ -146,6 +148,7 @@ export async function sendAndConfirmRawTransaction(
     commitment: Commitment = COMMITMENT,
     logTx: boolean = true,
     confirmOptions: SendOptions = CONFIRM_OPTIONS,
+    priorityLevel?: string,
 ): Promise<TransactionSignature | null> {
     const latestBlockhash = await connection.getLatestBlockhash(commitment);
     tx.recentBlockhash = latestBlockhash.blockhash;
@@ -153,7 +156,18 @@ export async function sendAndConfirmRawTransaction(
     tx.feePayer = feePayer;
 
     if (signers) {
-        signers.forEach((s) => tx.sign(s));
+        tx.sign(...signers);
+    }
+    if (priorityLevel !== undefined) {
+        const feeEstimate = await getPriorityFeeEstimate(
+            connection.rpcEndpoint,
+            priorityLevel,
+            tx,
+        );
+        const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
+            microLamports: feeEstimate.priorityFeeEstimate,
+        });
+        tx.add(computePriceIx);
     }
 
     let txId = "";
@@ -201,9 +215,28 @@ export async function sendAndConfirmRawVersionedTransaction(
     commitment: Commitment = COMMITMENT,
     logTx: boolean = true,
     confirmOptions: SendOptions = CONFIRM_OPTIONS,
+    priorityLevel?: string,
 ): Promise<TransactionSignature | null> {
     const { value, context } =
         await connection.getLatestBlockhashAndContext(commitment);
+
+    if (priorityLevel !== undefined) {
+        const tx = new Transaction().add(...ixs);
+        tx.recentBlockhash = value.blockhash;
+        // tx.lastValidBlockHeight = value.lastValidBlockHeight;
+        // tx.feePayer = feePayer;
+        tx.sign(...signers);
+        const feeEstimate = await getPriorityFeeEstimate(
+            connection.rpcEndpoint,
+            priorityLevel,
+            tx,
+        );
+        const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
+            microLamports: feeEstimate.priorityFeeEstimate,
+        });
+        ixs.push(computePriceIx);
+    }
+
     const messageV0 = new TransactionMessage({
         payerKey: feePayer,
         recentBlockhash: value.blockhash,
@@ -248,72 +281,6 @@ export async function sendAndConfirmRawVersionedTransaction(
         console.error("Caught TX error", e);
         return null;
     }
-}
-
-export async function sendAndConfirmRawVersionedTransactionWithRetries(
-    connection: Connection,
-    ixs: TransactionInstruction[],
-    feePayer: PublicKey,
-    wallet?: NodeWallet,
-    signers: Keypair[] = [],
-    commitment: Commitment = COMMITMENT,
-    logTx: boolean = true,
-    confirmOptions: SendOptions = CONFIRM_OPTIONS,
-): Promise<TransactionSignature | null> {
-    const { value, context } =
-        await connection.getLatestBlockhashAndContext(commitment);
-    const messageV0 = new TransactionMessage({
-        payerKey: feePayer,
-        recentBlockhash: value.blockhash,
-        instructions: ixs,
-    }).compileToV0Message();
-
-    let tx = new VersionedTransaction(messageV0);
-    if (wallet !== undefined) {
-        tx = await wallet.signTransaction(tx);
-    }
-    tx.sign(signers);
-
-    const lastValidBlockHeight = context.slot + 150;
-
-    let blockHeight = await this._connection.getBlockHeight();
-
-    // retry until block height is greater than last valid block height
-    let retries = 0;
-    let txId;
-    while (blockHeight < lastValidBlockHeight) {
-        console.log("Retry: ", retries);
-
-        try {
-            txId = await connection.sendRawTransaction(tx.serialize(), {
-                ...confirmOptions,
-                minContextSlot: context.slot,
-                maxRetries: 1,
-            });
-
-            if (logTx) {
-                console.log(explorerUrl(connection, txId));
-            }
-
-            const res = await connection.confirmTransaction(
-                {
-                    signature: txId,
-                    blockhash: value.blockhash,
-                    lastValidBlockHeight: value.lastValidBlockHeight,
-                },
-                commitment,
-            );
-
-            if (res.value.err) {
-                console.log("Res", res.value.err);
-            }
-        } catch {
-            blockHeight = await connection.getBlockHeight();
-        }
-        retries = retries + 1;
-    }
-
-    return txId;
 }
 
 // Taken from switchboard
