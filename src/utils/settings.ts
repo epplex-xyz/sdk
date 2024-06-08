@@ -8,7 +8,7 @@ export const CONFIRM_OPTIONS: SendOptions = {
 export const COMMITMENT = "confirmed";
 
 export function getClusterByEndpoint(
-    endpointUrl: string,§
+    endpointUrl: string,
 ): Cluster | "localnet" {
     if (endpointUrl.includes("mainnet")) {
         return "mainnet-beta";
