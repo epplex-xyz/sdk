@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+import { Cluster, PublicKey } from "@solana/web3.js";
 import EpplexBurgerIdl from "../idl/epplex_burger.json";
 import EpplexCoreIdl from "../idl/epplex_core.json";
 import { DISTRIBUTION_PROGRAM_ID, WNS_PROGRAM_ID } from "./wenCore";
@@ -34,3 +34,18 @@ export const LOCAL_PROGRAMS: Programs = {
     wns: new PublicKey("WNSrqdCHC7RqT6mTzaL9hFa1Cscki3mdttM6eWj27kk"),
     royalty: new PublicKey("WRDeuzdXF7QmJbTRfiyKz7CUCXX6EbZo1dpH7G7W744"),
 };
+
+export function getIdsByNetwork(
+    network: Cluster | "localnet",
+    programIds?: Programs,
+) {
+    if (programIds !== undefined) {
+        return programIds;
+    } else if (network === "localnet") {
+        return LOCAL_PROGRAMS;
+    } else if (["mainnet-beta", "devnet"].includes(network)) {
+        return MAINNET_DEVNET_PROGRAMS;
+    } else {
+        return DEFAULT_PROGRAMS;
+    }
+}

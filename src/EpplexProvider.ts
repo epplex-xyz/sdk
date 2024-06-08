@@ -26,12 +26,7 @@ import {
     getEphemeralAuth,
     getGlobalCollectionConfig,
 } from "./constants/coreSeeds";
-import {
-    DEFAULT_PROGRAMS,
-    LOCAL_PROGRAMS,
-    MAINNET_DEVNET_PROGRAMS,
-    Programs,
-} from "./constants/ids";
+import { DEFAULT_PROGRAMS, getIdsByNetwork, Programs } from "./constants/ids";
 import { PAYER_ADMIN } from "./constants/keys";
 import {
     DEFAULT_COMPUTE_BUDGET,
@@ -90,7 +85,7 @@ class EpplexProvider {
         programIds?: Programs,
         ephemeralRuleSeed?: number,
     ) {
-        this.setProgramIds(network, programIds);
+        this.programIds = getIdsByNetwork(network, programIds);
         this.provider = new anchor.AnchorProvider(connection, wallet, opts);
         this.program = getEpplexBurgerProgram(
             this.provider,
@@ -99,18 +94,6 @@ class EpplexProvider {
         this.eventParser = getEpplexBurgerEventParser(this.programIds.burger);
         this.ephemeralRuleSeed = ephemeralRuleSeed;
         this.network = network;
-    }
-
-    setProgramIds(network: Cluster | "localnet", programIds?: Programs) {
-        if (programIds === undefined) {
-            this.programIds = programIds;
-        } else if (network === "localnet") {
-            this.programIds = LOCAL_PROGRAMS;
-        } else if (["mainnet-beta", "devnet"].includes(network)) {
-            this.programIds = MAINNET_DEVNET_PROGRAMS;
-        } else {
-            this.programIds = DEFAULT_PROGRAMS;
-        }
     }
 
     /*
@@ -418,7 +401,7 @@ class EpplexProvider {
                 token22Program: TOKEN_2022_PROGRAM_ID,
                 manager: getManagerAccount(),
                 wns: this.programIds.wns,
-                // systemProgram: SystemProgram.programId
+                systemProgram: SystemProgram.programId,
             })
             .transaction();
     }
