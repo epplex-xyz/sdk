@@ -8,20 +8,20 @@ export const CONFIRM_OPTIONS: SendOptions = {
 export const COMMITMENT = "confirmed";
 
 export function getClusterByEndpoint(
-    endpointUrl: string,
-): Cluster | "local" | "mainnet" {
+    endpointUrl: string,§
+): Cluster | "localnet" {
     if (endpointUrl.includes("mainnet")) {
-        return "mainnet";
+        return "mainnet-beta";
     } else if (endpointUrl.includes("devnet")) {
         return "devnet";
     } else if (endpointUrl.includes("local")) {
-        return "local";
+        return "localnet";
     } else if (endpointUrl.includes("127")) {
-        return "local";
+        return "localnet";
     } else if (endpointUrl.includes("8899")) {
-        return "local";
+        return "localnet";
     } else if (endpointUrl.includes("burgerbob")) {
-        return "mainnet";
+        return "mainnet-beta";
     } else {
         throw new Error("Unknown network");
     }
