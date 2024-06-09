@@ -1,16 +1,14 @@
 import { PAYER_ADMIN, setupGlobals } from "./utils/setup";
-import { Commitment, Keypair, PublicKey, SendOptions } from "@solana/web3.js";
+import { ComputeBudgetProgram, Keypair, PublicKey } from "@solana/web3.js";
 import {
     sendAndConfirmRawTransaction,
     sendAndConfirmRawVersionedTransaction,
 } from "../src";
 import { expect } from "chai";
-import { COMMITMENT, CONFIRM_OPTIONS } from "../src/utils/settings";
 
 describe("Testing Setup Colleciton -> Generate Mints", () => {
     const { wallet, burgerProvider } = setupGlobals();
     const collectionMint = Keypair.generate();
-    // const collectionMint = new PublicKey("BGhy7HhwtAJbqVZ6jo6cCTeJFsbhaAJ8YmapxaxUHwat")
 
     const maxSize = 1;
     const collectionArgs = {
@@ -38,17 +36,26 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
     //     expect(id).to.not.be.empty;
     // });
 
-    // it("Create a collection", async () => {
-    //     const tx = await burgerProvider.wnsGroupMintTx(collectionArgs);
-    //     const id = await sendAndConfirmRawVersionedTransaction(
-    //         burgerProvider.provider.connection,
-    //         tx.instructions,
-    //         wallet.publicKey,
-    //         wallet,
-    //         [collectionMint],
-    //     );
-    //     expect(id).to.not.be.empty;
-    // });
+    it("Create a collection", async () => {
+        const tx = await burgerProvider.wnsGroupMintTx(collectionArgs);
+        const id = await sendAndConfirmRawVersionedTransaction(
+            burgerProvider.provider.connection,
+            [
+                ComputeBudgetProgram.setComputeUnitLimit({
+                    units: collectionArgs.computeBudget,
+                }),
+                ...tx.instructions,
+            ],
+            wallet.publicKey,
+            wallet,
+            [PAYER_ADMIN, collectionMint],
+            undefined,
+            undefined,
+            undefined,
+            "High",
+        );
+        expect(id).to.not.be.empty;
+    });
 
     it("Max mint nfts into collection", async () => {
         for (let i = 0; i < collectionArgs.maxSize; i++) {
@@ -60,7 +67,7 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
                     address: new PublicKey(
                         "burgMnyDXpqEczZkAt25z5fw3aGgJYqDCDT4JDY553W",
                     ),
-                    share: 12,
+                    share: 20,
                 },
                 {
                     address: new PublicKey(
@@ -76,11 +83,8 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
                 uri: "https://arweave.net/nVRvZDaOk5YAdr4ZBEeMjOVhynuv8P3vywvuN5sYSPo",
                 addPermanentDelegate: false,
                 creators: creators,
-                royaltyBasisPoints: 420,
-                // groupMint: collectionMint.publicKey,
-                groupMint: new PublicKey(
-                    "EKe8gh8YFvpkHKbVN2SS9PBP5HCz4zFQoX6oWrJ6qjhv",
-                ),
+                royaltyBasisPoints: 500,
+                groupMint: collectionMint.publicKey,
                 mint: mint.publicKey,
                 computeBudget: 400_000,
                 microLamports: 60_000,
@@ -90,7 +94,12 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
 
             const id = await sendAndConfirmRawVersionedTransaction(
                 burgerProvider.provider.connection,
-                [...mintTx.instructions],
+                [
+                    ComputeBudgetProgram.setComputeUnitLimit({
+                        units: mintArgs.computeBudget,
+                    }),
+                    ...mintTx.instructions,
+                ],
                 wallet.publicKey,
                 wallet,
                 [PAYER_ADMIN, mint],
