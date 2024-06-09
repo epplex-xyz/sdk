@@ -73,7 +73,7 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
                     address: new PublicKey(
                         "MA1NqUiWSgJz4VDXjPFfNoDWqBBRpMDnT4vxEnt9qbv",
                     ),
-                    share: 88,
+                    share: 80,
                 },
             ];
 
@@ -87,7 +87,6 @@ describe("Testing Setup Colleciton -> Generate Mints", () => {
                 groupMint: collectionMint.publicKey,
                 mint: mint.publicKey,
                 computeBudget: 400_000,
-                microLamports: 60_000,
                 addGameReset: false,
             };
             const mintTx = await burgerProvider.wnsMemberMintTx(mintArgs);

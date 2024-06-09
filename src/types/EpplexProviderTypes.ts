@@ -48,8 +48,6 @@ export interface WnsMemberMintParams {
     expiryDate?: string;
     royaltyBasisPoints?: number;
     creators?: CreatorsWithShare[];
-    computeBudget?: number;
-    computeUnit?: number;
     addGameReset?: boolean;
     ephemeralDataSeed?: number;
 }
@@ -61,8 +59,6 @@ export interface WnsGroupMintParams {
     uri: string;
     maxSize: number;
     paymentMint?: PublicKey;
-    computeBudget?: number;
-    computeUnit?: number;
 }
 
 export interface CreateCollectionMintTxTxParams {
