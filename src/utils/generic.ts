@@ -223,8 +223,6 @@ export async function sendAndConfirmRawVersionedTransaction(
     if (priorityLevel !== undefined) {
         const tx = new Transaction().add(...ixs);
         tx.recentBlockhash = value.blockhash;
-        // tx.lastValidBlockHeight = value.lastValidBlockHeight;
-        // tx.feePayer = feePayer;
         tx.sign(...signers);
         const feeEstimate = await getPriorityFeeEstimate(
             connection.rpcEndpoint,
